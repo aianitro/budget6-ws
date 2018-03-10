@@ -1,7 +1,6 @@
 package com.anpilog.budget.ws.ui.model.request;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;

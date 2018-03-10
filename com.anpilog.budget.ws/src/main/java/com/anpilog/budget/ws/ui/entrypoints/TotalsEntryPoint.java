@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.anpilog.budget.ws.service.AccountsService;
 import com.anpilog.budget.ws.service.TotalsService;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.ui.model.request.CreateTotalRequest;
@@ -30,6 +31,8 @@ public class TotalsEntryPoint {
 	
 	@Autowired
 	TotalsService totalsService;
+	@Autowired
+	AccountsService accountsService;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -66,10 +69,8 @@ public class TotalsEntryPoint {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public TotalResponse createTotal(CreateTotalRequest requestObject) {
-
-		TotalResponse returnValue = new TotalResponse();
-
+	public TotalResponse createTotal(CreateTotalRequest requestObject) {		
+		
 		// Prepare DTO
 		TotalDTO totalDto = new TotalDTO();
 		BeanUtils.copyProperties(requestObject, totalDto);
@@ -78,6 +79,7 @@ public class TotalsEntryPoint {
 		TotalDTO createdTotal = totalsService.createTotal(totalDto);		
 
 		// Prepare response
+		TotalResponse returnValue = new TotalResponse();
 		BeanUtils.copyProperties(createdTotal, returnValue);
 
 		return returnValue;

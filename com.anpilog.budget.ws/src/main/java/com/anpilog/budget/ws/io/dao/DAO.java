@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
 import com.anpilog.budget.ws.shared.dto.BankDTO;
-import com.anpilog.budget.ws.shared.dto.SecretQuestionDTO;
 import com.anpilog.budget.ws.shared.dto.UserDTO;
 
 public interface DAO {
@@ -27,13 +26,6 @@ public interface DAO {
 	AccountDTO saveAccount(AccountDTO accountDto);
 	void updateAccount(AccountDTO accountDto);
     void deleteAccount(AccountDTO accountDto);
-	
-	// Secret questions
-	List<SecretQuestionDTO> getSecretQuestions();
-	SecretQuestionDTO getSecretQuestion(String id);
-	SecretQuestionDTO saveSecretQuestion(SecretQuestionDTO secretQuestionDto);
-	void updateSecretQuestion(SecretQuestionDTO secretQuestionDto);
-	void deleteSecretQuestion(SecretQuestionDTO secretQuestionDto);
 	
 	// Banks
 	List<BankDTO> getBanks();

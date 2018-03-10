@@ -1,9 +1,10 @@
 package com.anpilog.budget.ws.io.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Type;
+import com.anpilog.budget.ws.utils.LocalDatePersistenceConverter;
 
 
 @Entity(name="totals")
@@ -23,8 +24,8 @@ public class TotalEntity implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	@Type(type = "date")
-	private Date date;
+	@Convert(converter = LocalDatePersistenceConverter.class)
+	private LocalDate date;
 	@ManyToOne
 	@JoinColumn(name = "account_id")
 	private AccountEntity account;
@@ -45,11 +46,11 @@ public class TotalEntity implements Serializable{
 		this.id = id;
 	}
 	
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 	
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 	

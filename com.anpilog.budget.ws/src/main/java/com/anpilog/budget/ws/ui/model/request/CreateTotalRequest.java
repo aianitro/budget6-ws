@@ -1,5 +1,6 @@
 package com.anpilog.budget.ws.ui.model.request;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -7,21 +8,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.anpilog.budget.ws.io.entity.AccountEntity;
 import com.anpilog.budget.ws.io.entity.TransactionEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @XmlRootElement 
 public class CreateTotalRequest {
 	
-	private Date date;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate date;
 	private AccountEntity account;
 	private Double amount;
 	private Double difference;
 	private List<TransactionEntity> transactions;
 	
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 	
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 	

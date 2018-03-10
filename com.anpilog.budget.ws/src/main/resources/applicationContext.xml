@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="usersService" class="com.anpilog.budget.ws.service.impl.UsersServiceImpl">
+		<constructor-arg ref="mysqlDAO" />
+	</bean>
+	<bean id="banksService" class="com.anpilog.budget.ws.service.impl.BanksServiceImpl">
+		<constructor-arg ref="mysqlDAO" />
+	</bean>
+	<bean id="accountsService" class="com.anpilog.budget.ws.service.impl.AccountsServiceImpl">
+		<constructor-arg ref="mysqlDAO" />
+	</bean>
+
+	<bean id="mysqlDAO" class="com.anpilog.budget.ws.io.dao.impl.MySQLDAO" />
+
+</beans>

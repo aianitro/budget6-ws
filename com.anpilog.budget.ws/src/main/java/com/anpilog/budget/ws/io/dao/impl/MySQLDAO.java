@@ -34,43 +34,40 @@ public class MySQLDAO implements DAO {
 		SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
 		session = sessionFactory.openSession();
 	}
-	
+
 	@Override
 	public void closeConnection() {
 		if (session != null)
 			session.close();
 	}
-	
-	
+
 	// USERS
 
-    @Override
-    public List<UserDTO> getUsers(int start, int limit) {
+	@Override
+	public List<UserDTO> getUsers(int start, int limit) {
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+		CriteriaBuilder cb = session.getCriteriaBuilder();
 
-        //Create Criteria against a particular persistent class
-        CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
+		// Create Criteria against a particular persistent class
+		CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
 
-        //Query roots always reference entities
-        Root<UserEntity> root = criteria.from(UserEntity.class);
-        criteria.select(root);
+		// Query roots always reference entities
+		Root<UserEntity> root = criteria.from(UserEntity.class);
+		criteria.select(root);
 
-        // Fetch results from start to a number of "limit"
-        List<UserEntity> searchResults = session.createQuery(criteria).
-                setFirstResult(start).
-                setMaxResults(limit).
-                getResultList();
- 
-        List<UserDTO> returnValue = new ArrayList<UserDTO>();
-        for (UserEntity userEntity : searchResults) {
-            UserDTO userDto = new UserDTO();
-            BeanUtils.copyProperties(userEntity, userDto);
-            returnValue.add(userDto);
-        }
+		// Fetch results from start to a number of "limit"
+		List<UserEntity> searchResults = session.createQuery(criteria).setFirstResult(start).setMaxResults(limit)
+				.getResultList();
 
-        return returnValue;
-    }
+		List<UserDTO> returnValue = new ArrayList<UserDTO>();
+		for (UserEntity userEntity : searchResults) {
+			UserDTO userDto = new UserDTO();
+			BeanUtils.copyProperties(userEntity, userDto);
+			returnValue.add(userDto);
+		}
+
+		return returnValue;
+	}
 
 	@Override
 	public UserDTO getUser(String id) {
@@ -92,7 +89,7 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
+
 	@Override
 	public UserDTO getUserByUserName(String userName) {
 
@@ -146,16 +143,16 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
-	
-    @Override
-    public void deleteUser(UserDTO userPofile) {
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userPofile, userEntity);
-        
-        session.beginTransaction();
-        session.delete(userEntity);
-        session.getTransaction().commit();
-    }
+
+	@Override
+	public void deleteUser(UserDTO userPofile) {
+		UserEntity userEntity = new UserEntity();
+		BeanUtils.copyProperties(userPofile, userEntity);
+
+		session.beginTransaction();
+		session.delete(userEntity);
+		session.getTransaction().commit();
+	}
 
 	@Override
 	public UserDTO getUserByEmailToken(String token) {
@@ -182,8 +179,7 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
-	
+
 	// ACCOUNTS
 
 	@Override
@@ -202,7 +198,7 @@ public class MySQLDAO implements DAO {
 				.getResultList();
 
 		List<AccountDTO> returnValue = new ArrayList<AccountDTO>();
-		for(AccountEntity accountEntity: searchResults) {
+		for (AccountEntity accountEntity : searchResults) {
 			AccountDTO accountDto = new AccountDTO();
 			BeanUtils.copyProperties(accountEntity, accountDto);
 			returnValue.add(accountDto);
@@ -273,7 +269,7 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
+
 	@Override
 	public void updateAccount(AccountDTO accountDto) {
 		AccountEntity accountEntity = new AccountEntity();
@@ -284,7 +280,7 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
-	
+
 	@Override
 	public void deleteAccount(AccountDTO accountDto) {
 		AccountEntity accountEntity = new AccountEntity();
@@ -295,8 +291,7 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
-	
-	
+
 	// SECURITY QUESTIONS
 
 	@Override
@@ -314,7 +309,7 @@ public class MySQLDAO implements DAO {
 		List<SecretQuestionEntity> searchResults = session.createQuery(criteria).getResultList();
 
 		List<SecretQuestionDTO> returnValue = new ArrayList<SecretQuestionDTO>();
-		for(SecretQuestionEntity securityQuestionEntity: searchResults) {
+		for (SecretQuestionEntity securityQuestionEntity : searchResults) {
 			SecretQuestionDTO securityQuestionDto = new SecretQuestionDTO();
 			BeanUtils.copyProperties(securityQuestionEntity, securityQuestionDto);
 			returnValue.add(securityQuestionDto);
@@ -358,7 +353,7 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
+
 	@Override
 	public void updateSecretQuestion(SecretQuestionDTO securityQuestionDto) {
 		SecretQuestionEntity securityQuestionEntity = new SecretQuestionEntity();
@@ -369,7 +364,7 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
-	
+
 	@Override
 	public void deleteSecretQuestion(SecretQuestionDTO securityQuestionDto) {
 		SecretQuestionEntity securityQuestionEntity = new SecretQuestionEntity();
@@ -381,7 +376,6 @@ public class MySQLDAO implements DAO {
 
 	}
 
-	
 	// BANKS
 
 	@Override
@@ -399,21 +393,21 @@ public class MySQLDAO implements DAO {
 		List<BankEntity> searchResults = session.createQuery(criteria).getResultList();
 
 		List<BankDTO> returnValue = new ArrayList<BankDTO>();
-		for(BankEntity bankEntity: searchResults) {
+		for (BankEntity bankEntity : searchResults) {
 			BankDTO bankDto = new BankDTO();
 			BeanUtils.copyProperties(bankEntity, bankDto);
-			
+
 			// Secret questions
-			if(bankEntity.getSecretQuestions().size()>0) {
+			if (bankEntity.getSecretQuestions().size() > 0) {
 				Set<SecretQuestionDTO> secretQuestionsDto = new HashSet<SecretQuestionDTO>();
-				for(SecretQuestionEntity secretQuestionEntity: bankEntity.getSecretQuestions()) {
+				for (SecretQuestionEntity secretQuestionEntity : bankEntity.getSecretQuestions()) {
 					SecretQuestionDTO secretQuestionDto = new SecretQuestionDTO();
 					BeanUtils.copyProperties(secretQuestionEntity, secretQuestionDto);
 					secretQuestionsDto.add(secretQuestionDto);
 				}
 				bankDto.setSecretQuestions(secretQuestionsDto);
 			}
-			
+
 			returnValue.add(bankDto);
 		}
 
@@ -473,20 +467,21 @@ public class MySQLDAO implements DAO {
 		BankDTO returnValue = new BankDTO();
 		BankEntity bankEntity = new BankEntity();
 		BeanUtils.copyProperties(bankDto, bankEntity);
-		
-		for(SecretQuestionEntity secretQuestionEntity: bankEntity.getSecretQuestions())
-			secretQuestionEntity.setBank(bankEntity);
+
+		if (bankEntity.getSecretQuestions() != null)
+			for (SecretQuestionEntity secretQuestionEntity : bankEntity.getSecretQuestions())
+				secretQuestionEntity.setBank(bankEntity);
 
 		session.beginTransaction();
 		session.save(bankEntity);
 		session.getTransaction().commit();
 
 		BeanUtils.copyProperties(bankEntity, returnValue);
-		
+
 		// Secret questions
-		if(bankEntity.getSecretQuestions().size()>0) {
+		if (bankEntity.getSecretQuestions() != null && bankEntity.getSecretQuestions().size() > 0) {
 			Set<SecretQuestionDTO> secretQuestionsDto = new HashSet<SecretQuestionDTO>();
-			for(SecretQuestionEntity secretQuestionEntity: bankEntity.getSecretQuestions()) {
+			for (SecretQuestionEntity secretQuestionEntity : bankEntity.getSecretQuestions()) {
 				SecretQuestionDTO secretQuestionDto = new SecretQuestionDTO();
 				BeanUtils.copyProperties(secretQuestionEntity, secretQuestionDto);
 				secretQuestionsDto.add(secretQuestionDto);
@@ -496,7 +491,7 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
+
 	@Override
 	public void updateBank(BankDTO bankDto) {
 		BankEntity bankEntity = new BankEntity();
@@ -507,7 +502,7 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
-	
+
 	@Override
 	public void deleteBank(BankDTO bankDto) {
 		BankEntity bankEntity = new BankEntity();

@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,7 +37,7 @@ public class TotalEntity implements Serializable{
 	//@Column(name = "status")
 	//private DataRetrievalStatus status;
 	//private String errorMessage;
-	@OneToMany(mappedBy = "total")
+	@OneToMany(mappedBy = "total", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<TransactionEntity> transactions;
 	
 	public int getId() {

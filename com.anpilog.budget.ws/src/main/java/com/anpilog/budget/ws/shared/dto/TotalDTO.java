@@ -2,7 +2,7 @@ package com.anpilog.budget.ws.shared.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import com.anpilog.budget.ws.io.entity.AccountEntity;
 
@@ -15,7 +15,7 @@ public class TotalDTO implements Serializable{
 	private AccountEntity account;
 	private Double amount;
 	private Double difference;
-	private Set<TransactionDTO> transactions;
+	private List<TransactionDTO> transactions;
 	
 	public int getId() {
 		return id;
@@ -57,11 +57,11 @@ public class TotalDTO implements Serializable{
 		this.difference = difference;
 	}
 	
-	public Set<TransactionDTO> getTransactions() {
+	public List<TransactionDTO> getTransactions() {
 		return transactions;
 	}
 	
-	public void setTransactions(Set<TransactionDTO> transactions) {
+	public void setTransactions(List<TransactionDTO> transactions) {
 		this.transactions = transactions;
 	}
 	

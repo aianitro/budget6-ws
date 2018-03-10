@@ -27,7 +27,7 @@ public class TransactionEntity implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "total_id")
 	private TotalEntity total;
-	private String decription;
+	private String description;
 	private double amount;
 	private String categoryStr;
 	private TransactionEntity transferPair;
@@ -64,12 +64,12 @@ public class TransactionEntity implements Serializable{
 		this.total = total;
 	}
 	
-	public String getDecription() {
-		return decription;
+	public String getDescription() {
+		return description;
 	}
 	
-	public void setDecription(String decription) {
-		this.decription = decription;
+	public void setDescription(String decription) {
+		this.description = decription;
 	}
 	
 	public double getAmount() {

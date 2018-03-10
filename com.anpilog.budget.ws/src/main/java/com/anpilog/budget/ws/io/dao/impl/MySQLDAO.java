@@ -465,7 +465,7 @@ public class MySQLDAO implements DAO {
 
 			// Secret questions
 			if (totalEntity.getTransactions().size() > 0) {
-				Set<TransactionDTO> transactionsDto = new HashSet<TransactionDTO>();
+				List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
 				for (TransactionEntity transactionEntity : totalEntity.getTransactions()) {
 					TransactionDTO transactionDto = new TransactionDTO();
 					BeanUtils.copyProperties(transactionEntity, transactionDto);
@@ -503,7 +503,7 @@ public class MySQLDAO implements DAO {
 
 	@Override
 	public TotalDTO saveTotal(TotalDTO totalDto) {
-		TotalDTO returnValue = new TotalDTO();
+		
 		TotalEntity totalEntity = new TotalEntity();
 		BeanUtils.copyProperties(totalDto, totalEntity);
 
@@ -515,11 +515,12 @@ public class MySQLDAO implements DAO {
 		session.save(totalEntity);
 		session.getTransaction().commit();
 
+		TotalDTO returnValue = new TotalDTO();
 		BeanUtils.copyProperties(totalEntity, returnValue);
 
-		// Secret questions
+		// Transactions
 		if (totalEntity.getTransactions() != null && totalEntity.getTransactions().size() > 0) {
-			Set<TransactionDTO> transactionsDto = new HashSet<TransactionDTO>();
+			List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
 			for (TransactionEntity transactionEntity : totalEntity.getTransactions()) {
 				TransactionDTO transactionDto = new TransactionDTO();
 				BeanUtils.copyProperties(transactionEntity, transactionDto);

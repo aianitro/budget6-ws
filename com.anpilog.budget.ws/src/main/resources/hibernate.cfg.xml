@@ -19,9 +19,11 @@
 		<property name="hibernate.c3p0.max_statements">50</property>
 		
 		<mapping class="com.anpilog.budget.ws.io.entity.SecretQuestionEntity" />
+		<mapping class="com.anpilog.budget.ws.io.entity.UserEntity" />
 		<mapping class="com.anpilog.budget.ws.io.entity.UILoginDetailsEntity" />
 		<mapping class="com.anpilog.budget.ws.io.entity.BankEntity" />		
 		<mapping class="com.anpilog.budget.ws.io.entity.AccountEntity" />
-		<mapping class="com.anpilog.budget.ws.io.entity.UserEntity" />
+		<mapping class="com.anpilog.budget.ws.io.entity.TotalEntity" />
+		<mapping class="com.anpilog.budget.ws.io.entity.TransactionEntity" />		
 	</session-factory>
 </hibernate-configuration>

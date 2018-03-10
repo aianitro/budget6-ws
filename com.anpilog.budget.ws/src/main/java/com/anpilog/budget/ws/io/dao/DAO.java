@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
 import com.anpilog.budget.ws.shared.dto.BankDTO;
+import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.shared.dto.UserDTO;
 
 public interface DAO {
@@ -19,14 +20,6 @@ public interface DAO {
 	UserDTO getUserByEmailToken(String token);
 	void deleteUser(UserDTO userDto);
 	
-	// Accounts
-	List<AccountDTO> getAccounts(int start, int limit);
-	AccountDTO getAccount(String id);
-	AccountDTO getAccountByName(String name);	
-	AccountDTO saveAccount(AccountDTO accountDto);
-	void updateAccount(AccountDTO accountDto);
-    void deleteAccount(AccountDTO accountDto);
-	
 	// Banks
 	List<BankDTO> getBanks();
 	BankDTO getBank(String id);
@@ -34,5 +27,21 @@ public interface DAO {
 	BankDTO saveBank(BankDTO bankDto);
 	void updateBank(BankDTO bankDto);
 	void deleteBank(BankDTO bankDto);
+	
+	// Accounts
+	List<AccountDTO> getAccounts(int start, int limit);
+	AccountDTO getAccount(String id);
+	AccountDTO getAccountByName(String name);	
+	AccountDTO saveAccount(AccountDTO accountDto);
+	void updateAccount(AccountDTO accountDto);
+    void deleteAccount(AccountDTO accountDto);
+    
+	// Totals
+	List<TotalDTO> getTotals();
+	TotalDTO getTotal(String id);
+	TotalDTO saveTotal(TotalDTO totalDto);
+	void updateTotal(TotalDTO totalDto);
+    void deleteTotal(TotalDTO totalDto);
+	
 	
 }

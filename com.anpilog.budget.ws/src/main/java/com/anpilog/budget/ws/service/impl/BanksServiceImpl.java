@@ -5,6 +5,7 @@ import java.util.List;
 import com.anpilog.budget.ws.exceptions.AccountServiceException;
 import com.anpilog.budget.ws.exceptions.CouldNotDeleteRecordException;
 import com.anpilog.budget.ws.exceptions.CouldNotUpdateRecordException;
+import com.anpilog.budget.ws.exceptions.ExistingReferenceException;
 import com.anpilog.budget.ws.exceptions.NoRecordFoundException;
 import com.anpilog.budget.ws.io.dao.DAO;
 import com.anpilog.budget.ws.service.BanksService;
@@ -74,7 +75,7 @@ public class BanksServiceImpl implements BanksService {
 	public BankDTO createBank(BankDTO bankDto) {
 		BankDTO returnValue = null;
 
-		// Check if account already exists
+		// Check if bank already exists
 		BankDTO existingAccount = this.getBankByName(bankDto.getName());
 		if (existingAccount != null)
 			throw new AccountServiceException(ErrorMessages.RECORD_ALREADY_EXISTS.name());
@@ -82,7 +83,7 @@ public class BanksServiceImpl implements BanksService {
 		// Record data into a database
 		returnValue = this.saveBank(bankDto);
 
-		// Return back the account
+		// Return back the bank
 		return returnValue;
 	}
 	
@@ -115,6 +116,11 @@ public class BanksServiceImpl implements BanksService {
 
 	@Override
 	public void deleteBank(BankDTO bankDto) {
+		
+		// Check if bank has referenced accounts
+		if (bankDto.getAccounts() != null && !bankDto.getAccounts().isEmpty())
+			throw new ExistingReferenceException(ErrorMessages.EXISTING_REFERENCES.name());
+		
 		try {
 			this.database.openConnection();
 			this.database.deleteBank(bankDto);

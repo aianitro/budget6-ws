@@ -9,7 +9,8 @@ public enum ErrorMessages {
 	AUTHENTICAION_FAILED("Authentication failed"),
 	COULD_NOT_UPDATE_RECORD("Could not update"), 
 	COULD_NOT_DELETE_RECORD("Could not delete"),
-	EMAIL_ADDRESS_NOT_VERIFIED("Email address could not be verified");
+	EMAIL_ADDRESS_NOT_VERIFIED("Email address could not be verified"),
+	EXISTING_REFERENCES("Record has dependent references");
 	
 	private String errorMessage;
 

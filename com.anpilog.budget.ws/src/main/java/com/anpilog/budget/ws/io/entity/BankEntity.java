@@ -22,11 +22,9 @@ public class BankEntity implements Serializable{
 	private String name;
 	private Boolean isEnabled;
 	@OneToMany(mappedBy = "bank", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<SecretQuestionEntity> secretQuestions;
-	/*
+	private Set<SecretQuestionEntity> secretQuestions;	
 	@OneToMany(mappedBy = "bank", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<AccountEntity> accounts;
-	*/	
+	private Set<AccountEntity> accounts;	
 	/*
 	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "ui_login_details_id", unique = true)
@@ -66,7 +64,6 @@ public class BankEntity implements Serializable{
 		this.secretQuestions = secretQuestions;
 	}
 	
-	/*
 	public Set<AccountEntity> getAccounts() {
 		return accounts;
 	}
@@ -74,7 +71,6 @@ public class BankEntity implements Serializable{
 	public void setAccounts(Set<AccountEntity> accounts) {
 		this.accounts = accounts;
 	}
-	*/
 	
 	
 	/*

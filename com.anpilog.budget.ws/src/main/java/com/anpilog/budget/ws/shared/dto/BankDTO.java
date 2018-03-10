@@ -11,6 +11,7 @@ public class BankDTO implements Serializable{
 	private String name;
 	private Boolean isEnabled;
 	private Set<SecretQuestionDTO> secretQuestions;	
+	private Set<AccountDTO> accounts;	
 	
 	public long getId() {
 		return id;
@@ -42,6 +43,14 @@ public class BankDTO implements Serializable{
 
 	public void setSecretQuestions(Set<SecretQuestionDTO> secretQuestions) {
 		this.secretQuestions = secretQuestions;
+	}
+	
+	public Set<AccountDTO> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(Set<AccountDTO> accounts) {
+		this.accounts = accounts;
 	}
 	
 }

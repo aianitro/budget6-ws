@@ -21,7 +21,6 @@ public class AccountEntity implements Serializable{
 	@JoinColumn(name = "bank_id", nullable = false)	
 	private BankEntity bank;
 	private Boolean isEnabled;
-	private String accountId;
 	
 	public long getId() {
 		return id;
@@ -53,14 +52,6 @@ public class AccountEntity implements Serializable{
 	
 	public void setIsEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
-	}
-	
-	public String getAccountId() {
-		return accountId;
-	}
-	
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
 	}
 	
 }

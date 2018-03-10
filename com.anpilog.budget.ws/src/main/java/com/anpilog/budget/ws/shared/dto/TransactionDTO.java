@@ -1,14 +1,14 @@
 package com.anpilog.budget.ws.shared.dto;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class TransactionDTO implements Serializable{
 
 	private static final long serialVersionUID = 5490726788823406474L;
 	
 	private int id;
-	private Date date;
+	private LocalDate date;
 	private String decription;
 	private double amount;
 	private String categoryStr;
@@ -22,11 +22,11 @@ public class TransactionDTO implements Serializable{
 		this.id = id;
 	}
 	
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 	
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 	

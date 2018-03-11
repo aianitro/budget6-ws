@@ -1,5 +1,6 @@
 package com.anpilog.budget.ws.ui.entrypoints;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.anpilog.budget.ws.service.RefreshService;
 import com.anpilog.budget.ws.shared.dto.RefreshStatusDTO;
+import com.anpilog.budget.ws.ui.model.request.RefreshRequest;
 import com.anpilog.budget.ws.ui.model.response.RefreshResponse;
 
 @Path("/refresh")
@@ -31,11 +33,12 @@ public class RefreshEntryPoint {
 	}
 
 	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public RefreshResponse refreshAccounts() {
+	public RefreshResponse refreshAccounts(RefreshRequest requestObject) {
 
 		RefreshResponse refreshResponse = new RefreshResponse();
-		RefreshStatusDTO refreshStatusDTO = refreshService.refreshAccounts();
+		RefreshStatusDTO refreshStatusDTO = refreshService.refreshAccounts(requestObject);
 		BeanUtils.copyProperties(refreshStatusDTO, refreshResponse);
 
 		return refreshResponse;

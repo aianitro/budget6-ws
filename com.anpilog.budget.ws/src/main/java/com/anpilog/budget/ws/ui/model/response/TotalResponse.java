@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.anpilog.budget.ws.io.entity.AccountEntity;
+import com.anpilog.budget.ws.io.entity.ReferenceEntity;
 import com.anpilog.budget.ws.io.entity.TransactionEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -15,7 +15,7 @@ public class TotalResponse {
 	private int id;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate date;
-	private AccountEntity account;
+	private ReferenceEntity account;
 	private Double amount;
 	private Double difference;
 	private List<TransactionEntity> transactions;
@@ -36,11 +36,11 @@ public class TotalResponse {
 		this.date = date;
 	}
 	
-	public AccountEntity getAccount() {
+	public ReferenceEntity getAccount() {
 		return account;
 	}
 	
-	public void setAccount(AccountEntity account) {
+	public void setAccount(ReferenceEntity account) {
 		this.account = account;
 	}
 	

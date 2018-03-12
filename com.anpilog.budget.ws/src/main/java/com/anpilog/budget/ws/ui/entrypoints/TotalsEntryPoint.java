@@ -65,6 +65,13 @@ public class TotalsEntryPoint {
 		// Prepare response
 		returnValue = new TotalResponse();
 		BeanUtils.copyProperties(totalDto, returnValue);
+			
+		ReferenceEntity accountReference = new ReferenceEntity();			
+		BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
+		returnValue.setAccount(accountReference);
+		
+		// To avoid StackOverflowException
+		returnValue.getTransactions().stream().forEach(t -> t.setTotal(null));
 
 		return returnValue;
 	}

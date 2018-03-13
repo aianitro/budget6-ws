@@ -488,6 +488,11 @@ public class MySQLDAO implements DAO {
 		for (TotalEntity totalEntity : searchResults) {
 			TotalDTO totalDto = new TotalDTO();
 			BeanUtils.copyProperties(totalEntity, totalDto);
+			
+			// Account
+			AccountDTO accountDto = new AccountDTO();
+			BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
+			totalDto.setAccount(accountDto);
 
 			// Secret questions
 			if (totalEntity.getTransactions().size() > 0) {
@@ -531,6 +536,11 @@ public class MySQLDAO implements DAO {
 		for (TotalEntity totalEntity : searchResults) {
 			TotalDTO totalDto = new TotalDTO();
 			BeanUtils.copyProperties(totalEntity, totalDto);
+			
+			// Account
+			AccountDTO accountDto = new AccountDTO();
+			BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
+			totalDto.setAccount(accountDto);
 
 			// Secret questions
 			if (totalEntity.getTransactions().size() > 0) {
@@ -566,6 +576,11 @@ public class MySQLDAO implements DAO {
 
 		TotalDTO returnValue = new TotalDTO();
 		BeanUtils.copyProperties(totalEntity, returnValue);
+		
+		// Account
+		AccountDTO accountDto = new AccountDTO();
+		BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
+		returnValue.setAccount(accountDto);
 
 		return returnValue;
 	}
@@ -575,7 +590,13 @@ public class MySQLDAO implements DAO {
 		
 		TotalEntity totalEntity = new TotalEntity();
 		BeanUtils.copyProperties(totalDto, totalEntity);
+		
+		// Account
+		AccountEntity accountEntity = new AccountEntity();
+		BeanUtils.copyProperties(totalDto.getAccount(), accountEntity);
+		totalEntity.setAccount(accountEntity);
 
+		// Transactions
 		if (totalEntity.getTransactions() != null)
 			for (TransactionEntity transactionEntity : totalEntity.getTransactions())
 				transactionEntity.setTotal(totalEntity);
@@ -586,6 +607,11 @@ public class MySQLDAO implements DAO {
 
 		TotalDTO returnValue = new TotalDTO();
 		BeanUtils.copyProperties(totalEntity, returnValue);
+		
+		// Account
+		AccountDTO accountDto = new AccountDTO();
+		BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
+		returnValue.setAccount(accountDto);
 
 		// Transactions
 		if (totalEntity.getTransactions() != null && totalEntity.getTransactions().size() > 0) {

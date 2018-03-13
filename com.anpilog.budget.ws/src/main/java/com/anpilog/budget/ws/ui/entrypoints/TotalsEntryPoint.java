@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.anpilog.budget.ws.io.entity.ReferenceEntity;
 import com.anpilog.budget.ws.service.TotalsService;
+import com.anpilog.budget.ws.shared.dto.AccountDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.ui.model.request.CreateTotalRequest;
 import com.anpilog.budget.ws.ui.model.request.UpdateTotalRequest;
@@ -66,6 +67,7 @@ public class TotalsEntryPoint {
 		returnValue = new TotalResponse();
 		BeanUtils.copyProperties(totalDto, returnValue);
 			
+		// Account
 		ReferenceEntity accountReference = new ReferenceEntity();			
 		BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
@@ -84,6 +86,11 @@ public class TotalsEntryPoint {
 		// Prepare DTO
 		TotalDTO totalDto = new TotalDTO();
 		BeanUtils.copyProperties(requestObject, totalDto);
+		
+		// Account
+		AccountDTO accountDto = new AccountDTO();
+		BeanUtils.copyProperties(requestObject.getAccount(), accountDto);
+		totalDto.setAccount(accountDto);		
 
 		// Create new total
 		TotalDTO createdTotal = totalsService.createTotal(totalDto);		
@@ -91,6 +98,11 @@ public class TotalsEntryPoint {
 		// Prepare response
 		TotalResponse returnValue = new TotalResponse();
 		BeanUtils.copyProperties(createdTotal, returnValue);
+		
+		// Account
+		ReferenceEntity accountReference = new ReferenceEntity();			
+		BeanUtils.copyProperties(createdTotal.getAccount(), accountReference);
+		returnValue.setAccount(accountReference);
 
 		return returnValue;
 	}
@@ -109,6 +121,11 @@ public class TotalsEntryPoint {
 		// Prepare response
 		TotalResponse returnValue = new TotalResponse();
 		BeanUtils.copyProperties(totalDto, returnValue);
+		
+		// Account
+		ReferenceEntity accountReference = new ReferenceEntity();			
+		BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
+		returnValue.setAccount(accountReference);
 
 		return returnValue;
 	}

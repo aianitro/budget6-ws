@@ -4,15 +4,13 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.anpilog.budget.ws.io.entity.AccountEntity;
-
 public class TotalDTO implements Serializable{
 
 	private static final long serialVersionUID = -33377695509924566L;
 	
 	private int id;
 	private LocalDate date;
-	private AccountEntity account;
+	private AccountDTO account;
 	private Double amount;
 	private Double difference;
 	private List<TransactionDTO> transactions;
@@ -33,11 +31,11 @@ public class TotalDTO implements Serializable{
 		this.date = date;
 	}
 	
-	public AccountEntity getAccount() {
+	public AccountDTO getAccount() {
 		return account;
 	}
 	
-	public void setAccount(AccountEntity account) {
+	public void setAccount(AccountDTO account) {
 		this.account = account;
 	}
 	

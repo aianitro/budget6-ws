@@ -17,9 +17,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.anpilog.budget.ws.io.entity.ReferenceEntity;
+import com.anpilog.budget.ws.io.entity.TransactionEntity;
 import com.anpilog.budget.ws.service.TotalsService;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
+import com.anpilog.budget.ws.shared.dto.TransactionDTO;
 import com.anpilog.budget.ws.ui.model.request.CreateTotalRequest;
 import com.anpilog.budget.ws.ui.model.request.UpdateTotalRequest;
 import com.anpilog.budget.ws.ui.model.response.DeleteTotalResponse;
@@ -103,6 +105,9 @@ public class TotalsEntryPoint {
 		ReferenceEntity accountReference = new ReferenceEntity();			
 		BeanUtils.copyProperties(createdTotal.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
+		
+		// To avoid StackOverflowException
+		returnValue.getTransactions().stream().forEach(t -> t.setTotal(null));
 
 		return returnValue;
 	}
@@ -115,6 +120,27 @@ public class TotalsEntryPoint {
 
 		TotalDTO totalDto = totalsService.getTotal(id);
 		
+		if (updateRequest.getDate() != null)
+			totalDto.setDate(updateRequest.getDate());
+		if (updateRequest.getAccount() != null) {
+			AccountDTO accountDto = new AccountDTO();
+			BeanUtils.copyProperties(updateRequest.getAccount(), accountDto);	
+			totalDto.setAccount(accountDto);
+		}
+		if (updateRequest.getAmount() != null)
+			totalDto.setAmount(updateRequest.getAmount());
+		if (updateRequest.getDifference() != null)
+			totalDto.setDifference(updateRequest.getDifference());		
+		if (updateRequest.getTransactions()!=null && updateRequest.getTransactions().size() > 0) {
+			List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
+			for (TransactionEntity transactionEntity : updateRequest.getTransactions()) {
+				TransactionDTO transactionDto = new TransactionDTO();
+				BeanUtils.copyProperties(transactionEntity, transactionDto);
+				transactionsDto.add(transactionDto);
+			}
+			totalDto.setTransactions(transactionsDto);
+		}		
+		
 		// Update total details
 		totalsService.updateTotal(totalDto);
 
@@ -126,6 +152,19 @@ public class TotalsEntryPoint {
 		ReferenceEntity accountReference = new ReferenceEntity();			
 		BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
+		
+		// Transactions
+		if (totalDto.getTransactions().size() > 0) {
+			List<TransactionEntity> transactionsEntity = new ArrayList<TransactionEntity>();
+			for (TransactionDTO transactionDto : totalDto.getTransactions()) {
+				TransactionEntity transactionEntity = new TransactionEntity();
+				BeanUtils.copyProperties(transactionDto, transactionEntity);
+				// To avoid StackOverflowException
+				transactionEntity.setTotal(null);
+				transactionsEntity.add(transactionEntity);
+			}
+			returnValue.setTransactions(transactionsEntity);
+		}		
 
 		return returnValue;
 	}

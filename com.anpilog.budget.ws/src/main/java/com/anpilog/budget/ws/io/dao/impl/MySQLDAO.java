@@ -356,6 +356,32 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
+	
+	@Override
+	public List<AccountDTO> getAccountsEnabledOnly(int start, int limit) {
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+
+		// Create Criteria against particular persistent class
+		CriteriaQuery<AccountEntity> criteria = cb.createQuery(AccountEntity.class);
+
+		// Query
+		Root<AccountEntity> root = criteria.from(AccountEntity.class);
+		criteria.select(root);
+		criteria.where(cb.equal(root.get("isEnabled"), true));
+
+		// Fetch single result
+		List<AccountEntity> searchResults = session.createQuery(criteria).setFirstResult(start).setMaxResults(limit)
+				.getResultList();
+
+		List<AccountDTO> returnValue = new ArrayList<AccountDTO>();
+		for (AccountEntity accountEntity : searchResults) {
+			AccountDTO accountDto = new AccountDTO();
+			BeanUtils.copyProperties(accountEntity, accountDto);
+			returnValue.add(accountDto);
+		}
+
+		return returnValue;
+	}
 
 	@Override
 	public AccountDTO getAccount(String id) {

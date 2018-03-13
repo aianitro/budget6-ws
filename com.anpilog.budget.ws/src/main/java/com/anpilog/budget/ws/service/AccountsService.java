@@ -7,6 +7,7 @@ import com.anpilog.budget.ws.shared.dto.AccountDTO;
 public interface AccountsService {
 		
 	List<AccountDTO> getAccounts(int start, int limit);
+	List<AccountDTO> getAccountsEnabledOnly(int start, int limit);
 	AccountDTO getAccount(String id);
 	AccountDTO getAccountByName(String name);
 	AccountDTO createAccount(AccountDTO accountDto);

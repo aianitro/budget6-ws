@@ -8,6 +8,7 @@ import com.anpilog.budget.ws.service.AccountsService;
 import com.anpilog.budget.ws.service.TotalsService;
 import com.anpilog.budget.ws.service.impl.AccountsServiceImpl;
 import com.anpilog.budget.ws.service.impl.TotalsServiceImpl;
+import com.anpilog.budget.ws.shared.dto.AccountDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
 
 public class DataHandler {
@@ -21,11 +22,12 @@ public class DataHandler {
 		accountsService = new AccountsServiceImpl(database);
 		totalsService = new TotalsServiceImpl(database);
 		
+		// Get all enabled accounts
+		List<AccountDTO> accounts = accountsService.getAccountsEnabledOnly(0, 100);
+		
 		// Get latest totals
 		List<TotalDTO> latestTotals = totalsService.getLastTotals();
 		
-		// Getting list of accounts need update
-		//List<AccountEntity> accountsToUpdate = accountsService.
 		
 		//
 		StringBuilder sb = new StringBuilder();

@@ -30,6 +30,7 @@ public interface DAO {
 	
 	// Accounts
 	List<AccountDTO> getAccounts(int start, int limit);
+	List<AccountDTO> getAccountsEnabledOnly(int start, int limit);
 	AccountDTO getAccount(String id);
 	AccountDTO getAccountByName(String name);	
 	AccountDTO saveAccount(AccountDTO accountDto);

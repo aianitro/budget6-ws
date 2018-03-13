@@ -35,6 +35,21 @@ public class AccountsServiceImpl implements AccountsService {
 		
 		return accounts;
 	}
+	
+	@Override
+	public List<AccountDTO> getAccountsEnabledOnly(int start, int limit) {
+		
+		List<AccountDTO> accounts = null;
+		
+		try {
+			this.database.openConnection();
+			accounts = this.database.getAccountsEnabledOnly(start, limit);
+		} finally {
+			this.database.closeConnection();
+		}
+		
+		return accounts;
+	}
 
 	@Override
 	public AccountDTO getAccount(String id) {

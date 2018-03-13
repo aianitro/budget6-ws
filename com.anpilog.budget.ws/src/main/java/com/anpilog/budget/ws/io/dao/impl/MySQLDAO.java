@@ -479,6 +479,49 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
+	
+	@Override
+	public List<TotalDTO> getLastTotals() {
+		
+		// Query
+		String sql = "SELECT\n" + 
+				"  id,\n" + 
+				"  amount,\n" + 
+				"  date,\n" + 
+				"  difference,\n" + 
+				"  all_totals.account_id AS account_id\n" + 
+				"FROM b6db.totals all_totals\n" + 
+				"RIGHT JOIN (SELECT\n" + 
+				"  MAX(date) AS max_date,\n" + 
+				"  account_id\n" + 
+				"FROM b6db.totals\n" + 
+				"GROUP BY account_id) last_totals\n" + 
+				"  ON all_totals.account_id = last_totals.account_id\n" + 
+				"  AND all_totals.date = last_totals.max_date";
+		Query<TotalEntity> query = session.createNativeQuery(sql, TotalEntity.class);
+		List<TotalEntity> searchResults = (List<TotalEntity>) query.getResultList();			
+
+		List<TotalDTO> returnValue = new ArrayList<TotalDTO>();
+		for (TotalEntity totalEntity : searchResults) {
+			TotalDTO totalDto = new TotalDTO();
+			BeanUtils.copyProperties(totalEntity, totalDto);
+
+			// Secret questions
+			if (totalEntity.getTransactions().size() > 0) {
+				List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
+				for (TransactionEntity transactionEntity : totalEntity.getTransactions()) {
+					TransactionDTO transactionDto = new TransactionDTO();
+					BeanUtils.copyProperties(transactionEntity, transactionDto);
+					transactionsDto.add(transactionDto);
+				}
+				totalDto.setTransactions(transactionsDto);
+			}
+
+			returnValue.add(totalDto);
+		}
+
+		return returnValue;
+	}
 
 	@Override
 	public TotalDTO getTotal(String id) {

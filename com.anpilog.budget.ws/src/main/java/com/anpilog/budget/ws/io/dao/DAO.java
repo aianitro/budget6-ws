@@ -38,6 +38,7 @@ public interface DAO {
     
 	// Totals
 	List<TotalDTO> getTotals();
+	List<TotalDTO> getLastTotals();
 	TotalDTO getTotal(String id);
 	TotalDTO saveTotal(TotalDTO totalDto);
 	void updateTotal(TotalDTO totalDto);

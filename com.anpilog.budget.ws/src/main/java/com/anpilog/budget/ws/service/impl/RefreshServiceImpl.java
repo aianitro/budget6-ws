@@ -1,5 +1,6 @@
 package com.anpilog.budget.ws.service.impl;
 
+import com.anpilog.budget.ws.core.DataHandler;
 import com.anpilog.budget.ws.io.dao.DAO;
 import com.anpilog.budget.ws.service.RefreshService;
 import com.anpilog.budget.ws.shared.dto.RefreshStatusDTO;
@@ -25,11 +26,14 @@ public class RefreshServiceImpl implements RefreshService {
 	}
 
 	@Override
-	public RefreshStatusDTO refreshAccounts(RefreshRequest requestObject) {
+	public RefreshStatusDTO refreshAccounts(RefreshRequest requestObject) {		
+		DataHandler dataHandler = new DataHandler();
+		String newTotalsResult = dataHandler.getNewTotals();
+		
 		RefreshStatusDTO returnValue = new RefreshStatusDTO();
 		returnValue.setStatus(RefreshStatuses.STARTED);
 		returnValue.setDetails("Banks are " + (requestObject.getIsRunningBankAccounts() ? "ON" : "OFF")
-				+ ", credit score is " + (requestObject.getIsRunningCreditScore() ? "ON" : "OFF"));
+				+ ", credit score is " + (requestObject.getIsRunningCreditScore() ? "ON" : "OFF") + "\\r\\n Accounts: \\r\\n" + newTotalsResult);
 
 		return returnValue;
 	}

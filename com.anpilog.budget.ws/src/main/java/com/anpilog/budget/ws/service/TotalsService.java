@@ -7,6 +7,7 @@ import com.anpilog.budget.ws.shared.dto.TotalDTO;
 public interface TotalsService {
 		
 	List<TotalDTO> getTotals();
+	List<TotalDTO> getLastTotals();
 	TotalDTO getTotal(String id);
 	TotalDTO createTotal(TotalDTO totalDto);
 	void updateTotal(TotalDTO totalDto);

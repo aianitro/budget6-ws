@@ -34,6 +34,21 @@ public class TotalsServiceImpl implements TotalsService {
 		
 		return totals;
 	}
+	
+	@Override
+	public List<TotalDTO> getLastTotals() {
+		
+		List<TotalDTO> totals = null;
+		
+		try {
+			this.database.openConnection();
+			totals = this.database.getLastTotals();
+		} finally {
+			this.database.closeConnection();
+		}
+		
+		return totals;
+	}
 
 	@Override
 	public TotalDTO getTotal(String id) {

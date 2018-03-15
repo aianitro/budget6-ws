@@ -243,6 +243,17 @@ public class MySQLDAO implements DAO {
 
 		BankDTO returnValue = new BankDTO();
 		BeanUtils.copyProperties(bankEntity, returnValue);
+		
+		// Secret questions
+		if (bankEntity.getSecretQuestions().size() > 0) {
+			Set<SecretQuestionDTO> secretQuestionsDto = new HashSet<SecretQuestionDTO>();
+			for (SecretQuestionEntity secretQuestionEntity : bankEntity.getSecretQuestions()) {
+				SecretQuestionDTO secretQuestionDto = new SecretQuestionDTO();
+				BeanUtils.copyProperties(secretQuestionEntity, secretQuestionDto);
+				secretQuestionsDto.add(secretQuestionDto);
+			}
+			returnValue.setSecretQuestions(secretQuestionsDto);
+		}
 
 		return returnValue;
 	}

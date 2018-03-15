@@ -1,4 +1,4 @@
-package com.anpilog.budget.ws.io.entity;
+package com.anpilog.budget.ws.core;
 
 public enum DataRetrievalStatus {
 
@@ -9,7 +9,6 @@ public enum DataRetrievalStatus {
 	UNKNOWN("?");
 	
 	String abbr;
-	
 	DataRetrievalStatus(String a){
 		this.abbr = a;
 	} 

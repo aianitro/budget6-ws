@@ -1,7 +1,9 @@
 package com.anpilog.budget.ws.ui.entrypoints;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -16,8 +18,10 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.anpilog.budget.ws.io.entity.SecretQuestionEntity;
 import com.anpilog.budget.ws.service.BanksService;
 import com.anpilog.budget.ws.shared.dto.BankDTO;
+import com.anpilog.budget.ws.shared.dto.SecretQuestionDTO;
 import com.anpilog.budget.ws.ui.model.request.CreateBankRequest;
 import com.anpilog.budget.ws.ui.model.request.UpdateBankRequest;
 import com.anpilog.budget.ws.ui.model.response.BankResponse;
@@ -27,7 +31,7 @@ import com.anpilog.budget.ws.ui.model.response.ResponseStatus;
 
 @Path("/banks")
 public class BanksEntryPoint {
-	
+
 	@Autowired
 	BanksService banksService;
 
@@ -75,7 +79,7 @@ public class BanksEntryPoint {
 		BeanUtils.copyProperties(requestObject, bankDto);
 
 		// Create new bank
-		BankDTO createdBank = banksService.createBank(bankDto);		
+		BankDTO createdBank = banksService.createBank(bankDto);
 
 		// Prepare response
 		BeanUtils.copyProperties(createdBank, returnValue);
@@ -97,7 +101,17 @@ public class BanksEntryPoint {
 
 		if (updateBankRequest.getIsEnabled() != null)
 			bankDto.setIsEnabled(updateBankRequest.getIsEnabled());
-		
+
+		if (updateBankRequest.getSecretQuestions() != null) {
+			Set<SecretQuestionDTO> secretQuestionsDto = new HashSet<SecretQuestionDTO>();
+			for (SecretQuestionEntity secretQuestionEntity : updateBankRequest.getSecretQuestions()) {
+				SecretQuestionDTO secretQuestionDto = new SecretQuestionDTO();
+				BeanUtils.copyProperties(secretQuestionEntity, secretQuestionDto);
+				secretQuestionsDto.add(secretQuestionDto);
+			}
+			bankDto.setSecretQuestions(secretQuestionsDto);
+		}
+
 		// Update account details
 		banksService.updateBank(bankDto);
 
@@ -107,18 +121,18 @@ public class BanksEntryPoint {
 
 		return returnValue;
 	}
-	
+
 	@DELETE
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DeleteBankResponse deleteBank(@PathParam("id") String id) {
 		DeleteBankResponse returnValue = new DeleteBankResponse();
 		returnValue.setRequestOperation(RequestOperation.DELETE);
-		
+
 		BankDTO bankDto = banksService.getBank(id);
-		
+
 		banksService.deleteBank(bankDto);
-		
+
 		returnValue.setResponseStatus(ResponseStatus.SUCCESS);
 
 		return returnValue;

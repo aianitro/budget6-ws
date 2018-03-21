@@ -24,16 +24,16 @@ public class BanksServiceImpl implements BanksService {
 
 	@Override
 	public List<BankDTO> getBanks() {
-		
+
 		List<BankDTO> accounts = null;
-		
+
 		try {
 			this.database.openConnection();
 			accounts = this.database.getBanks();
 		} finally {
 			this.database.closeConnection();
 		}
-		
+
 		return accounts;
 	}
 
@@ -86,14 +86,19 @@ public class BanksServiceImpl implements BanksService {
 		// Return back the bank
 		return returnValue;
 	}
-	
 
 	@Override
 	public void updateBank(BankDTO bankDto) {
+
+		// Check if bank already exists
+		BankDTO existingAccount = this.getBankByName(bankDto.getName());
+		if (existingAccount != null && existingAccount.getId() != bankDto.getId())
+			throw new AccountServiceException(ErrorMessages.RECORD_ALREADY_EXISTS.name());
+
 		try {
 			this.database.openConnection();
 			this.database.updateBank(bankDto);
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			throw new CouldNotUpdateRecordException(ex.getMessage());
 		} finally {
 			this.database.closeConnection();
@@ -116,15 +121,15 @@ public class BanksServiceImpl implements BanksService {
 
 	@Override
 	public void deleteBank(BankDTO bankDto) {
-		
+
 		// Check if bank has referenced accounts
 		if (bankDto.getAccounts() != null && !bankDto.getAccounts().isEmpty())
 			throw new ExistingReferenceException(ErrorMessages.EXISTING_REFERENCES.name());
-		
+
 		try {
 			this.database.openConnection();
 			this.database.deleteBank(bankDto);
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			throw new CouldNotDeleteRecordException(ex.getMessage());
 		} finally {
 			this.database.closeConnection();

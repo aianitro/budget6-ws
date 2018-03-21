@@ -319,10 +319,33 @@ public class MySQLDAO implements DAO {
 	public void updateBank(BankDTO bankDto) {
 		BankEntity bankEntity = new BankEntity();
 		BeanUtils.copyProperties(bankDto, bankEntity);
+		
+		// Secret questions
+		if (bankDto.getSecretQuestions() != null && bankDto.getSecretQuestions().size() > 0) {
+			Set<SecretQuestionEntity> secretQuestionsEntities = new HashSet<SecretQuestionEntity>();
+			for (SecretQuestionDTO secretQuestionDto : bankDto.getSecretQuestions()) {
+				SecretQuestionEntity secretQuestionsEntity = new SecretQuestionEntity();
+				BeanUtils.copyProperties(secretQuestionDto, secretQuestionsEntity);
+				secretQuestionsEntity.setBank(bankEntity);
+				secretQuestionsEntities.add(secretQuestionsEntity);				
+			}
+			bankEntity.setSecretQuestions(secretQuestionsEntities);
+		}
 
 		session.beginTransaction();
 		session.update(bankEntity);
 		session.getTransaction().commit();
+		
+		// Secret questions
+		if (bankEntity.getSecretQuestions() != null && bankEntity.getSecretQuestions().size() > 0) {
+			Set<SecretQuestionDTO> secretQuestionsDto = new HashSet<SecretQuestionDTO>();
+			for (SecretQuestionEntity secretQuestionEntity : bankEntity.getSecretQuestions()) {
+				SecretQuestionDTO secretQuestionDto = new SecretQuestionDTO();
+				BeanUtils.copyProperties(secretQuestionEntity, secretQuestionDto);
+				secretQuestionsDto.add(secretQuestionDto);
+			}
+			bankDto.setSecretQuestions(secretQuestionsDto);
+		}
 
 	}
 

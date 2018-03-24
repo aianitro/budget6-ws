@@ -32,8 +32,8 @@ public class RefreshServiceImpl implements RefreshService {
 		
 		RefreshStatusDTO returnValue = new RefreshStatusDTO();
 		returnValue.setStatus(RefreshStatuses.STARTED);
-		returnValue.setDetails("Banks are " + (requestObject.getIsRunningBankAccounts() ? "ON" : "OFF")
-				+ ", credit score is " + (requestObject.getIsRunningCreditScore() ? "ON" : "OFF") + "\\r\\n Accounts: \\r\\n" + newTotalsResult);
+		returnValue.setDetails("Banks are " + (requestObject.getRunBankAccounts() ? "ON" : "OFF")
+				+ ", credit score is " + (requestObject.getRunCreditScore() ? "ON" : "OFF") + "\\r\\n Accounts: \\r\\n" + newTotalsResult);
 
 		return returnValue;
 	}

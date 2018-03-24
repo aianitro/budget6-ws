@@ -5,23 +5,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement 
 public class RefreshRequest {
 	
-	private Boolean isRunningBankAccounts;
-	private Boolean isRunningCreditScore;
+	private Boolean runBankAccounts;
+	private Boolean runCreditScore;
 	
-	public Boolean getIsRunningBankAccounts() {
-		return isRunningBankAccounts;
+	public Boolean getRunBankAccounts() {
+		return runBankAccounts;
 	}
 	
-	public void setIsRunningBankAccounts(Boolean isRunningBankAccounts) {
-		this.isRunningBankAccounts = isRunningBankAccounts;
+	public void setRunBankAccounts(Boolean runBankAccounts) {
+		this.runBankAccounts = runBankAccounts;
 	}
 	
-	public Boolean getIsRunningCreditScore() {
-		return isRunningCreditScore;
+	public Boolean getRunCreditScore() {
+		return runCreditScore;
 	}
 	
-	public void setIsRunningCreditScore(Boolean isRunningCreditScore) {
-		this.isRunningCreditScore = isRunningCreditScore;
+	public void setRunCreditScore(Boolean runCreditScore) {
+		this.runCreditScore = runCreditScore;
 	}
-
+	
 }

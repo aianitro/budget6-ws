@@ -89,6 +89,9 @@ public class AccountsEntryPoint {
 
 		// Prepare response
 		BeanUtils.copyProperties(createdAccount, returnValue);
+		ReferenceEntity bankReference = new ReferenceEntity();			
+		BeanUtils.copyProperties(createdAccount.getBank(), bankReference);
+		returnValue.setBank(bankReference);
 
 		return returnValue;
 	}
@@ -117,6 +120,9 @@ public class AccountsEntryPoint {
 		// Prepare response
 		AccountResponse returnValue = new AccountResponse();
 		BeanUtils.copyProperties(storedAccount, returnValue);
+		ReferenceEntity bankReference = new ReferenceEntity();			
+		BeanUtils.copyProperties(storedAccount.getBank(), bankReference);
+		returnValue.setBank(bankReference);
 
 		return returnValue;
 	}

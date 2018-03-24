@@ -61,11 +61,14 @@ public class AccountsEntryPoint {
 	public AccountResponse getAccount(@PathParam("id") String id) {
 		AccountResponse returnValue = null;
 
-		AccountDTO accountProfile = accountService.getAccount(id);
+		AccountDTO accountDto = accountService.getAccount(id);
 
 		// Prepare response
 		returnValue = new AccountResponse();
-		BeanUtils.copyProperties(accountProfile, returnValue);
+		BeanUtils.copyProperties(accountDto, returnValue);
+		ReferenceEntity bankReference = new ReferenceEntity();			
+		BeanUtils.copyProperties(accountDto.getBank(), bankReference);
+		returnValue.setBank(bankReference);
 
 		return returnValue;
 	}

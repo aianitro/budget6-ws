@@ -110,6 +110,9 @@ public class AccountsEntryPoint {
 
 		if (accountDetails.getBank() != null)
 			storedAccount.setBank(accountDetails.getBank());
+		
+		if (accountDetails.getMyPortfolioId() != null && !accountDetails.getMyPortfolioId().isEmpty())
+			storedAccount.setMyPortfolioId(accountDetails.getMyPortfolioId());
 
 		if (accountDetails.getIsEnabled() != null)
 			storedAccount.setIsEnabled(accountDetails.getIsEnabled());

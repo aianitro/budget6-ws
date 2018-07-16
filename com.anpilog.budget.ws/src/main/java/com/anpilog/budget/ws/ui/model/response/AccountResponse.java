@@ -10,6 +10,7 @@ public class AccountResponse {
 	private long id;
 	private String name;
 	private ReferenceEntity bank;
+	private String myPortfolioId;
 	private Boolean isEnabled;
 	
 	public long getId() {
@@ -34,6 +35,14 @@ public class AccountResponse {
 	
 	public void setBank(ReferenceEntity bank) {
 		this.bank = bank;
+	}
+	
+	public String getMyPortfolioId() {
+		return myPortfolioId;
+	}
+	
+	public void setMyPortfolioId(String myPortfolioId) {
+		this.myPortfolioId = myPortfolioId;
 	}
 	
 	public Boolean getIsEnabled() {

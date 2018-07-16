@@ -11,6 +11,7 @@ public class AccountDTO implements Serializable{
 	private long id;
 	private String name;
 	private BankEntity bank;
+	private String myPortfolioId;
 	private Boolean isEnabled;
 	
 	public long getId() {
@@ -35,6 +36,14 @@ public class AccountDTO implements Serializable{
 	
 	public void setBank(BankEntity bank) {
 		this.bank = bank;
+	}
+	
+	public String getMyPortfolioId() {
+		return myPortfolioId;
+	}
+	
+	public void setMyPortfolioId(String myPortfolioId) {
+		this.myPortfolioId = myPortfolioId;
 	}
 	
 	public Boolean getIsEnabled() {

@@ -8,16 +8,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class DateUtils {
 	
-	private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
-	
 	public static boolean isDateToday(LocalDate date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		return sdf.format(date).equals(sdf.format(new Date()));
+		return date.equals(LocalDate.now());
 	}
 	
 	public static boolean isDateToday(Date date) {
@@ -138,8 +132,9 @@ public class DateUtils {
 						.parse(string.trim() + ", " + new Date().getYear());
 			}
 		} catch (ParseException ex) {
-			logger.error(ex.getMessage());
-		}
+			ex.printStackTrace();
+		} 
+		
 		return null;
 	}
 	

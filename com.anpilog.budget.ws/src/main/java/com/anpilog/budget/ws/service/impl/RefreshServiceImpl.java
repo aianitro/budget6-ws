@@ -28,12 +28,13 @@ public class RefreshServiceImpl implements RefreshService {
 	@Override
 	public RefreshStatusDTO refreshAccounts(RefreshRequest requestObject) {		
 		DataHandler dataHandler = new DataHandler();
+		
 		String newTotalsResult = dataHandler.getNewTotals();
 		
 		RefreshStatusDTO returnValue = new RefreshStatusDTO();
 		returnValue.setStatus(RefreshStatuses.STARTED);
 		returnValue.setDetails("Banks are " + (requestObject.getRunBankAccounts() ? "ON" : "OFF")
-				+ ", credit score is " + (requestObject.getRunCreditScore() ? "ON" : "OFF") + "\\r\\n Accounts: \\r\\n" + newTotalsResult);
+				+ ", credit score is " + (requestObject.getRunCreditScore() ? "ON" : "OFF") + "\\r\\n Accounts: \\r\\n" + newTotalsResult);				
 
 		return returnValue;
 	}

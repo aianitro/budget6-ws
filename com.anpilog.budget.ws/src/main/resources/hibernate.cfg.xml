@@ -5,7 +5,7 @@
 	<session-factory>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/b6db?useTimezone=true&amp;serverTimezone=UTC&amp;useLegacyDatetimeCode=false</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/b6db?useTimezone=true&amp;serverTimezone=PST&amp;useLegacyDatetimeCode=false</property>
 		<property name="hibernate.connection.username">b6db</property>
 		<property name="hibernate.connection.password">b6pass!</property>
 

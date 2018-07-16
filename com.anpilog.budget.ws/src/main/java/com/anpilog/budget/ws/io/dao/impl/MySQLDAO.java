@@ -711,5 +711,32 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
+	
+	
+	// TOTALS
+
+	@Override
+	public List<TransactionDTO> getTransactions() {
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+
+		// Create Criteria against particular persistent class
+		CriteriaQuery<TransactionEntity> criteria = cb.createQuery(TransactionEntity.class);
+
+		// Query
+		Root<TransactionEntity> root = criteria.from(TransactionEntity.class);
+		criteria.select(root);
+
+		// Fetch single result
+		List<TransactionEntity> searchResults = session.createQuery(criteria).getResultList();
+
+		List<TransactionDTO> returnValue = new ArrayList<TransactionDTO>();
+		for (TransactionEntity transactionEntity : searchResults) {
+			TransactionDTO transactionDto = new TransactionDTO();
+			BeanUtils.copyProperties(transactionEntity, transactionDto);
+			returnValue.add(transactionDto);
+		}
+
+		return returnValue;
+	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
 import com.anpilog.budget.ws.shared.dto.BankDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
+import com.anpilog.budget.ws.shared.dto.TransactionDTO;
 import com.anpilog.budget.ws.shared.dto.UserDTO;
 
 public interface DAO {
@@ -45,5 +46,7 @@ public interface DAO {
 	void updateTotal(TotalDTO totalDto);
     void deleteTotal(TotalDTO totalDto);
 	
+	// Transactions
+	List<TransactionDTO> getTransactions();
 	
 }

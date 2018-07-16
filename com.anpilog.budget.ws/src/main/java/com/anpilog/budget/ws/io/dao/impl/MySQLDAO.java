@@ -731,6 +731,8 @@ public class MySQLDAO implements DAO {
 
 		List<TransactionDTO> returnValue = new ArrayList<TransactionDTO>();
 		for (TransactionEntity transactionEntity : searchResults) {
+			if(!transactionEntity.getTotal().getAccount().getIsEnabled())
+				continue;
 			TransactionDTO transactionDto = new TransactionDTO();
 			BeanUtils.copyProperties(transactionEntity, transactionDto);
 			returnValue.add(transactionDto);

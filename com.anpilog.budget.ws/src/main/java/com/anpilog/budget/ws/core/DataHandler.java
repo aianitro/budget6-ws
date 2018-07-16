@@ -67,6 +67,7 @@ public class DataHandler {
 	
 	private List<TransactionDTO> getAllTransactions() {
 		this.database = new MySQLDAO();
+		
 		transactionsService = new TransactionsServiceImpl(database);
 
 		return transactionsService.getTransactions();

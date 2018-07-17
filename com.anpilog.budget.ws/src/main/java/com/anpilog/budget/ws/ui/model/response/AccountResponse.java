@@ -11,6 +11,7 @@ public class AccountResponse {
 	private String name;
 	private ReferenceEntity bank;
 	private String myPortfolioId;
+	private Boolean isAutomated;
 	private Boolean isEnabled;
 	
 	public long getId() {
@@ -43,6 +44,14 @@ public class AccountResponse {
 	
 	public void setMyPortfolioId(String myPortfolioId) {
 		this.myPortfolioId = myPortfolioId;
+	}
+	
+	public Boolean getIsAutomated() {
+		return isAutomated;
+	}
+	
+	public void setIsAutomated(Boolean isAutomated) {
+		this.isAutomated = isAutomated;
 	}
 	
 	public Boolean getIsEnabled() {

@@ -12,6 +12,7 @@ public class AccountDTO implements Serializable{
 	private String name;
 	private BankEntity bank;
 	private String myPortfolioId;
+	private Boolean isAutomated;
 	private Boolean isEnabled;
 	
 	public long getId() {
@@ -46,6 +47,14 @@ public class AccountDTO implements Serializable{
 		this.myPortfolioId = myPortfolioId;
 	}
 	
+	public Boolean getIsAutomated() {
+		return isAutomated;
+	}
+	
+	public void setIsAutomated(Boolean isAutomated) {
+		this.isAutomated = isAutomated;
+	}
+	
 	public Boolean getIsEnabled() {
 		return isEnabled;
 	}
@@ -53,5 +62,4 @@ public class AccountDTO implements Serializable{
 	public void setIsEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
-	
 }

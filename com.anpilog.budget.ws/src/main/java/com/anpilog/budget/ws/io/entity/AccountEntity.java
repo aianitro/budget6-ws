@@ -21,6 +21,7 @@ public class AccountEntity implements Serializable{
 	@JoinColumn(name = "bank_id", nullable = false)	
 	private BankEntity bank;
 	private String myPortfolioId;
+	private Boolean isAutomated;
 	private Boolean isEnabled;
 	
 	public long getId() {
@@ -53,6 +54,14 @@ public class AccountEntity implements Serializable{
 	
 	public void setMyPortfolioId(String myPortfolioId) {
 		this.myPortfolioId = myPortfolioId;
+	}
+	
+	public Boolean getIsAutomated() {
+		return isAutomated;
+	}
+	
+	public void setIsAutomated(Boolean isAutomated) {
+		this.isAutomated = isAutomated;
 	}
 	
 	public Boolean getIsEnabled() {

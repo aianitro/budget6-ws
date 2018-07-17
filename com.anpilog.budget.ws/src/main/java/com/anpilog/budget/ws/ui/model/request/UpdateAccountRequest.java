@@ -10,6 +10,7 @@ public class UpdateAccountRequest {
 	private String name;
 	private BankEntity bank;
 	private String myPortfolioId;
+	private Boolean isAutomated;
 	private Boolean isEnabled;
 	
 	public String getName() {
@@ -34,6 +35,14 @@ public class UpdateAccountRequest {
 	
 	public void setMyPortfolioId(String myPortfolioId) {
 		this.myPortfolioId = myPortfolioId;
+	}
+	
+	public Boolean getIsAutomated() {
+		return isAutomated;
+	}
+	
+	public void setIsAutomated(Boolean isAutomated) {
+		this.isAutomated = isAutomated;
 	}
 	
 	public Boolean getIsEnabled() {

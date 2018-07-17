@@ -117,6 +117,9 @@ public class AccountsEntryPoint {
 		if (accountDetails.getIsEnabled() != null)
 			storedAccount.setIsEnabled(accountDetails.getIsEnabled());
 		
+		if (accountDetails.getIsAutomated() != null)
+			storedAccount.setIsAutomated(accountDetails.getIsAutomated());
+		
 		// Update account details
 		accountService.updateAccountDetails(storedAccount);
 

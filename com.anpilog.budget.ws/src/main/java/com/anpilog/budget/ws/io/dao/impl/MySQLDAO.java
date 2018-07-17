@@ -387,7 +387,7 @@ public class MySQLDAO implements DAO {
 
 		// Query
 		Root<AccountEntity> root = criteria.from(AccountEntity.class);
-		criteria.select(root);
+		criteria.select(root).orderBy(cb.asc(root.get("id")));
 
 		// Fetch single result
 		List<AccountEntity> searchResults = session.createQuery(criteria).setFirstResult(start).setMaxResults(limit)

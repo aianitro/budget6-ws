@@ -46,9 +46,13 @@ public class AccountsEntryPoint {
 		for (AccountDTO accountDTO : accounts) {
 			AccountResponse accountResponse = new AccountResponse();
 			BeanUtils.copyProperties(accountDTO, accountResponse);
-			ReferenceEntity bankReference = new ReferenceEntity();
-			BeanUtils.copyProperties(accountDTO.getBank(), bankReference);
-			accountResponse.setBank(bankReference);
+
+			// Set bank reference in response
+			if (accountDTO.getBank() != null) {
+				ReferenceEntity bankReference = new ReferenceEntity();
+				BeanUtils.copyProperties(accountDTO.getBank(), bankReference);
+				accountResponse.setBank(bankReference);
+			}
 			returnValue.add(accountResponse);
 		}
 
@@ -66,9 +70,13 @@ public class AccountsEntryPoint {
 		// Prepare response
 		returnValue = new AccountResponse();
 		BeanUtils.copyProperties(accountDto, returnValue);
-		ReferenceEntity bankReference = new ReferenceEntity();
-		BeanUtils.copyProperties(accountDto.getBank(), bankReference);
-		returnValue.setBank(bankReference);
+
+		// Set bank reference in response
+		if (accountDto.getBank() != null) {
+			ReferenceEntity bankReference = new ReferenceEntity();
+			BeanUtils.copyProperties(accountDto.getBank(), bankReference);
+			returnValue.setBank(bankReference);
+		}
 
 		return returnValue;
 	}
@@ -89,10 +97,10 @@ public class AccountsEntryPoint {
 
 		// Prepare response
 		BeanUtils.copyProperties(createdAccount, returnValue);
-		ReferenceEntity bankReference = new ReferenceEntity();
 
 		// Set bank reference in response
 		if (createdAccount.getBank() != null) {
+			ReferenceEntity bankReference = new ReferenceEntity();
 			BeanUtils.copyProperties(createdAccount.getBank(), bankReference);
 			returnValue.setBank(bankReference);
 		}
@@ -130,9 +138,13 @@ public class AccountsEntryPoint {
 		// Prepare response
 		AccountResponse returnValue = new AccountResponse();
 		BeanUtils.copyProperties(storedAccount, returnValue);
-		ReferenceEntity bankReference = new ReferenceEntity();
-		BeanUtils.copyProperties(storedAccount.getBank(), bankReference);
-		returnValue.setBank(bankReference);
+
+		// Set bank reference in response
+		if (storedAccount.getBank() != null) {
+			ReferenceEntity bankReference = new ReferenceEntity();
+			BeanUtils.copyProperties(storedAccount.getBank(), bankReference);
+			returnValue.setBank(bankReference);
+		}
 
 		return returnValue;
 	}

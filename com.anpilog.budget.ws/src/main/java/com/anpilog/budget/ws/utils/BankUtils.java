@@ -8,7 +8,8 @@ public class BankUtils {
 
 	public void validateRequiredFields(AccountDTO accountDto) throws MissingRequiredFieldException {
 
-		if (accountDto.getName() == null || accountDto.getName().isEmpty() || accountDto.getBank() == null)
+		if (accountDto.getName() == null || accountDto.getName().isEmpty()
+				|| (accountDto.getIsAutomated() && accountDto.getBank() == null))
 			throw new MissingRequiredFieldException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 
 	}

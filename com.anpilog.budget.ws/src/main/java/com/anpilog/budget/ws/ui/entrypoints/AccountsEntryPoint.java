@@ -30,7 +30,7 @@ import com.anpilog.budget.ws.ui.model.response.ResponseStatus;
 
 @Path("/accounts")
 public class AccountsEntryPoint {
-	
+
 	@Autowired
 	AccountsService accountService;
 
@@ -46,7 +46,7 @@ public class AccountsEntryPoint {
 		for (AccountDTO accountDTO : accounts) {
 			AccountResponse accountResponse = new AccountResponse();
 			BeanUtils.copyProperties(accountDTO, accountResponse);
-			ReferenceEntity bankReference = new ReferenceEntity();			
+			ReferenceEntity bankReference = new ReferenceEntity();
 			BeanUtils.copyProperties(accountDTO.getBank(), bankReference);
 			accountResponse.setBank(bankReference);
 			returnValue.add(accountResponse);
@@ -66,7 +66,7 @@ public class AccountsEntryPoint {
 		// Prepare response
 		returnValue = new AccountResponse();
 		BeanUtils.copyProperties(accountDto, returnValue);
-		ReferenceEntity bankReference = new ReferenceEntity();			
+		ReferenceEntity bankReference = new ReferenceEntity();
 		BeanUtils.copyProperties(accountDto.getBank(), bankReference);
 		returnValue.setBank(bankReference);
 
@@ -89,9 +89,13 @@ public class AccountsEntryPoint {
 
 		// Prepare response
 		BeanUtils.copyProperties(createdAccount, returnValue);
-		ReferenceEntity bankReference = new ReferenceEntity();			
-		BeanUtils.copyProperties(createdAccount.getBank(), bankReference);
-		returnValue.setBank(bankReference);
+		ReferenceEntity bankReference = new ReferenceEntity();
+
+		// Set bank reference in response
+		if (createdAccount.getBank() != null) {
+			BeanUtils.copyProperties(createdAccount.getBank(), bankReference);
+			returnValue.setBank(bankReference);
+		}
 
 		return returnValue;
 	}
@@ -110,40 +114,40 @@ public class AccountsEntryPoint {
 
 		if (accountDetails.getBank() != null)
 			storedAccount.setBank(accountDetails.getBank());
-		
+
 		if (accountDetails.getMyPortfolioId() != null && !accountDetails.getMyPortfolioId().isEmpty())
 			storedAccount.setMyPortfolioId(accountDetails.getMyPortfolioId());
 
 		if (accountDetails.getIsEnabled() != null)
 			storedAccount.setIsEnabled(accountDetails.getIsEnabled());
-		
+
 		if (accountDetails.getIsAutomated() != null)
 			storedAccount.setIsAutomated(accountDetails.getIsAutomated());
-		
+
 		// Update account details
 		accountService.updateAccountDetails(storedAccount);
 
 		// Prepare response
 		AccountResponse returnValue = new AccountResponse();
 		BeanUtils.copyProperties(storedAccount, returnValue);
-		ReferenceEntity bankReference = new ReferenceEntity();			
+		ReferenceEntity bankReference = new ReferenceEntity();
 		BeanUtils.copyProperties(storedAccount.getBank(), bankReference);
 		returnValue.setBank(bankReference);
 
 		return returnValue;
 	}
-	
+
 	@DELETE
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DeleteAccountResponse deleteAccount(@PathParam("id") String id) {
 		DeleteAccountResponse returnValue = new DeleteAccountResponse();
 		returnValue.setRequestOperation(RequestOperation.DELETE);
-		
+
 		AccountDTO storedAccount = accountService.getAccount(id);
-		
+
 		accountService.deleteAccount(storedAccount);
-		
+
 		returnValue.setResponseStatus(ResponseStatus.SUCCESS);
 
 		return returnValue;

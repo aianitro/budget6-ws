@@ -7,11 +7,20 @@ import com.anpilog.budget.ws.io.entity.BankEntity;
 @XmlRootElement 
 public class UpdateAccountRequest {
 	
+	private long id;
 	private String name;
 	private BankEntity bank;
 	private String myPortfolioId;
 	private Boolean isAutomated;
 	private Boolean isEnabled;
+	
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
 	
 	public String getName() {
 		return name;

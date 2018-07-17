@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.anpilog.budget.ws.exceptions.CouldNotUpdateRecordException;
 import com.anpilog.budget.ws.io.entity.ReferenceEntity;
 import com.anpilog.budget.ws.service.AccountsService;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
@@ -113,6 +114,10 @@ public class AccountsEntryPoint {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public AccountResponse updateAccount(@PathParam("id") String id, UpdateAccountRequest accountDetails) {
+
+		// Primitive validation to exclude misuse method
+		if (accountDetails.getId() != 0 && accountDetails.getId() != Long.parseLong(id))
+			throw new CouldNotUpdateRecordException("Mismatch between account to be updatde and it's ID in url");
 
 		AccountDTO storedAccount = accountService.getAccount(id);
 

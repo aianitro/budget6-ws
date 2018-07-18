@@ -5,8 +5,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.utils.LocalDatePersistenceConverter;
 
 
@@ -31,11 +35,14 @@ public class TotalEntity implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "account_id")
 	private AccountEntity account;
+	@ManyToOne
+	@JoinColumn(name = "balance_id")
+	private BalanceEntity balance;
 	private Double amount;
 	private Double difference;
-	//@Enumerated(EnumType.STRING)
-	//@Column(name = "status")
-	//private DataRetrievalStatus status;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private DataRetrievalStatus status;
 	//private String errorMessage;
 	@OneToMany(mappedBy = "total", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<TransactionEntity> transactions;
@@ -62,6 +69,14 @@ public class TotalEntity implements Serializable{
 	
 	public void setAccount(AccountEntity account) {
 		this.account = account;
+	}
+	
+	public BalanceEntity getBalance() {
+		return balance;
+	}
+	
+	public void setBalance(BalanceEntity balance) {
+		this.balance = balance;
 	}
 	
 	public Double getAmount() {

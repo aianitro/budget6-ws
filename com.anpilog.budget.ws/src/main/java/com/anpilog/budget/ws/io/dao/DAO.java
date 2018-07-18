@@ -3,6 +3,7 @@ package com.anpilog.budget.ws.io.dao;
 import java.util.List;
 
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
+import com.anpilog.budget.ws.shared.dto.BalanceDTO;
 import com.anpilog.budget.ws.shared.dto.BankDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.shared.dto.TransactionDTO;
@@ -37,6 +38,10 @@ public interface DAO {
 	AccountDTO saveAccount(AccountDTO accountDto);
 	void updateAccount(AccountDTO accountDto);
     void deleteAccount(AccountDTO accountDto);
+    
+	// Balances
+	List<BalanceDTO> getBalances();
+	BalanceDTO saveBalance(BalanceDTO balanceDto);
     
 	// Totals
 	List<TotalDTO> getTotals();

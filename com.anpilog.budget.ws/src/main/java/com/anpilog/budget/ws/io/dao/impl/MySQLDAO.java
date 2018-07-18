@@ -16,12 +16,14 @@ import org.springframework.beans.BeanUtils;
 
 import com.anpilog.budget.ws.io.dao.DAO;
 import com.anpilog.budget.ws.io.entity.AccountEntity;
+import com.anpilog.budget.ws.io.entity.BalanceEntity;
 import com.anpilog.budget.ws.io.entity.BankEntity;
 import com.anpilog.budget.ws.io.entity.SecretQuestionEntity;
 import com.anpilog.budget.ws.io.entity.TotalEntity;
 import com.anpilog.budget.ws.io.entity.TransactionEntity;
 import com.anpilog.budget.ws.io.entity.UserEntity;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
+import com.anpilog.budget.ws.shared.dto.BalanceDTO;
 import com.anpilog.budget.ws.shared.dto.BankDTO;
 import com.anpilog.budget.ws.shared.dto.SecretQuestionDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
@@ -513,6 +515,78 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
+	
+	// BALANCES
+
+	@Override
+	public List<BalanceDTO> getBalances() {
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+
+		// Create Criteria against particular persistent class
+		CriteriaQuery<BalanceEntity> criteria = cb.createQuery(BalanceEntity.class);
+
+		// Query
+		Root<BalanceEntity> root = criteria.from(BalanceEntity.class);
+		criteria.select(root);
+
+		// Fetch single result
+		List<BalanceEntity> searchResults = session.createQuery(criteria).getResultList();
+
+		List<BalanceDTO> returnValue = new ArrayList<BalanceDTO>();
+		for (BalanceEntity balanceEntity : searchResults) {
+			BalanceDTO balanceDto = new BalanceDTO();
+			BeanUtils.copyProperties(balanceEntity, balanceDto);
+
+			// Totals
+			if (balanceEntity.getTotals().size() > 0) {
+				List<TotalDTO> totalsDto = new ArrayList<TotalDTO>();
+				for (TotalEntity totalEntity : balanceEntity.getTotals()) {
+					TotalDTO totalDto = new TotalDTO();
+					BeanUtils.copyProperties(totalEntity, totalDto);
+					totalsDto.add(totalDto);
+				}
+				balanceDto.setTotals(totalsDto);
+			}
+
+			returnValue.add(balanceDto);
+		}
+
+		return returnValue;
+	}
+	
+
+	@Override
+	public BalanceDTO saveBalance(BalanceDTO balanceDto) {
+		
+		BalanceEntity balanceEntity = new BalanceEntity();
+		BeanUtils.copyProperties(balanceDto, balanceEntity);
+
+		// Totals
+		//if (balanceEntity.getTotals() != null)
+		//	for (TotalEntity totalEntity : balanceEntity.getTotals())
+		//		totalEntity.setBalance(balanceEntity);
+
+		session.beginTransaction();
+		session.save(balanceEntity);
+		session.getTransaction().commit();
+
+		BalanceDTO returnValue = new BalanceDTO();
+		BeanUtils.copyProperties(balanceEntity, returnValue);
+
+		// Transactions
+		if (balanceEntity.getTotals() != null && balanceEntity.getTotals().size() > 0) {
+			List<TotalDTO> totalsDto = new ArrayList<TotalDTO>();
+			for (TotalEntity totalEntity : balanceEntity.getTotals()) {
+				TotalDTO totalDto = new TotalDTO();
+				BeanUtils.copyProperties(totalEntity, totalDto);
+				totalsDto.add(totalDto);
+			}
+			returnValue.setTotals(totalsDto);
+		}
+
+		return returnValue;
+	}
+	
 
 	// TOTALS
 

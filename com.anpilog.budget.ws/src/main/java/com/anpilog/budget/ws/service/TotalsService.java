@@ -8,6 +8,7 @@ public interface TotalsService {
 		
 	List<TotalDTO> getTotals();
 	List<TotalDTO> getLastTotals();
+	List<TotalDTO> getOutdatedTotals();
 	TotalDTO getTotal(String id);
 	TotalDTO createTotal(TotalDTO totalDto);
 	void updateTotal(TotalDTO totalDto);

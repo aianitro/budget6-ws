@@ -1,6 +1,7 @@
 package com.anpilog.budget.ws.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.anpilog.budget.ws.exceptions.CouldNotDeleteRecordException;
 import com.anpilog.budget.ws.exceptions.CouldNotUpdateRecordException;
@@ -9,6 +10,7 @@ import com.anpilog.budget.ws.io.dao.DAO;
 import com.anpilog.budget.ws.service.TotalsService;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.ui.model.response.ErrorMessages;
+import com.anpilog.budget.ws.utils.DateUtils;
 import com.anpilog.budget.ws.utils.TotalUtils;
 
 public class TotalsServiceImpl implements TotalsService {
@@ -22,32 +24,41 @@ public class TotalsServiceImpl implements TotalsService {
 
 	@Override
 	public List<TotalDTO> getTotals() {
-		
+
 		List<TotalDTO> totals = null;
-		
+
 		try {
 			this.database.openConnection();
 			totals = this.database.getTotals();
 		} finally {
 			this.database.closeConnection();
 		}
-		
+
 		return totals;
 	}
-	
+
 	@Override
 	public List<TotalDTO> getLastTotals() {
-		
+
 		List<TotalDTO> totals = null;
-		
+
 		try {
 			this.database.openConnection();
 			totals = this.database.getLastTotals();
 		} finally {
 			this.database.closeConnection();
 		}
-		
+
 		return totals;
+	}
+
+	@Override
+	public List<TotalDTO> getOutdatedTotals() {
+
+		return getLastTotals().stream()
+				.filter(t -> !DateUtils.isDateToday(t.getDate()) && t.getAccount().getIsAutomated())
+				.collect(Collectors.toList());
+
 	}
 
 	@Override
@@ -76,14 +87,13 @@ public class TotalsServiceImpl implements TotalsService {
 		// Return back the bank
 		return returnValue;
 	}
-	
 
 	@Override
 	public void updateTotal(TotalDTO totalDto) {
 		try {
 			this.database.openConnection();
 			this.database.updateTotal(totalDto);
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			throw new CouldNotUpdateRecordException(ex.getMessage());
 		} finally {
 			this.database.closeConnection();
@@ -106,11 +116,11 @@ public class TotalsServiceImpl implements TotalsService {
 
 	@Override
 	public void deleteTotal(TotalDTO totalDto) {
-		
+
 		try {
 			this.database.openConnection();
 			this.database.deleteTotal(totalDto);
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			throw new CouldNotDeleteRecordException(ex.getMessage());
 		} finally {
 			this.database.closeConnection();

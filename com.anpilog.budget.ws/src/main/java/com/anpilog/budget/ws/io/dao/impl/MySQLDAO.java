@@ -640,7 +640,9 @@ public class MySQLDAO implements DAO {
 				"  amount,\n" + 
 				"  date,\n" + 
 				"  difference,\n" + 
-				"  all_totals.account_id AS account_id\n" + 
+				"  all_totals.account_id,\n" + 
+				"  all_totals.balance_id,\n" +
+				"  all_totals.status\n" +
 				"FROM b6db.totals all_totals\n" + 
 				"RIGHT JOIN (SELECT\n" + 
 				"  MAX(date) AS max_date,\n" + 

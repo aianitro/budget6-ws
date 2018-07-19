@@ -29,9 +29,6 @@ public class RefreshServiceImpl implements RefreshService {
 	@Override
 	public RefreshStatusDTO refreshAccounts(RefreshRequest requestObject) {	
 		
-		// Creating new Balance entity with 'Pending' status
-		BalanceEntity newBalance = new BalanceEntity();
-		
 		DataHandler dataHandler = new DataHandler();
 		
 		boolean runBankAccounts = requestObject.getRunBankAccounts();

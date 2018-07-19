@@ -2,18 +2,20 @@ package com.anpilog.budget.ws.ui.model.response;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
+
 @XmlRootElement
 public class RefreshResponse {
 
-	private RefreshStatuses refreshStatus;
+	private DataRetrievalStatus status;
 	private String details;
 
-	public RefreshStatuses getStatus() {
-		return refreshStatus;
+	public DataRetrievalStatus getStatus() {
+		return status;
 	}
 
-	public void setStatus(RefreshStatuses refreshStatus) {
-		this.refreshStatus = refreshStatus;
+	public void setStatus(DataRetrievalStatus status) {
+		this.status = status;
 	}
 
 	public String getDetails() {

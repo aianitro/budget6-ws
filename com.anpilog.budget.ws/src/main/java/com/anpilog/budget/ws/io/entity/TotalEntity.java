@@ -32,6 +32,9 @@ public class TotalEntity implements Serializable{
 	private int id;
 	@Convert(converter = LocalDatePersistenceConverter.class)
 	private LocalDate date;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private DataRetrievalStatus status;		
 	@ManyToOne
 	@JoinColumn(name = "account_id")
 	private AccountEntity account;
@@ -40,9 +43,6 @@ public class TotalEntity implements Serializable{
 	private BalanceEntity balance;
 	private Double amount;
 	private Double difference;
-	@Enumerated(EnumType.STRING)
-	@Column(name = "status")
-	private DataRetrievalStatus status;
 	//private String errorMessage;
 	@OneToMany(mappedBy = "total", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<TransactionEntity> transactions;
@@ -61,6 +61,14 @@ public class TotalEntity implements Serializable{
 	
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+	
+	public DataRetrievalStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(DataRetrievalStatus status) {
+		this.status = status;
 	}
 	
 	public AccountEntity getAccount() {

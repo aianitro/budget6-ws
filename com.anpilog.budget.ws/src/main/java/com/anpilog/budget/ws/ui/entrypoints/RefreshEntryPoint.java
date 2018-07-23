@@ -64,6 +64,7 @@ public class RefreshEntryPoint {
 			TotalDTO newTotalDto = new TotalDTO();
 			newTotalDto.setAccount(totalDto.getAccount());
 			newTotalDto.setDate(LocalDate.now());
+			newTotalDto.setStatus(DataRetrievalStatus.PENDING);
 			newTotals.add(newTotalDto);
 		}
 		balanceDto.setTotals(newTotals);

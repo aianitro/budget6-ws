@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
+
 public class TotalDTO implements Serializable{
 
 	private static final long serialVersionUID = -33377695509924566L;
 	
 	private int id;
 	private LocalDate date;
+	private DataRetrievalStatus status;
 	private AccountDTO account;
 	private Double amount;
 	private Double difference;
@@ -29,6 +32,14 @@ public class TotalDTO implements Serializable{
 	
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+	
+	public DataRetrievalStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(DataRetrievalStatus status) {
+		this.status = status;
 	}
 	
 	public AccountDTO getAccount() {

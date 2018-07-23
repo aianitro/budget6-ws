@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.anpilog.budget.ws.io.entity.ReferenceEntity;
 import com.anpilog.budget.ws.io.entity.TransactionEntity;
+import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @XmlRootElement 
@@ -15,6 +16,7 @@ public class TotalResponse {
 	private int id;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate date;
+	private DataRetrievalStatus status;	
 	private ReferenceEntity account;
 	private Double amount;
 	private Double difference;
@@ -34,6 +36,14 @@ public class TotalResponse {
 	
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+	
+	public DataRetrievalStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(DataRetrievalStatus status) {
+		this.status = status;
 	}
 	
 	public ReferenceEntity getAccount() {

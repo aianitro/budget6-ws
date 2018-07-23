@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.anpilog.budget.ws.io.entity.ReferenceEntity;
 import com.anpilog.budget.ws.io.entity.TransactionEntity;
+import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.TotalsService;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
@@ -88,6 +89,7 @@ public class TotalsEntryPoint {
 		// Prepare DTO
 		TotalDTO totalDto = new TotalDTO();
 		BeanUtils.copyProperties(requestObject, totalDto);
+		totalDto.setStatus(DataRetrievalStatus.COMPLETED);
 		
 		// Account
 		AccountDTO accountDto = new AccountDTO();

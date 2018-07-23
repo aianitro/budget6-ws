@@ -185,13 +185,9 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
-	
-	
+
 	// BANKS
 
-	
-	
 	@Override
 	public List<BankDTO> getBanks() {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -245,7 +241,7 @@ public class MySQLDAO implements DAO {
 
 		BankDTO returnValue = new BankDTO();
 		BeanUtils.copyProperties(bankEntity, returnValue);
-		
+
 		// Secret questions
 		if (bankEntity.getSecretQuestions().size() > 0) {
 			Set<SecretQuestionDTO> secretQuestionsDto = new HashSet<SecretQuestionDTO>();
@@ -321,7 +317,7 @@ public class MySQLDAO implements DAO {
 	public void updateBank(BankDTO bankDto) {
 		BankEntity bankEntity = new BankEntity();
 		BeanUtils.copyProperties(bankDto, bankEntity);
-		
+
 		// Secret questions
 		if (bankDto.getSecretQuestions() != null && bankDto.getSecretQuestions().size() > 0) {
 			Set<SecretQuestionEntity> secretQuestionsEntities = new HashSet<SecretQuestionEntity>();
@@ -337,7 +333,7 @@ public class MySQLDAO implements DAO {
 		session.beginTransaction();
 		session.update(bankEntity);
 		session.getTransaction().commit();
-		
+
 		// Secret questions
 		if (bankEntity.getSecretQuestions() != null && bankEntity.getSecretQuestions().size() > 0) {
 			Set<SecretQuestionDTO> secretQuestionsDto = new HashSet<SecretQuestionDTO>();
@@ -355,7 +351,7 @@ public class MySQLDAO implements DAO {
 	public void deleteBank(BankDTO bankDto) {
 		BankEntity bankEntity = new BankEntity();
 		BeanUtils.copyProperties(bankDto, bankEntity);
-		
+
 		// Secret questions
 		if (bankDto.getSecretQuestions() != null && bankDto.getSecretQuestions().size() > 0) {
 			Set<SecretQuestionEntity> secretQuestionsEntities = new HashSet<SecretQuestionEntity>();
@@ -373,13 +369,9 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
-	
-	
 
 	// ACCOUNTS
 
-	
-	
 	@Override
 	public List<AccountDTO> getAccounts(int start, int limit) {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -404,7 +396,7 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
+
 	@Override
 	public List<AccountDTO> getAccountsEnabledOnly(int start, int limit) {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -553,18 +545,17 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
 
 	@Override
 	public BalanceDTO saveBalance(BalanceDTO balanceDto) {
-		
+
 		BalanceEntity balanceEntity = new BalanceEntity();
 		BeanUtils.copyProperties(balanceDto, balanceEntity);
 
-		// Totals		
+		// Totals
 		List<TotalEntity> totalsEntity = new ArrayList<TotalEntity>();
 		for (TotalDTO totalDto : balanceDto.getTotals()) {
-			
+
 			TotalEntity totalEntity = new TotalEntity();
 			BeanUtils.copyProperties(totalDto, totalEntity);
 
@@ -572,12 +563,11 @@ public class MySQLDAO implements DAO {
 			AccountEntity accountEntity = new AccountEntity();
 			BeanUtils.copyProperties(totalDto.getAccount(), accountEntity);
 			totalEntity.setAccount(accountEntity);
-			
+
 			totalEntity.setBalance(balanceEntity);
-			totalsEntity.add(totalEntity);			
+			totalsEntity.add(totalEntity);
 		}
 		balanceEntity.setTotals(totalsEntity);
-		
 
 		session.beginTransaction();
 		session.save(balanceEntity);
@@ -599,7 +589,6 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
 
 	// TOTALS
 
@@ -621,7 +610,7 @@ public class MySQLDAO implements DAO {
 		for (TotalEntity totalEntity : searchResults) {
 			TotalDTO totalDto = new TotalDTO();
 			BeanUtils.copyProperties(totalEntity, totalDto);
-			
+
 			// Account
 			AccountDTO accountDto = new AccountDTO();
 			BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
@@ -711,7 +700,7 @@ public class MySQLDAO implements DAO {
 
 		TotalDTO returnValue = new TotalDTO();
 		BeanUtils.copyProperties(totalEntity, returnValue);
-		
+
 		// Account
 		AccountDTO accountDto = new AccountDTO();
 		BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
@@ -722,19 +711,25 @@ public class MySQLDAO implements DAO {
 
 	@Override
 	public TotalDTO saveTotal(TotalDTO totalDto) {
-		
+
 		TotalEntity totalEntity = new TotalEntity();
 		BeanUtils.copyProperties(totalDto, totalEntity);
-		
+
 		// Account
 		AccountEntity accountEntity = new AccountEntity();
 		BeanUtils.copyProperties(totalDto.getAccount(), accountEntity);
 		totalEntity.setAccount(accountEntity);
 
 		// Transactions
+		List<TransactionEntity> transactionEntities = new ArrayList<TransactionEntity>();
 		if (totalEntity.getTransactions() != null)
-			for (TransactionEntity transactionEntity : totalEntity.getTransactions())
+			for (TransactionDTO transactionDto : totalDto.getTransactions()) {
+				TransactionEntity transactionEntity =  new TransactionEntity();
+				BeanUtils.copyProperties(transactionDto, transactionEntity);
 				transactionEntity.setTotal(totalEntity);
+				transactionEntities.add(transactionEntity);
+			}
+		totalEntity.setTransactions(transactionEntities);
 
 		session.beginTransaction();
 		session.save(totalEntity);
@@ -742,7 +737,7 @@ public class MySQLDAO implements DAO {
 
 		TotalDTO returnValue = new TotalDTO();
 		BeanUtils.copyProperties(totalEntity, returnValue);
-		
+
 		// Account
 		AccountDTO accountDto = new AccountDTO();
 		BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
@@ -766,12 +761,12 @@ public class MySQLDAO implements DAO {
 	public void updateTotal(TotalDTO totalDto) {
 		TotalEntity totalEntity = new TotalEntity();
 		BeanUtils.copyProperties(totalDto, totalEntity);
-		
+
 		// Account
 		AccountEntity accountEntity = new AccountEntity();
 		BeanUtils.copyProperties(totalDto.getAccount(), accountEntity);
 		totalEntity.setAccount(accountEntity);
-		
+
 		// Transactions
 		if (totalDto.getTransactions() != null && totalDto.getTransactions().size() > 0) {
 			List<TransactionEntity> transactionsEntity = new ArrayList<TransactionEntity>();
@@ -800,8 +795,7 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
-	
-	
+
 	// TOTALS
 
 	@Override
@@ -820,7 +814,7 @@ public class MySQLDAO implements DAO {
 
 		List<TransactionDTO> returnValue = new ArrayList<TransactionDTO>();
 		for (TransactionEntity transactionEntity : searchResults) {
-			if(!transactionEntity.getTotal().getAccount().getIsEnabled())
+			if (!transactionEntity.getTotal().getAccount().getIsEnabled())
 				continue;
 			TransactionDTO transactionDto = new TransactionDTO();
 			BeanUtils.copyProperties(transactionEntity, transactionDto);

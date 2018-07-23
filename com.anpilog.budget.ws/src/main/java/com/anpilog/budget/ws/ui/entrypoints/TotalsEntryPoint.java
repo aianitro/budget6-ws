@@ -32,7 +32,7 @@ import com.anpilog.budget.ws.ui.model.response.TotalResponse;
 
 @Path("/totals")
 public class TotalsEntryPoint {
-	
+
 	@Autowired
 	TotalsService totalsService;
 
@@ -47,11 +47,11 @@ public class TotalsEntryPoint {
 		for (TotalDTO totalDto : totals) {
 			TotalResponse totalResponse = new TotalResponse();
 			BeanUtils.copyProperties(totalDto, totalResponse);
-			
-			ReferenceEntity accountReference = new ReferenceEntity();			
+
+			ReferenceEntity accountReference = new ReferenceEntity();
 			BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 			totalResponse.setAccount(accountReference);
-			
+
 			returnValue.add(totalResponse);
 		}
 
@@ -69,14 +69,11 @@ public class TotalsEntryPoint {
 		// Prepare response
 		returnValue = new TotalResponse();
 		BeanUtils.copyProperties(totalDto, returnValue);
-			
+
 		// Account
-		ReferenceEntity accountReference = new ReferenceEntity();			
+		ReferenceEntity accountReference = new ReferenceEntity();
 		BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
-		
-		// To avoid StackOverflowException
-		returnValue.getTransactions().stream().forEach(t -> t.setTotal(null));
 
 		return returnValue;
 	}
@@ -84,32 +81,54 @@ public class TotalsEntryPoint {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public TotalResponse createTotal(CreateTotalRequest requestObject) {		
-		
+	public TotalResponse createTotal(CreateTotalRequest requestObject) {
+
 		// Prepare DTO
 		TotalDTO totalDto = new TotalDTO();
 		BeanUtils.copyProperties(requestObject, totalDto);
 		totalDto.setStatus(DataRetrievalStatus.COMPLETED);
-		
+
 		// Account
 		AccountDTO accountDto = new AccountDTO();
 		BeanUtils.copyProperties(requestObject.getAccount(), accountDto);
-		totalDto.setAccount(accountDto);		
+		totalDto.setAccount(accountDto);
+
+		// Transactions
+		List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
+		for (TransactionEntity transactionEntity : requestObject.getTransactions()) {
+			TransactionDTO transactionDto = new TransactionDTO();
+			BeanUtils.copyProperties(transactionEntity, transactionDto);
+			transactionsDto.add(transactionDto);
+		}
+		totalDto.setTransactions(transactionsDto);
 
 		// Create new total
-		TotalDTO createdTotal = totalsService.createTotal(totalDto);		
+		TotalDTO createdTotal = totalsService.createTotal(totalDto);
 
 		// Prepare response
 		TotalResponse returnValue = new TotalResponse();
 		BeanUtils.copyProperties(createdTotal, returnValue);
-		
+
 		// Account
-		ReferenceEntity accountReference = new ReferenceEntity();			
+		ReferenceEntity accountReference = new ReferenceEntity();
 		BeanUtils.copyProperties(createdTotal.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
-		
-		// To avoid StackOverflowException
-		returnValue.getTransactions().stream().forEach(t -> t.setTotal(null));
+
+		// Transactions
+		List<ReferenceEntity> transactionReferences = new ArrayList<ReferenceEntity>();
+		for (TransactionDTO transactionDto : createdTotal.getTransactions()) {
+			ReferenceEntity transactionReference = new ReferenceEntity();
+			transactionReference.setId(transactionDto.getId());
+			String transactionData = transactionDto.getDate() + "  " + transactionDto.getAmount();
+			if (transactionDto.getDescription() != null)
+				transactionData = transactionData + "  " + transactionDto.getDescription();
+			if (transactionDto.getCategoryStr() != null)
+				transactionData = transactionData + "  " + transactionDto.getCategoryStr();
+
+			transactionReference.setName(transactionData);
+			transactionReferences.add(transactionReference);
+		}
+		returnValue.setTransactions(transactionReferences);
 
 		return returnValue;
 	}
@@ -121,19 +140,19 @@ public class TotalsEntryPoint {
 	public TotalResponse updateTotal(@PathParam("id") String id, UpdateTotalRequest updateRequest) {
 
 		TotalDTO totalDto = totalsService.getTotal(id);
-		
+
 		if (updateRequest.getDate() != null)
 			totalDto.setDate(updateRequest.getDate());
 		if (updateRequest.getAccount() != null) {
 			AccountDTO accountDto = new AccountDTO();
-			BeanUtils.copyProperties(updateRequest.getAccount(), accountDto);	
+			BeanUtils.copyProperties(updateRequest.getAccount(), accountDto);
 			totalDto.setAccount(accountDto);
 		}
 		if (updateRequest.getAmount() != null)
 			totalDto.setAmount(updateRequest.getAmount());
 		if (updateRequest.getDifference() != null)
-			totalDto.setDifference(updateRequest.getDifference());		
-		if (updateRequest.getTransactions()!=null && updateRequest.getTransactions().size() > 0) {
+			totalDto.setDifference(updateRequest.getDifference());
+		if (updateRequest.getTransactions() != null && updateRequest.getTransactions().size() > 0) {
 			List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
 			for (TransactionEntity transactionEntity : updateRequest.getTransactions()) {
 				TransactionDTO transactionDto = new TransactionDTO();
@@ -141,20 +160,20 @@ public class TotalsEntryPoint {
 				transactionsDto.add(transactionDto);
 			}
 			totalDto.setTransactions(transactionsDto);
-		}		
-		
+		}
+
 		// Update total details
 		totalsService.updateTotal(totalDto);
 
 		// Prepare response
 		TotalResponse returnValue = new TotalResponse();
 		BeanUtils.copyProperties(totalDto, returnValue);
-		
+
 		// Account
-		ReferenceEntity accountReference = new ReferenceEntity();			
+		ReferenceEntity accountReference = new ReferenceEntity();
 		BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
-		
+
 		// Transactions
 		if (totalDto.getTransactions().size() > 0) {
 			List<TransactionEntity> transactionsEntity = new ArrayList<TransactionEntity>();
@@ -165,23 +184,23 @@ public class TotalsEntryPoint {
 				transactionEntity.setTotal(null);
 				transactionsEntity.add(transactionEntity);
 			}
-			returnValue.setTransactions(transactionsEntity);
-		}		
+			// returnValue.setTransactions(transactionsEntity);
+		}
 
 		return returnValue;
 	}
-	
+
 	@DELETE
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DeleteTotalResponse deleteTotal(@PathParam("id") String id) {
 		DeleteTotalResponse returnValue = new DeleteTotalResponse();
 		returnValue.setRequestOperation(RequestOperation.DELETE);
-		
+
 		TotalDTO totalDto = totalsService.getTotal(id);
-		
+
 		totalsService.deleteTotal(totalDto);
-		
+
 		returnValue.setResponseStatus(ResponseStatus.SUCCESS);
 
 		return returnValue;

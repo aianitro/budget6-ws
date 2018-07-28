@@ -39,7 +39,7 @@ public class RefreshEntryPoint {
 	public RefreshResponse getRefreshStatus() {
 
 		RefreshResponse refreshResponse = new RefreshResponse();
-		RefreshStatusDTO refreshStatusDTO = refreshService.getRefreshStatus();
+		RefreshStatusDTO refreshStatusDTO = refreshService.getStatus();
 		BeanUtils.copyProperties(refreshStatusDTO, refreshResponse);
 
 		return refreshResponse;
@@ -74,10 +74,9 @@ public class RefreshEntryPoint {
 		BalanceDTO createdBalance = balancesService.createBalance(balanceDto);
 
 		// CREATE A RESPONSE WITH STATS
-
 		RefreshResponse refreshResponse = new RefreshResponse();
-		refreshResponse.setStatus(DataRetrievalStatus.PENDING);
-		refreshResponse.setDetails(newTotals.size() + " accounts to be updated");
+		RefreshStatusDTO refreshStatusDTO = refreshService.getStatus();
+		BeanUtils.copyProperties(refreshStatusDTO, refreshResponse);
 
 		return refreshResponse;
 	}

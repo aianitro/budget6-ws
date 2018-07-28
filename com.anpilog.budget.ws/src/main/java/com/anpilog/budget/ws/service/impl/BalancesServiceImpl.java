@@ -1,6 +1,8 @@
 package com.anpilog.budget.ws.service.impl;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.anpilog.budget.ws.io.dao.DAO;
 import com.anpilog.budget.ws.service.BalancesService;
@@ -16,17 +18,33 @@ public class BalancesServiceImpl implements BalancesService {
 
 	@Override
 	public List<BalanceDTO> getBalances() {
-		
+
 		List<BalanceDTO> balances = null;
-		
+
 		try {
 			this.database.openConnection();
 			balances = this.database.getBalances();
 		} finally {
 			this.database.closeConnection();
 		}
-		
+
 		return balances;
+	}
+
+	@Override
+	public BalanceDTO getLatestBalance() {
+
+		BalanceDTO balance = null;
+
+		try {
+			this.database.openConnection();
+			balance = this.database.getBalances().stream().max(Comparator.comparing(BalanceDTO::getDate))
+					.orElseThrow(NoSuchElementException::new);
+		} finally {
+			this.database.closeConnection();
+		}
+
+		return balance;
 	}
 
 	@Override
@@ -52,6 +70,5 @@ public class BalancesServiceImpl implements BalancesService {
 
 		return returnValue;
 	}
-
 
 }

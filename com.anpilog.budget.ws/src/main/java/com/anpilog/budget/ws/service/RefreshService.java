@@ -5,7 +5,7 @@ import com.anpilog.budget.ws.ui.model.request.RefreshRequest;
 
 public interface RefreshService {
 		
-	RefreshStatusDTO getRefreshStatus();
+	RefreshStatusDTO getStatus();
 	RefreshStatusDTO refreshAccounts(RefreshRequest requestObject);
 
 }

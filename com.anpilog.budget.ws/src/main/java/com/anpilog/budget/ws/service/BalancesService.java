@@ -8,7 +8,8 @@ public interface BalancesService {
 		
 	List<BalanceDTO> getBalances();
 	//List<BalanceDTO> getLastBalances();
-	//BalanceDTO getBalance(String id);
+	BalanceDTO getLatestBalance();
+	//BalanceDTO getBalance(String id);	
 	BalanceDTO createBalance(BalanceDTO balanceDto);
 	//void updateBalance(BalanceDTO balanceDto);
 	//void deleteBalance(BalanceDTO balanceDto);

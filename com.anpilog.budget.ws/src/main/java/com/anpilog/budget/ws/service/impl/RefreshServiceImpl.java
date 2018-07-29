@@ -1,6 +1,5 @@
 package com.anpilog.budget.ws.service.impl;
 
-import com.anpilog.budget.ws.core.DataHandler;
 import com.anpilog.budget.ws.io.dao.DAO;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.BalancesService;
@@ -43,18 +42,16 @@ public class RefreshServiceImpl implements RefreshService {
 	@Override
 	public RefreshStatusDTO refreshAccounts(RefreshRequest requestObject) {
 
-		DataHandler dataHandler = new DataHandler();
-
 		boolean runBankAccounts = requestObject.getRunBankAccounts();
-		String newTotalsResult = dataHandler.getNewTotals(runBankAccounts);
+		//String newTotalsResult = dataHandler.getNewTotals(runBankAccounts);
 
 		// TODO
 		// boolean runCreditScore = requestObject.getRunCreditScore();
 
 		RefreshStatusDTO returnValue = new RefreshStatusDTO();
 		returnValue.setStatus(DataRetrievalStatus.PENDING);
-		returnValue.setDetails("Banks are " + (requestObject.getRunBankAccounts() ? "ON" : "OFF") + ", credit score is "
-				+ (requestObject.getRunCreditScore() ? "ON" : "OFF") + "\\r\\n Accounts: \\r\\n" + newTotalsResult);
+		//returnValue.setDetails("Banks are " + (requestObject.getRunBankAccounts() ? "ON" : "OFF") + ", credit score is "
+		//		+ (requestObject.getRunCreditScore() ? "ON" : "OFF") + "\\r\\n Accounts: \\r\\n" + newTotalsResult);
 
 		return returnValue;
 	}

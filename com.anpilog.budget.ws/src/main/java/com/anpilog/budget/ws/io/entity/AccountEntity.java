@@ -70,6 +70,5 @@ public class AccountEntity implements Serializable{
 	
 	public void setIsEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
-	}
-	
+	}	
 }

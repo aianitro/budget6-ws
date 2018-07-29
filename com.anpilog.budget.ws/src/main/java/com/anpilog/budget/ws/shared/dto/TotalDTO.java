@@ -15,6 +15,7 @@ public class TotalDTO implements Serializable{
 	private DataRetrievalStatus status;
 	private AccountDTO account;
 	private Double amount;
+	private Double previousAmount;
 	private Double difference;
 	private List<TransactionDTO> transactions;
 	
@@ -56,6 +57,14 @@ public class TotalDTO implements Serializable{
 	
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+	
+	public Double getPreviousAmount() {
+		return previousAmount;
+	}
+	
+	public void setPreviousAmount(Double previousAmount) {
+		this.previousAmount = previousAmount;
 	}
 	
 	public Double getDifference() {

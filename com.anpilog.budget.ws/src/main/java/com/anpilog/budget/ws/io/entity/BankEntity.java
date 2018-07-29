@@ -25,11 +25,8 @@ public class BankEntity implements Serializable{
 	private Set<SecretQuestionEntity> secretQuestions;	
 	@OneToMany(mappedBy = "bank", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<AccountEntity> accounts;	
-	/*
-	@OneToOne(cascade = { CascadeType.PERSIST })
-	@JoinColumn(name = "ui_login_details_id", unique = true)
-	private UILoginDetailsEntity uiLoginDetails;
-	*/
+	private String username;
+	private String password;
 	
 	public long getId() {
 		return id;
@@ -71,16 +68,23 @@ public class BankEntity implements Serializable{
 	public void setAccounts(Set<AccountEntity> accounts) {
 		this.accounts = accounts;
 	}
-	
-	
-	/*
-	public UILoginDetailsEntity getUiLoginDetails() {
-		return uiLoginDetails;
+
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUiLoginDetails(UILoginDetailsEntity uiLoginDetails) {
-		this.uiLoginDetails = uiLoginDetails;
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	*/
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	
 	
 }

@@ -14,10 +14,14 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 	<bean id="accountsService" class="com.anpilog.budget.ws.service.impl.AccountsServiceImpl">
 		<constructor-arg ref="mysqlDAO" />
 	</bean>
+	<bean id="balancesService" class="com.anpilog.budget.ws.service.impl.BalancesServiceImpl">
+		<constructor-arg ref="mysqlDAO" />
+	</bean>
 	<bean id="totalsService" class="com.anpilog.budget.ws.service.impl.TotalsServiceImpl">
 		<constructor-arg ref="mysqlDAO" />
 	</bean>
-	<bean id="balancesService" class="com.anpilog.budget.ws.service.impl.BalancesServiceImpl">
+	<bean id="transactionsService"
+		class="com.anpilog.budget.ws.service.impl.TransactionsServiceImpl">
 		<constructor-arg ref="mysqlDAO" />
 	</bean>
 	<bean id="refreshService" class="com.anpilog.budget.ws.service.impl.RefreshServiceImpl">

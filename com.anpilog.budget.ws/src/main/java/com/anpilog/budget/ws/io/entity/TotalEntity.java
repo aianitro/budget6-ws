@@ -42,6 +42,8 @@ public class TotalEntity implements Serializable{
 	@JoinColumn(name = "balance_id")
 	private BalanceEntity balance;
 	private Double amount;
+	@Column(name="previous_amount")
+	private Double previousAmount;
 	private Double difference;
 	//private String errorMessage;
 	@OneToMany(mappedBy = "total", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -93,6 +95,14 @@ public class TotalEntity implements Serializable{
 	
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+	
+	public Double getPreviousAmount() {
+		return previousAmount;
+	}
+	
+	public void setPreviousAmount(Double previousAmount) {
+		this.previousAmount = previousAmount;
 	}
 	
 	public Double getDifference() {

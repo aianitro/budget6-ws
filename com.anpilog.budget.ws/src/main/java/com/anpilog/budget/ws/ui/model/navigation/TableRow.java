@@ -1,5 +1,6 @@
 package com.anpilog.budget.ws.ui.model.navigation;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.openqa.selenium.By;
@@ -31,7 +32,7 @@ public class TableRow extends PageElement {
 
 	}
 
-	public Date getDate() throws PageElementNotFoundException {
+	public LocalDate getDate() throws PageElementNotFoundException {
 		return DateUtils.convertStringToDateByType(lblTransactionDate.getText(), valTransactionDateFormat);
 	}
 

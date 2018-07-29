@@ -14,13 +14,16 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.anpilog.budget.ws.core.WebDriverManager;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.BalancesService;
 import com.anpilog.budget.ws.service.RefreshService;
 import com.anpilog.budget.ws.service.TotalsService;
+import com.anpilog.budget.ws.service.TransactionsService;
 import com.anpilog.budget.ws.shared.dto.BalanceDTO;
 import com.anpilog.budget.ws.shared.dto.RefreshStatusDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
+import com.anpilog.budget.ws.shared.dto.TransactionDTO;
 import com.anpilog.budget.ws.ui.model.request.RefreshRequest;
 import com.anpilog.budget.ws.ui.model.response.RefreshResponse;
 
@@ -33,6 +36,8 @@ public class RefreshEntryPoint {
 	BalancesService balancesService;
 	@Autowired
 	TotalsService totalsService;
+	@Autowired
+	TransactionsService transactionsService;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -63,6 +68,7 @@ public class RefreshEntryPoint {
 		for (TotalDTO totalDto : totalsToUpdate) {
 			TotalDTO newTotalDto = new TotalDTO();
 			newTotalDto.setAccount(totalDto.getAccount());
+			newTotalDto.setPreviousAmount(totalDto.getAmount());
 			newTotalDto.setDate(LocalDate.now());
 			newTotalDto.setStatus(DataRetrievalStatus.PENDING);
 			newTotals.add(newTotalDto);
@@ -72,8 +78,27 @@ public class RefreshEntryPoint {
 		// Save balance
 		@SuppressWarnings("unused")
 		BalanceDTO createdBalance = balancesService.createBalance(balanceDto);
+		
+		// Getting all transactions to exclude
+		// while finding for new totals
+		List<TransactionDTO> allTransactions = transactionsService.getTransactions();
+		
+		// Start fetching new data with Selenium
+		WebDriverManager webDriverManager = new WebDriverManager();
+		webDriverManager.refreshTotals(newTotals, allTransactions);
+		
+		// If all totals successfully refreshed changing status for Balance
+		boolean isRefreshSuccessful = true;
+		for(TotalDTO totalDTO: balanceDto.getTotals())
+			if(totalDTO.getStatus()!=DataRetrievalStatus.COMPLETED) {
+				isRefreshSuccessful = false;
+				break;
+			}
+		if(isRefreshSuccessful)
+			balanceDto.setStatus(DataRetrievalStatus.COMPLETED);
+			
 
-		// CREATE A RESPONSE WITH STATS
+		// Status
 		RefreshResponse refreshResponse = new RefreshResponse();
 		RefreshStatusDTO refreshStatusDTO = refreshService.getStatus();
 		BeanUtils.copyProperties(refreshStatusDTO, refreshResponse);

@@ -1,12 +1,11 @@
 package com.anpilog.budget.ws.utils;
 
 import java.text.DateFormatSymbols;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class DateUtils {
 	
@@ -105,37 +104,33 @@ public class DateUtils {
 		return cal.getTime();
 	}
 	
-	@SuppressWarnings("deprecation")
-	public static Date convertStringToDateByType(String string, int type) {
+	public static LocalDate convertStringToDateByType(String string, int type) {
 		string = string.replace("\n", " ");
-		try {
+		DateTimeFormatter formatter = null;
 			switch (type) {
 			case 0:
-				return new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(string.trim());
+				formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			case 1:
-				return new SimpleDateFormat("MM/dd/yy", Locale.ENGLISH).parse(string.trim());
+				formatter = DateTimeFormatter.ofPattern("MM/dd/yy");
 			case 2:
-				return new SimpleDateFormat("MMM. dd, yyyy", Locale.ENGLISH).parse(string.trim());
+				formatter = DateTimeFormatter.ofPattern("MMM. dd, yyyy");
 			case 3:
-				return new SimpleDateFormat("MMMdd yyyy", Locale.ENGLISH)
-						.parse(string.trim() + " " + Calendar.getInstance().get(Calendar.YEAR));
+				formatter = DateTimeFormatter.ofPattern("MMMdd yyyy");
+						//.parse(string.trim() + " " + Calendar.getInstance().get(Calendar.YEAR));
 			case 4:
-				return new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(string.trim());
+				formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			case 5:
-				return new SimpleDateFormat("MMMMM dd, yyyy", Locale.ENGLISH).parse(string.trim());
+				formatter = DateTimeFormatter.ofPattern("MMMMM dd, yyyy");
 			case 6:
-				return new SimpleDateFormat("MMMMM dd yyyy", Locale.ENGLISH).parse(string.trim());
+				formatter = DateTimeFormatter.ofPattern("MMMMM dd yyyy");
 			case 7:
-				return new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH).parse(string.trim());
+				formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 			case 8:
-				return new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
-						.parse(string.trim() + ", " + new Date().getYear());
+				formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+						//.parse(string.trim() + ", " + new Date().getYear());
 			}
-		} catch (ParseException ex) {
-			ex.printStackTrace();
-		} 
 		
-		return null;
+		return LocalDate.parse(string, formatter);
 	}
 	
 	public static String convertDateToStringType1(Date date) {

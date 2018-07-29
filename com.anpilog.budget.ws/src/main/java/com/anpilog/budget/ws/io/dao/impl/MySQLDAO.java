@@ -639,8 +639,9 @@ public class MySQLDAO implements DAO {
 		// Query
 		String sql = "SELECT\n" + 
 				"  id,\n" + 
-				"  amount,\n" + 
 				"  date,\n" + 
+				"  amount,\n" + 
+				"  previous_amount,\n" + 				
 				"  difference,\n" + 
 				"  all_totals.account_id,\n" + 
 				"  all_totals.balance_id,\n" +

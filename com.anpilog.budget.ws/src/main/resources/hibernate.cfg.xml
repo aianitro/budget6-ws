@@ -20,7 +20,6 @@
 
 		<mapping class="com.anpilog.budget.ws.io.entity.SecretQuestionEntity" />
 		<mapping class="com.anpilog.budget.ws.io.entity.UserEntity" />
-		<mapping class="com.anpilog.budget.ws.io.entity.UILoginDetailsEntity" />
 		<mapping class="com.anpilog.budget.ws.io.entity.BankEntity" />
 		<mapping class="com.anpilog.budget.ws.io.entity.AccountEntity" />
 		<mapping class="com.anpilog.budget.ws.io.entity.TotalEntity" />

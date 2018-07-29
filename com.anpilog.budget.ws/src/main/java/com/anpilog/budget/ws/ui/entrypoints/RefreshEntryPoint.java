@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.anpilog.budget.ws.core.WebDriverManager;
+import com.anpilog.budget.ws.exceptions.ConfigurationException;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.BalancesService;
 import com.anpilog.budget.ws.service.RefreshService;
@@ -53,7 +54,7 @@ public class RefreshEntryPoint {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public RefreshResponse refreshAccounts(RefreshRequest requestObject) {
+	public RefreshResponse refreshAccounts(RefreshRequest requestObject) throws ConfigurationException {
 
 		// Check how many accounts need refresh - quit fast if 0
 		List<TotalDTO> totalsToUpdate = totalsService.getOutdatedTotals();

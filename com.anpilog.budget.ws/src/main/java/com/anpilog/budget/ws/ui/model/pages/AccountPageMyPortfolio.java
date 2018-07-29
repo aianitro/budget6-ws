@@ -8,6 +8,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.anpilog.budget.ws.exceptions.ConfigurationException;
 import com.anpilog.budget.ws.exceptions.PageElementNotFoundException;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
@@ -34,8 +35,13 @@ public class AccountPageMyPortfolio extends AccountPage {
 	// Transactions
 	private Switch swtPeriod;
 
-	public AccountPageMyPortfolio(AccountDTO account) {
+	public AccountPageMyPortfolio(AccountDTO account) throws ConfigurationException {
 		super(account);
+		valUsername = account.getBank().getUsername();
+		valPassword = account.getBank().getPassword();
+		if (valUsername == null || valUsername.trim().equals("") || valPassword == null
+				|| valPassword.trim().equals(""))
+			throw new ConfigurationException("Username/password is not configured for " + account.getBank().getName());
 	}
 
 	public void gotoHomePage() {
@@ -45,9 +51,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 	public void refreshLocators() {
 		// Login
 		fldUsername = new Field("username", By.id("onlineId1"), getWebdriver(), getWebdriver());
-		valUsername = account.getBank().getUsername();
 		fldPassword = new Field("password", By.id("passcode1"), getWebdriver(), getWebdriver());
-		valPassword = account.getBank().getPassword();
 		btnLogin = new Button("login", By.id("hp-sign-in-btn"), getWebdriver(), getWebdriver());
 		btnLogout = new Button("logout", By.linkText("Sign Out"), getWebdriver(), getWebdriver());
 
@@ -83,9 +87,9 @@ public class AccountPageMyPortfolio extends AccountPage {
 		if (totalsList == null) {
 			logger.info("Capturing all totals on 'My Portfolio' page...");
 			// secret question
-			if (SeleniumUtils.isSecretQuestionShown(webDriver))
-				if (!super.answerSecretQuestion())
-					return null;
+			// if (SeleniumUtils.isSecretQuestionShown(webDriver))
+			// if (!super.answerSecretQuestion())
+			// return null;
 
 			// navigate to MyPortfolio page if it's not there yet
 			if (!webDriver.getWebDriver().getTitle().contains("My Portfolio")) {
@@ -304,8 +308,8 @@ public class AccountPageMyPortfolio extends AccountPage {
 			if (!isTransactionExist(prevTransactions, tr.getDate(), tr.getAmount())
 					&& !isTransactionExist(currentTransactions, tr.getDate(), tr.getAmount())) {
 
-				currentTransactions.add(new TransactionDTO(total, tr.getDate(), tr.getDescription(), tr.getAmount(),
-						tr.getCategory()));
+				currentTransactions.add(
+						new TransactionDTO(total, tr.getDate(), tr.getDescription(), tr.getAmount(), tr.getCategory()));
 
 				// Refreshing remaining difference
 				difference = NumUtils.roundDouble(difference - tr.getAmount());

@@ -52,7 +52,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 		// Login
 		fldUsername = new Field("username", By.id("onlineId1"), getWebdriver(), getWebdriver());
 		fldPassword = new Field("password", By.id("passcode1"), getWebdriver(), getWebdriver());
-		btnLogin = new Button("login", By.id("hp-sign-in-btn"), getWebdriver(), getWebdriver());
+		btnLogin = new Button("login", By.id("signIn"), getWebdriver(), getWebdriver());
 		btnLogout = new Button("logout", By.linkText("Sign Out"), getWebdriver(), getWebdriver());
 
 		// Navigation

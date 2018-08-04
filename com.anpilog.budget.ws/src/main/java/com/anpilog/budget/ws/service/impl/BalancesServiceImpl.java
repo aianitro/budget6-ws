@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.anpilog.budget.ws.exceptions.CouldNotUpdateRecordException;
 import com.anpilog.budget.ws.io.dao.DAO;
 import com.anpilog.budget.ws.service.BalancesService;
 import com.anpilog.budget.ws.shared.dto.BalanceDTO;
@@ -69,6 +70,18 @@ public class BalancesServiceImpl implements BalancesService {
 		}
 
 		return returnValue;
+	}
+	
+	@Override
+	public void updateBalance(BalanceDTO balanceDto) {
+		try {
+			this.database.openConnection();
+			this.database.updateBalance(balanceDto);
+		} catch (Exception ex) {
+			throw new CouldNotUpdateRecordException(ex.getMessage());
+		} finally {
+			this.database.closeConnection();
+		}
 	}
 
 }

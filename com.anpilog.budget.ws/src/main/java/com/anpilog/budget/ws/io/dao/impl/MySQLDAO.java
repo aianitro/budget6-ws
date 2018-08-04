@@ -582,12 +582,56 @@ public class MySQLDAO implements DAO {
 			for (TotalEntity totalEntity : balanceEntity.getTotals()) {
 				TotalDTO totalDto = new TotalDTO();
 				BeanUtils.copyProperties(totalEntity, totalDto);
+				
+				AccountDTO accountDTO = new AccountDTO();
+				BeanUtils.copyProperties(totalEntity.getAccount(), accountDTO);
+				totalDto.setAccount(accountDTO);
+				
 				totalsDto.add(totalDto);
 			}
 			returnValue.setTotals(totalsDto);
 		}
 
 		return returnValue;
+	}
+	
+	@Override
+	public void updateBalance(BalanceDTO balanceDto) {
+
+		BalanceEntity balanceEntity = new BalanceEntity();
+		BeanUtils.copyProperties(balanceDto, balanceEntity);
+
+		// Totals
+		List<TotalEntity> totalsEntity = new ArrayList<TotalEntity>();
+		for (TotalDTO totalDto : balanceDto.getTotals()) {
+
+			TotalEntity totalEntity = new TotalEntity();
+			BeanUtils.copyProperties(totalDto, totalEntity);
+			
+			if (totalDto.getTransactions() != null && totalDto.getTransactions().size() > 0) {
+				List<TransactionEntity> transactionsEntity = new ArrayList<TransactionEntity>();
+				for (TransactionDTO transactionDto : totalDto.getTransactions()) {
+					TransactionEntity transactionEntity = new TransactionEntity();
+					BeanUtils.copyProperties(transactionDto, transactionEntity);
+					transactionEntity.setTotal(totalEntity);
+					transactionsEntity.add(transactionEntity);
+				}
+				totalEntity.setTransactions(transactionsEntity);
+			}
+
+			// Account
+			AccountEntity accountEntity = new AccountEntity();
+			BeanUtils.copyProperties(totalDto.getAccount(), accountEntity);
+			totalEntity.setAccount(accountEntity);
+
+			totalEntity.setBalance(balanceEntity);
+			totalsEntity.add(totalEntity);
+		}
+		balanceEntity.setTotals(totalsEntity);
+
+		session.beginTransaction();
+		session.update(balanceEntity);
+		session.getTransaction().commit();
 	}
 
 	// TOTALS
@@ -638,7 +682,7 @@ public class MySQLDAO implements DAO {
 		
 		// Query
 		String sql = "SELECT\n" + 
-				"  id,\n" + 
+				"  all_totals.id,\n" + 
 				"  date,\n" + 
 				"  amount,\n" + 
 				"  previous_amount,\n" + 				
@@ -646,11 +690,16 @@ public class MySQLDAO implements DAO {
 				"  all_totals.account_id,\n" + 
 				"  all_totals.balance_id,\n" +
 				"  all_totals.status\n" +
-				"FROM b6db.totals all_totals\n" + 
-				"RIGHT JOIN (SELECT\n" + 
+				"FROM b6db.totals all_totals\n" +
+				"INNER JOIN (SELECT\n" + 
+				"  id\n" + 
+				"FROM b6db.accounts\n"+
+				"WHERE isEnabled=TRUE) active_accounts\n" + 
+				"  ON all_totals.account_id = active_accounts.id\n" +				
+				"INNER JOIN (SELECT\n" + 
 				"  MAX(date) AS max_date,\n" + 
 				"  account_id\n" + 
-				"FROM b6db.totals\n" + 
+				"FROM b6db.totals\n" +
 				"GROUP BY account_id) last_totals\n" + 
 				"  ON all_totals.account_id = last_totals.account_id\n" + 
 				"  AND all_totals.date = last_totals.max_date";

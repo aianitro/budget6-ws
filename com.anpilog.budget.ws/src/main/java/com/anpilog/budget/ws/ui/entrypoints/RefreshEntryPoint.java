@@ -14,13 +14,13 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.anpilog.budget.ws.core.WebDriverManager;
 import com.anpilog.budget.ws.exceptions.ConfigurationException;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.BalancesService;
 import com.anpilog.budget.ws.service.RefreshService;
 import com.anpilog.budget.ws.service.TotalsService;
 import com.anpilog.budget.ws.service.TransactionsService;
+import com.anpilog.budget.ws.service.impl.SeleniumServiceImpl;
 import com.anpilog.budget.ws.shared.dto.BalanceDTO;
 import com.anpilog.budget.ws.shared.dto.RefreshStatusDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
@@ -77,7 +77,6 @@ public class RefreshEntryPoint {
 		balanceDto.setTotals(newTotals);
 
 		// Save balance
-		@SuppressWarnings("unused")
 		BalanceDTO createdBalance = balancesService.createBalance(balanceDto);
 		
 		// Getting all transactions to exclude
@@ -85,19 +84,20 @@ public class RefreshEntryPoint {
 		List<TransactionDTO> allTransactions = transactionsService.getTransactions();
 		
 		// Start fetching new data with Selenium
-		WebDriverManager webDriverManager = new WebDriverManager();
-		webDriverManager.refreshTotals(newTotals, allTransactions);
+		SeleniumServiceImpl seleniumService = new SeleniumServiceImpl();
+		seleniumService.refreshTotals(createdBalance.getTotals(), allTransactions);
 		
 		// If all totals successfully refreshed changing status for Balance
 		boolean isRefreshSuccessful = true;
 		for(TotalDTO totalDTO: balanceDto.getTotals())
-			if(totalDTO.getStatus()!=DataRetrievalStatus.COMPLETED) {
+			if(totalDTO.getStatus()!=DataRetrievalStatus.COMPLETED) {			
 				isRefreshSuccessful = false;
 				break;
 			}
 		if(isRefreshSuccessful)
 			balanceDto.setStatus(DataRetrievalStatus.COMPLETED);
-			
+		
+		balancesService.updateBalance(createdBalance);			
 
 		// Status
 		RefreshResponse refreshResponse = new RefreshResponse();

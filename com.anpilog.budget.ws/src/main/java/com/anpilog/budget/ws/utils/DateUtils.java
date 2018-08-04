@@ -110,24 +110,33 @@ public class DateUtils {
 			switch (type) {
 			case 0:
 				formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				break;
 			case 1:
 				formatter = DateTimeFormatter.ofPattern("MM/dd/yy");
+				break;
 			case 2:
 				formatter = DateTimeFormatter.ofPattern("MMM. dd, yyyy");
+				break;
 			case 3:
 				formatter = DateTimeFormatter.ofPattern("MMMdd yyyy");
 						//.parse(string.trim() + " " + Calendar.getInstance().get(Calendar.YEAR));
+				break;
 			case 4:
 				formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+				break;
 			case 5:
 				formatter = DateTimeFormatter.ofPattern("MMMMM dd, yyyy");
+				break;
 			case 6:
 				formatter = DateTimeFormatter.ofPattern("MMMMM dd yyyy");
+				break;
 			case 7:
 				formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+				break;
 			case 8:
 				formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 						//.parse(string.trim() + ", " + new Date().getYear());
+				break;
 			}
 		
 		return LocalDate.parse(string, formatter);

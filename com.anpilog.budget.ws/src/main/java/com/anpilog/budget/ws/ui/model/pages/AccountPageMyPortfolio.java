@@ -264,7 +264,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 					continue;
 
 				// Parsing row
-				TableRow tr = new TableRow("transaction row", By.xpath("./td/b"), 1, By.xpath("./td[4]/div/span"),
+				TableRow tr = new TableRow("transaction row", By.xpath("./td/b"), 4, By.xpath("./td[4]/div/span"),
 						By.xpath("./td[2]/div"), By.xpath("./td[3]/div"), row, getWebdriver());
 
 				if (!isTransactionExist(prevTransactions, tr.getDate(), tr.getAmount())) {

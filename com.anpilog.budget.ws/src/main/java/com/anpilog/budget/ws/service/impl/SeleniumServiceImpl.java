@@ -131,14 +131,21 @@ public class SeleniumServiceImpl implements SeleniumService {
 				total.setAmount(amount);
 				total.setDifference(difference);
 				logger.info("{}, total: {}", accountDto.getName(), amount);
-				if (difference != null && difference != 0.00) {
-					logger.info("{}, difference: {}", accountDto.getName(), difference);
-					findTransactionsForDifference(total, accountPage, prevTransactions);
-				}
 
-				if (total.getTransactions() != null && total.getTransactions().size() > 0) {
+				if (difference == 0.0) {
 					total.setStatus(DataRetrievalStatus.COMPLETED);
 					isDownloaded = true;
+				} else {
+					// Looking for transactions
+					if (difference != null && difference != 0.00) {
+						logger.info("{}, difference: {}", accountDto.getName(), difference);
+						findTransactionsForDifference(total, accountPage, prevTransactions);
+					}
+
+					if (total.getTransactions() != null && total.getTransactions().size() > 0) {
+						total.setStatus(DataRetrievalStatus.COMPLETED);
+						isDownloaded = true;
+					}
 				}
 			}
 			// });

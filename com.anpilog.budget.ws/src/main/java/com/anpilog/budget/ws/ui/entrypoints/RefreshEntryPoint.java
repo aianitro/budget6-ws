@@ -89,7 +89,7 @@ public class RefreshEntryPoint {
 		
 		// If all totals successfully refreshed changing status for Balance
 		boolean isRefreshSuccessful = true;
-		for(TotalDTO totalDTO: balanceDto.getTotals())
+		for(TotalDTO totalDTO: createdBalance.getTotals())
 			if(totalDTO.getStatus()!=DataRetrievalStatus.COMPLETED) {			
 				isRefreshSuccessful = false;
 				break;

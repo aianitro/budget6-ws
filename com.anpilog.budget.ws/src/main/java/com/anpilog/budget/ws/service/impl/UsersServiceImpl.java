@@ -18,6 +18,9 @@ import com.anpilog.budget.ws.utils.UserUtils;
 public class UsersServiceImpl implements UsersService {
 
 	DAO database;
+	
+	public UsersServiceImpl() {
+	}
 
 	public UsersServiceImpl(DAO database) {
 		this.database = database;

@@ -20,7 +20,7 @@ import com.anpilog.budget.ws.utils.SeleniumUtils;
 
 //import com.dashboard.budget.DAO.PicturesStorage;
 
-public class UberWebDriver implements Config, SearchContext {
+public class UberWebDriver implements SearchContext {
 
 	protected static Logger logger = LoggerFactory.getLogger(UberWebDriver.class);
 
@@ -40,7 +40,7 @@ public class UberWebDriver implements Config, SearchContext {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.wait = new WebDriverWait(this.webDriver, timeout);
+		this.wait = new WebDriverWait(this.webDriver, 30);
 	}
 
 	public void get(String url) {

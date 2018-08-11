@@ -5,7 +5,6 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.anpilog.budget.ws.io.entity.SecretQuestionEntity;
-import com.anpilog.budget.ws.io.entity.UILoginDetailsEntity;
 
 @XmlRootElement 
 public class BankResponse {
@@ -14,7 +13,6 @@ public class BankResponse {
 	private String name;
 	private Boolean isEnabled;
 	private Set<SecretQuestionEntity> secretQuestions;	
-	private UILoginDetailsEntity uiLoginDetails;
 	
 	public long getId() {
 		return id;
@@ -46,14 +44,6 @@ public class BankResponse {
 	
 	public void setSecretQuestions(Set<SecretQuestionEntity> secretQuestions) {
 		this.secretQuestions = secretQuestions;
-	}
-	
-	public UILoginDetailsEntity getUiLoginDetails() {
-		return uiLoginDetails;
-	}
-	
-	public void setUiLoginDetails(UILoginDetailsEntity uiLoginDetails) {
-		this.uiLoginDetails = uiLoginDetails;
 	}
 	
 }

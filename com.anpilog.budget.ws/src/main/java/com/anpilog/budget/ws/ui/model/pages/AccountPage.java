@@ -7,7 +7,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.anpilog.budget.ws.core.Config;
 import com.anpilog.budget.ws.core.UberWebDriver;
 import com.anpilog.budget.ws.exceptions.PageElementNotFoundException;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
@@ -19,7 +18,7 @@ import com.anpilog.budget.ws.ui.model.navigation.Field;
 import com.anpilog.budget.ws.ui.model.navigation.Switch;
 import com.anpilog.budget.ws.ui.model.navigation.TableRow;
 
-public abstract class AccountPage implements Config, Page {
+public abstract class AccountPage implements Page {
 
 	protected static Logger logger = LoggerFactory.getLogger(AccountPage.class);
 

@@ -95,7 +95,7 @@ public class RefreshEntryPoint {
 				break;
 			}
 		if(isRefreshSuccessful)
-			balanceDto.setStatus(DataRetrievalStatus.COMPLETED);
+			createdBalance.setStatus(DataRetrievalStatus.COMPLETED);
 		
 		balancesService.updateBalance(createdBalance);			
 

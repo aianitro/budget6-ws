@@ -10,6 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.anpilog.budget.ws.exceptions.ConfigurationException;
 import com.anpilog.budget.ws.exceptions.PageElementNotFoundException;
+import com.anpilog.budget.ws.io.entity.SecretQuestionEntity;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
@@ -86,10 +87,11 @@ public class AccountPageMyPortfolio extends AccountPage {
 		// first check if table of totals already captured
 		if (totalsList == null) {
 			logger.info("Capturing all totals on 'My Portfolio' page...");
+
 			// secret question
-			// if (SeleniumUtils.isSecretQuestionShown(webDriver))
-			// if (!super.answerSecretQuestion())
-			// return null;
+			if (SeleniumUtils.isSecretQuestionShown(webDriver))
+				if (!answerSecretQuestion())
+					return null;
 
 			// navigate to MyPortfolio page if it's not there yet
 			if (!webDriver.getWebDriver().getTitle().contains("My Portfolio")) {
@@ -371,6 +373,38 @@ public class AccountPageMyPortfolio extends AccountPage {
 		public String toString() {
 			return "mpTotal [id=" + id + ", locator=" + locator + ", amount=" + amount + "]";
 		}
+	}
+
+	private boolean answerSecretQuestion() {
+		
+		logger.info("Answering secret question...");
+
+		fldSecretQuestion = new Field("secret question", By.cssSelector("label"), getWebdriver(), getWebdriver());
+		fldSecretAnswer = new Field("secret answer", By.id("tlpvt-challenge-answer"), getWebdriver(), getWebdriver());
+		btnSecretSubmit = new Button("submit secret answer", By.id("verify-cq-submit"), getWebdriver(), getWebdriver());
+		btnRecognizeNextTime = new Button("pre submit secret answer", By.id("yes-recognize"), getWebdriver(),
+				getWebdriver());
+
+		try {
+			String secretQuestion = fldSecretQuestion.getText();
+			if (secretQuestion == null)
+				return true; // no secret question shown on the page
+
+			SecretQuestionEntity secretAnswer = account.getBank().getSecretQuestions().stream()
+					.filter(sq -> sq.getQuestion().equals(secretQuestion)).findFirst().orElse(null);
+			if (secretAnswer == null)
+				logger.error("Cannot find answer for question {}", secretQuestion);
+			else
+				fldSecretAnswer.setText(secretAnswer.getAnswer());
+
+			btnRecognizeNextTime.clickIfAvailable();
+			btnSecretSubmit.click();
+		} catch (PageElementNotFoundException e) {
+			logger.error(e.getLocalizedMessage());
+			return false;
+		}
+
+		return true;
 	}
 
 	public void quit() {

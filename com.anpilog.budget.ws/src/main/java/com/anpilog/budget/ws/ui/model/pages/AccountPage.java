@@ -45,6 +45,12 @@ public abstract class AccountPage implements Config, Page {
 	protected Button btnTransactionsPage;
 	protected TableRow trTransaction;
 	protected Switch swtPeriod;
+	
+	// Secret questions
+	protected Field fldSecretQuestion;
+	protected Field fldSecretAnswer;
+	protected Button btnSecretSubmit;
+	protected Button btnRecognizeNextTime;
 
 	public AccountPage(AccountDTO accountDto) {
 		this.account = accountDto;
@@ -88,10 +94,6 @@ public abstract class AccountPage implements Config, Page {
 	public int getScore() throws PageElementNotFoundException {
 		return 0;
 	}
-
-	//protected boolean answerSecretQuestion() {
-		//return pageQuestions.answerSecretQuestion();
-	//}
 
 	@Override
 	public UberWebDriver getWebdriver() {

@@ -325,7 +325,7 @@ public class MySQLDAO implements DAO {
 				SecretQuestionEntity secretQuestionsEntity = new SecretQuestionEntity();
 				BeanUtils.copyProperties(secretQuestionDto, secretQuestionsEntity);
 				secretQuestionsEntity.setBank(bankEntity);
-				secretQuestionsEntities.add(secretQuestionsEntity);				
+				secretQuestionsEntities.add(secretQuestionsEntity);
 			}
 			bankEntity.setSecretQuestions(secretQuestionsEntities);
 		}
@@ -359,7 +359,7 @@ public class MySQLDAO implements DAO {
 				SecretQuestionEntity secretQuestionsEntity = new SecretQuestionEntity();
 				BeanUtils.copyProperties(secretQuestionDto, secretQuestionsEntity);
 				secretQuestionsEntity.setBank(bankEntity);
-				secretQuestionsEntities.add(secretQuestionsEntity);				
+				secretQuestionsEntities.add(secretQuestionsEntity);
 			}
 			bankEntity.setSecretQuestions(secretQuestionsEntities);
 		}
@@ -507,7 +507,34 @@ public class MySQLDAO implements DAO {
 		session.getTransaction().commit();
 
 	}
-	
+
+	// SECRET QUESTIONS
+
+	@Override
+	public List<SecretQuestionDTO> getSecretQuestions() {
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+
+		// Create Criteria against particular persistent class
+		CriteriaQuery<SecretQuestionEntity> criteria = cb.createQuery(SecretQuestionEntity.class);
+
+		// Query
+		Root<SecretQuestionEntity> root = criteria.from(SecretQuestionEntity.class);
+		criteria.select(root);
+
+		// Fetch single result
+		List<SecretQuestionEntity> searchResults = session.createQuery(criteria).getResultList();
+
+		List<SecretQuestionDTO> returnValue = new ArrayList<SecretQuestionDTO>();
+		for (SecretQuestionEntity secretQuestionEntity : searchResults) {
+			SecretQuestionDTO secretQuestionDto = new SecretQuestionDTO();
+			BeanUtils.copyProperties(secretQuestionEntity, secretQuestionDto);
+
+			returnValue.add(secretQuestionDto);
+		}
+
+		return returnValue;
+	}
+
 	// BALANCES
 
 	@Override

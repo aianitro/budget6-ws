@@ -82,7 +82,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 		}
 	}
 
-	public Double getTotal() {
+	public Double getTotal() throws ConfigurationException {
 
 		// first check if table of totals already captured
 		if (totalsList == null) {
@@ -192,6 +192,11 @@ public class AccountPageMyPortfolio extends AccountPage {
 				return null;
 			}
 		}
+
+		// TODO validation on AccountEntryPoint
+		if (account.getMyPortfolioId() == null)
+			throw new ConfigurationException(
+					"Unable to find total for '" + account.getName() + "' due to missed 'My Portfolio ID' value in DB");
 
 		mpTotal totalRow = totalsList.stream().filter(t -> t.getId().contains(account.getMyPortfolioId())).findFirst()
 				.orElse(null);
@@ -376,7 +381,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 	}
 
 	private boolean answerSecretQuestion() {
-		
+
 		logger.info("Answering secret question...");
 
 		fldSecretQuestion = new Field("secret question", By.cssSelector("label"), getWebdriver(), getWebdriver());

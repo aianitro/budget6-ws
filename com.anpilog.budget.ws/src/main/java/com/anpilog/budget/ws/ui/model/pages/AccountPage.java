@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.anpilog.budget.ws.core.UberWebDriver;
+import com.anpilog.budget.ws.exceptions.ConfigurationException;
 import com.anpilog.budget.ws.exceptions.PageElementNotFoundException;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
@@ -80,7 +81,7 @@ public abstract class AccountPage implements Page {
 
 	public abstract DataRetrievalStatus login();
 
-	public abstract Double getTotal() throws PageElementNotFoundException;
+	public abstract Double getTotal() throws PageElementNotFoundException, ConfigurationException;
 
 	public abstract void findTransactions(TotalDTO totalDto, List<TransactionDTO> prevTransactions) throws PageElementNotFoundException;
 

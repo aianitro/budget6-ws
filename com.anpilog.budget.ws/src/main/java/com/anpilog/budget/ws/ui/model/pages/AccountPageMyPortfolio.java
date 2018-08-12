@@ -415,9 +415,9 @@ public class AccountPageMyPortfolio extends AccountPage {
 	public void quit() {
 		try {
 			btnLogout.click();
-			logger.info("Account page {} was closed", account.getName());
+			logger.info("Bank page {} was closed", account.getBank().getName());
 		} catch (PageElementNotFoundException | WebDriverException e) {
-			logger.error("Account page {} was not closed properly", account.getName());
+			logger.error("Bank page {} was not closed properly", account.getBank().getName());
 		}
 
 		webDriver.quit();

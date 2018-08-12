@@ -2,7 +2,9 @@
 package com.anpilog.budget.ws.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.anpilog.budget.ws.exceptions.ConfigurationException;
 import com.anpilog.budget.ws.exceptions.PageElementNotFoundException;
+import com.anpilog.budget.ws.io.entity.BankEntity;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.SeleniumService;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
@@ -73,79 +76,87 @@ public class SeleniumServiceImpl implements SeleniumService {
 		logger.info("Number of accounts to run: {}", totalsToRefresh.size());
 		totalsToRefresh.stream().forEach(a -> logger.info(a.getAccount().getName()));
 
-		// Extract list of drivers
-		List<List<String>> drivers = new ArrayList<List<String>>();
+		// Compiling map of totals grouped by bank
+		Map<BankEntity, List<TotalDTO>> totalsByBank = new HashMap<BankEntity, List<TotalDTO>>();
 
-		// Group accounts list by banks
-		totalsToRefresh.stream().filter(a -> a.getAccount().getBank() != null).forEach(a -> {
-			List<String> driver = new ArrayList<String>();
-			driver.add(a.getAccount().getBank().getName());
-			if (!drivers.contains(driver))
-				drivers.add(driver);
-		});
+		// Group totals list by banks
+		for (TotalDTO total : totalsToRefresh) {
+			BankEntity bank = total.getAccount().getBank();
+			List<TotalDTO> totals = totalsByBank.get(bank);
+			if (totals == null) {
+				totals = new ArrayList<TotalDTO>();
+				totalsByBank.put(bank, totals);
+			}
+			totals.add(total);
+		}
 
 		// ExecutorService executor = Executors.newFixedThreadPool(nubmberOfThreads,
 		// new ThreadFactoryBuilder().setNameFormat("%d").build());
 
-		// for (List<String> driver : drivers) {
-		// executor.submit(() -> {
-		// totalsToRefresh.stream().filter(a ->
-		// a.getAccount().getBank()==driver).forEach(total -> {
-		for (TotalDTO total : totalsToRefresh) {
-			AccountDTO accountDto = total.getAccount();
-			Thread.currentThread().setName("Bank accounts ("
-					+ SeleniumUtils.getThreadNumber(Thread.currentThread().getName()) + "): " + accountDto.getName());
-			int attempt = 0;
-			Double amount = null;
-			boolean isDownloaded = false;
-			while (!isDownloaded && attempt < 3) {
-				logger.info("{}: attempt #{}", accountDto.getName(), ++attempt);
-				if (accountPage == null) {
-					accountPage = getAccountPage(accountDto);
-					accountPage.gotoHomePage();
-					DataRetrievalStatus loginStatus = accountPage.login();
-					if (loginStatus != DataRetrievalStatus.COMPLETED) {
-						total.setStatus(loginStatus);
-						logger.error("Unsuccessful login to: {}", accountDto.getName());
+		for (Map.Entry<BankEntity, List<TotalDTO>> totalsByBankEntry : totalsByBank.entrySet()) {
+			// executor.submit(() -> {
+			// totalsToRefresh.stream().filter(a ->
+			// a.getAccount().getBank()==driver).forEach(total -> {
+			for (TotalDTO total : totalsByBankEntry.getValue()) {
+				// if (total.getAccount().getBank() != accountsByBank)
+				// continue;
+
+				AccountDTO accountDto = total.getAccount();
+				Thread.currentThread()
+						.setName("Bank accounts (" + SeleniumUtils.getThreadNumber(Thread.currentThread().getName())
+								+ "): " + accountDto.getName());
+				int attempt = 0;
+				Double amount = null;
+				boolean isDownloaded = false;
+				while (!isDownloaded && attempt < 3) {
+					logger.info("{}: attempt #{}", accountDto.getName(), ++attempt);
+					if (accountPage == null) {
+						accountPage = getAccountPage(accountDto);
+						accountPage.gotoHomePage();
+						DataRetrievalStatus loginStatus = accountPage.login();
+						if (loginStatus != DataRetrievalStatus.COMPLETED) {
+							total.setStatus(loginStatus);
+							logger.error("Unsuccessful login to: {}", accountDto.getName());
+							accountPage.quit();
+							accountPage = null;
+							isDownloaded = true;
+							continue;
+						}
+					} else
+						accountPage.setAccount(accountDto);
+
+					try {
+						amount = accountPage.getTotal();
+					} catch (PageElementNotFoundException ex) {
+						logger.error(ex.getLocalizedMessage());
+						logger.error("Error while getting total for: {}", accountDto.getName());
+						total.setStatus(DataRetrievalStatus.NAVIGATION_BROKEN);
 						accountPage.quit();
 						accountPage = null;
-						isDownloaded = true;
 						continue;
 					}
-				} else
-					accountPage.setAccount(accountDto);
 
-				try {
-					amount = accountPage.getTotal();
-				} catch (PageElementNotFoundException ex) {
-					logger.error(ex.getLocalizedMessage());
-					logger.error("Error while getting total for: {}", accountDto.getName());
-					total.setStatus(DataRetrievalStatus.NAVIGATION_BROKEN);
-					accountPage.quit();
-					accountPage = null;
-					continue;
-				}
+					Double prevTotal = total.getPreviousAmount();
+					Double difference = amount - prevTotal;
+					total.setAmount(amount);
+					total.setDifference(difference);
+					logger.info("{}, total: {}, difference: {}", accountDto.getName(), amount, difference);
 
-				Double prevTotal = total.getPreviousAmount();
-				Double difference = amount - prevTotal;
-				total.setAmount(amount);
-				total.setDifference(difference);
-				logger.info("{}, total: {}, difference: {}", accountDto.getName(), amount, difference);
-
-				if (difference == 0.0) {
-					total.setStatus(DataRetrievalStatus.COMPLETED);
-					isDownloaded = true;
-				} else {
-					// Looking for transactions
-					findTransactionsForDifference(total, accountPage, prevTransactions);
-
-					if (total.getTransactions() != null && total.getTransactions().size() > 0) {
+					if (difference == 0.0) {
 						total.setStatus(DataRetrievalStatus.COMPLETED);
 						isDownloaded = true;
+					} else {
+						// Looking for transactions
+						findTransactionsForDifference(total, accountPage, prevTransactions);
+
+						if (total.getTransactions() != null && total.getTransactions().size() > 0) {
+							total.setStatus(DataRetrievalStatus.COMPLETED);
+							isDownloaded = true;
+						}
 					}
 				}
+				// });
 			}
-			// });
 			accountPage.quit();
 			accountPage = null;
 		}

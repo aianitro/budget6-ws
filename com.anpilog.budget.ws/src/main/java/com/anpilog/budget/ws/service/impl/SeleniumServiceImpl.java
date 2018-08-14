@@ -23,6 +23,7 @@ import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.shared.dto.TransactionDTO;
 import com.anpilog.budget.ws.ui.model.pages.AccountPage;
 import com.anpilog.budget.ws.ui.model.pages.AccountPageMyPortfolio;
+import com.anpilog.budget.ws.utils.NumUtils;
 import com.anpilog.budget.ws.utils.SeleniumUtils;
 
 /**
@@ -133,7 +134,7 @@ public class SeleniumServiceImpl implements SeleniumService {
 					Double difference = amount - prevTotal;
 					total.setAmount(amount);
 					total.setDifference(difference);
-					logger.info("{}, total: {}, difference: {}", accountDto.getName(), amount, difference);
+					logger.info("{}, total: {}, difference: {}", accountDto.getName(), NumUtils.amountToString(amount), NumUtils.amountToString(difference));
 
 					if (difference == 0.0) {
 						total.setStatus(DataRetrievalStatus.COMPLETED);

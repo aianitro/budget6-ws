@@ -893,8 +893,20 @@ public class MySQLDAO implements DAO {
 		for (TransactionEntity transactionEntity : searchResults) {
 			if (!transactionEntity.getTotal().getAccount().getIsEnabled())
 				continue;
+			
 			TransactionDTO transactionDto = new TransactionDTO();
 			BeanUtils.copyProperties(transactionEntity, transactionDto);
+			
+			// Total
+			TotalDTO totalDto = new TotalDTO();
+			BeanUtils.copyProperties(transactionEntity.getTotal(), totalDto);
+			transactionDto.setTotal(totalDto);
+			
+			// Account
+			AccountDTO accountDto = new AccountDTO();
+			BeanUtils.copyProperties(transactionEntity.getTotal().getAccount(), accountDto);
+			totalDto.setAccount(accountDto);
+			
 			returnValue.add(transactionDto);
 		}
 

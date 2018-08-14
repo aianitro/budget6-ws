@@ -90,16 +90,9 @@ public class SeleniumServiceImpl implements SeleniumService {
 			totals.add(total);
 		}
 
-		// ExecutorService executor = Executors.newFixedThreadPool(nubmberOfThreads,
-		// new ThreadFactoryBuilder().setNameFormat("%d").build());
-
 		for (Map.Entry<BankEntity, List<TotalDTO>> totalsByBankEntry : totalsByBank.entrySet()) {
-			// executor.submit(() -> {
-			// totalsToRefresh.stream().filter(a ->
-			// a.getAccount().getBank()==driver).forEach(total -> {
+			
 			for (TotalDTO total : totalsByBankEntry.getValue()) {
-				// if (total.getAccount().getBank() != accountsByBank)
-				// continue;
 
 				AccountDTO accountDto = total.getAccount();
 				Thread.currentThread()
@@ -155,73 +148,11 @@ public class SeleniumServiceImpl implements SeleniumService {
 						}
 					}
 				}
-				// });
 			}
 			accountPage.quit();
 			accountPage = null;
 		}
-		// });
-		// }
-
-		// SeleniumUtils.executorShutdown(executor);
 	}
-
-	/*
-	 * public List<TotalDTO> getNewTotals(List<TotalDTO> prevTotals,
-	 * List<TransactionDTO> prevTransactions) {
-	 * 
-	 * List<TotalDTO> result = new ArrayList<TotalDTO>();
-	 * 
-	 * logger.info("Number of accounts to run: {}", prevTotals.size());
-	 * prevTotals.stream().forEach(a -> logger.info(a.getAccount().getName()));
-	 * 
-	 * // Extract list of drivers List<List<String>> drivers = new
-	 * ArrayList<List<String>>();
-	 * 
-	 * // Group accounts list by banks prevTotals.stream().filter(a ->
-	 * a.getAccount().getBank() != null).forEach(a -> { List<String> driver = new
-	 * ArrayList<String>(); driver.add(a.getAccount().getBank().getName()); if
-	 * (!drivers.contains(driver)) drivers.add(driver); });
-	 * 
-	 * ExecutorService executor = Executors.newFixedThreadPool(nubmberOfThreads, new
-	 * ThreadFactoryBuilder().setNameFormat("%d").build());
-	 * 
-	 * for (List<String> driver : drivers) { executor.submit(() -> {
-	 * prevTotals.stream().filter(a ->
-	 * a.getAccount().getBank()==driver).forEach(total -> { AccountDTO accountDto =
-	 * total.getAccount(); Thread.currentThread().setName("Bank accounts (" +
-	 * SeleniumUtils.getThreadNumber(Thread.currentThread().getName()) + "): " +
-	 * accountDto.getName()); int attempt = 0; Double amount = null; TotalDTO total
-	 * = null; Double prevTotal = total.getAmount(); Double difference = null;
-	 * boolean isDownloaded = false; while (!isDownloaded && attempt <
-	 * maxAttemptsToDownloadData) { logger.info("{}: attempt #{}",
-	 * accountDto.getName(), ++attempt); if (accountPage == null) { accountPage =
-	 * getAccountPage(accountDto); accountPage.gotoHomePage(); DataRetrievalStatus
-	 * loginStatus = accountPage.login(); if (loginStatus !=
-	 * DataRetrievalStatus.SUCCESS) { total = new Total(account, prevTotal, 0.0,
-	 * loginStatus); logger.error("Unsuccessful login to: {}", account.getName());
-	 * accountPage.quit(); accountPage = null; isDownloaded = true; // no need to
-	 * try more - // smth too wrong continue; } } else
-	 * accountPage.setAccount(account);
-	 * 
-	 * try { amount = accountPage.getTotal(); } catch (PageElementNotFoundException
-	 * ex) { logger.error(ex.getLocalizedMessage());
-	 * logger.error("Error while getting total for: {}", account.getName()); total =
-	 * new Total(account, prevTotal, 0.0, DataRetrievalStatus.NAVIGATION_BROKEN);
-	 * accountPage.quit(); accountPage = null; continue; }
-	 * 
-	 * difference = getDifference(account, amount, prevTotals); total = new
-	 * Total(account, amount, difference, DataRetrievalStatus.SUCCESS);
-	 * logger.info("{}, total: {}", account.getName(), amount); if (difference !=
-	 * null && difference != 0.00) { logger.info("{}, difference: {}",
-	 * account.getName(), difference); addTransactionsForDifference(total,
-	 * accountPage, difference, prevTotal, prevTransactions); }
-	 * 
-	 * isDownloaded = true; } if (total != null) result.add(total); });
-	 * accountPage.quit(); accountPage = null; }); }
-	 * 
-	 * Collections.sort(result); Util.executorShutdown(executor); return result; }
-	 */
 
 	public boolean isOnline() {
 		logger.info("Network check...");

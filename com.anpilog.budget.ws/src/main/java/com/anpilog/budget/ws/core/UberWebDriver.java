@@ -1,11 +1,14 @@
 package com.anpilog.budget.ws.core;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebElement;
@@ -162,7 +165,7 @@ public class UberWebDriver implements SearchContext {
 	
 	public void takeScreenshot() {
 		// TODO - to fix
-		// File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
-		// PicturesStorage.INSTANCE.addPicture("test123", scrFile);
+		 File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
+		 PicturesStorage.INSTANCE.addPicture("test123", scrFile);
 	}
 }

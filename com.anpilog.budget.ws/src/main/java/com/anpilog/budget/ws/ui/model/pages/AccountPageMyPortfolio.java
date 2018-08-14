@@ -128,6 +128,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 						.findElements(By.xpath("//div[@id='main-table']/div/table/tbody/tr"));
 				if (debitAccounts == null) {
 					logger.error("Unable to find table with debit accounts");
+					webDriver.takeScreenshot();
 					return null;
 				}
 				for (WebElement row : debitAccounts) {

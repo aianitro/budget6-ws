@@ -1,5 +1,7 @@
 package com.anpilog.budget.ws.service.impl;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,6 +9,7 @@ import com.anpilog.budget.ws.exceptions.CouldNotDeleteRecordException;
 import com.anpilog.budget.ws.exceptions.CouldNotUpdateRecordException;
 import com.anpilog.budget.ws.exceptions.NoRecordFoundException;
 import com.anpilog.budget.ws.io.dao.DAO;
+import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.TotalsService;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.ui.model.response.ErrorMessages;
@@ -59,6 +62,21 @@ public class TotalsServiceImpl implements TotalsService {
 				.filter(t -> !DateUtils.isDateToday(t.getDate()) && t.getAccount().getIsAutomated())
 				.collect(Collectors.toList());
 
+	}
+	
+	public List<TotalDTO> prepareNewTotals(){
+		
+		List<TotalDTO> newTotals = new ArrayList<TotalDTO>();
+		for (TotalDTO totalDto : getOutdatedTotals()) {
+			TotalDTO newTotalDto = new TotalDTO();
+			newTotalDto.setAccount(totalDto.getAccount());
+			newTotalDto.setPreviousAmount(totalDto.getAmount());
+			newTotalDto.setDate(LocalDate.now());
+			newTotalDto.setStatus(DataRetrievalStatus.PENDING);
+			newTotals.add(newTotalDto);
+		}
+		
+		return newTotals;
 	}
 
 	@Override

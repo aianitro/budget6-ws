@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import com.anpilog.budget.ws.exceptions.CouldNotUpdateRecordException;
 import com.anpilog.budget.ws.io.dao.DAO;
+import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.BalancesService;
 import com.anpilog.budget.ws.shared.dto.BalanceDTO;
 
@@ -30,6 +31,21 @@ public class BalancesServiceImpl implements BalancesService {
 		}
 
 		return balances;
+	}
+	
+	@Override
+	public BalanceDTO getPendingBalance() {
+
+		BalanceDTO balance = null;
+
+		try {
+			this.database.openConnection();
+			balance = this.database.getBalances().stream().filter(b -> b.getStatus()==DataRetrievalStatus.PENDING).findFirst().orElse(null);
+		} finally {
+			this.database.closeConnection();
+		}
+
+		return balance;
 	}
 
 	@Override

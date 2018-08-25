@@ -1,7 +1,6 @@
 package com.anpilog.budget.ws.ui.entrypoints;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -27,6 +26,7 @@ import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.shared.dto.TransactionDTO;
 import com.anpilog.budget.ws.ui.model.request.RefreshRequest;
 import com.anpilog.budget.ws.ui.model.response.RefreshResponse;
+import com.anpilog.budget.ws.utils.DateUtils;
 
 @Path("/refresh")
 public class RefreshEntryPoint {
@@ -56,48 +56,66 @@ public class RefreshEntryPoint {
 	@Produces(MediaType.APPLICATION_JSON)
 	public RefreshResponse refreshAccounts(RefreshRequest requestObject) throws ConfigurationException {
 
-		// Check how many accounts need refresh - quit fast if 0
-		List<TotalDTO> totalsToUpdate = totalsService.getOutdatedTotals();
+		BalanceDTO createdBalance;
 
-		// Create balance
-		BalanceDTO balanceDto = new BalanceDTO();
-		balanceDto.setDate(LocalDate.now());
-		balanceDto.setStatus(DataRetrievalStatus.PENDING);
+		// Get pending balance to re-utilize (if possible)
+		BalanceDTO pendingBalance = balancesService.getPendingBalance();
 
-		// Create totals
-		List<TotalDTO> newTotals = new ArrayList<TotalDTO>();
-		for (TotalDTO totalDto : totalsToUpdate) {
-			TotalDTO newTotalDto = new TotalDTO();
-			newTotalDto.setAccount(totalDto.getAccount());
-			newTotalDto.setPreviousAmount(totalDto.getAmount());
-			newTotalDto.setDate(LocalDate.now());
-			newTotalDto.setStatus(DataRetrievalStatus.PENDING);
-			newTotals.add(newTotalDto);
+		if (pendingBalance == null) { // All balances are COMPLETED
+
+			// Create new balance
+			BalanceDTO balanceDto = new BalanceDTO();
+			balanceDto.setDate(LocalDate.now());
+			balanceDto.setStatus(DataRetrievalStatus.PENDING);
+			balanceDto.setTotals(totalsService.prepareNewTotals());
+			createdBalance = balancesService.createBalance(balanceDto);
+
+		} else if (DateUtils.isDateToday(pendingBalance.getDate())) // today's balance simply re-using
+
+			createdBalance = pendingBalance;
+
+		else {
+			// Handling previous old (not today's) totals (and balance) which are left in
+			// PENDING state
+
+			// 1. Setting old balance to COMPLETE status
+			pendingBalance.setStatus(DataRetrievalStatus.COMPLETED);
+			for (TotalDTO totalDTO : pendingBalance.getTotals()) {
+				if (totalDTO.getStatus() != DataRetrievalStatus.PENDING)
+					continue;
+				totalDTO.setAmount(totalDTO.getPreviousAmount());
+				totalDTO.setDifference(0.0);
+				totalDTO.setStatus(DataRetrievalStatus.COMPLETED);
+			}
+			balancesService.updateBalance(pendingBalance);
+
+			// 2. Creating new balance
+			BalanceDTO balanceDto = new BalanceDTO();
+			balanceDto.setDate(LocalDate.now());
+			balanceDto.setStatus(DataRetrievalStatus.PENDING);
+			balanceDto.setTotals(totalsService.prepareNewTotals());
+			createdBalance = balancesService.createBalance(balanceDto);
 		}
-		balanceDto.setTotals(newTotals);
 
-		// Save balance
-		BalanceDTO createdBalance = balancesService.createBalance(balanceDto);
-		
 		// Getting all transactions to exclude
 		// while finding for new totals
 		List<TransactionDTO> allTransactions = transactionsService.getTransactions();
-		
+
 		// Start fetching new data with Selenium
 		SeleniumServiceImpl seleniumService = new SeleniumServiceImpl();
 		seleniumService.refreshTotals(createdBalance.getTotals(), allTransactions);
-		
+
 		// If all totals successfully refreshed changing status for Balance
 		boolean isRefreshSuccessful = true;
-		for(TotalDTO totalDTO: createdBalance.getTotals())
-			if(totalDTO.getStatus()!=DataRetrievalStatus.COMPLETED) {			
+		for (TotalDTO totalDTO : createdBalance.getTotals())
+			if (totalDTO.getStatus() != DataRetrievalStatus.COMPLETED) {
 				isRefreshSuccessful = false;
 				break;
 			}
-		if(isRefreshSuccessful)
+		if (isRefreshSuccessful)
 			createdBalance.setStatus(DataRetrievalStatus.COMPLETED);
-		
-		balancesService.updateBalance(createdBalance);			
+
+		balancesService.updateBalance(createdBalance);
 
 		// Status
 		RefreshResponse refreshResponse = new RefreshResponse();

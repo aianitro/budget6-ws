@@ -7,6 +7,7 @@ import com.anpilog.budget.ws.shared.dto.BalanceDTO;
 public interface BalancesService {
 		
 	List<BalanceDTO> getBalances();
+	BalanceDTO getPendingBalance();
 	//List<BalanceDTO> getLastBalances();
 	BalanceDTO getLatestBalance();
 	//BalanceDTO getBalance(String id);	

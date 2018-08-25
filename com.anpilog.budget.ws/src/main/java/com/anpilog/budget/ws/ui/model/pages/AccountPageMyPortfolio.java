@@ -130,39 +130,36 @@ public class AccountPageMyPortfolio extends AccountPage {
 		}
 	}
 
-	private void answerSecretQuestion() throws ConfigurationException {
-		if (SeleniumUtils.isSecretQuestionShown(webdriver))
-			
-			logger.info("Answering secret question...");
+	private void answerSecretQuestion() throws ConfigurationException, PageElementNotFoundException {
+		if (!SeleniumUtils.isSecretQuestionShown(webdriver))
+			return;
 
-			fldSecretQuestion = new Field("secret question", By.cssSelector("label"), getWebdriver(), getWebdriver());
-			fldSecretAnswer = new Field("secret answer", By.id("tlpvt-challenge-answer"), getWebdriver(), getWebdriver());
-			btnSecretSubmit = new Button("submit secret answer", By.id("verify-cq-submit"), getWebdriver(), getWebdriver());
-			btnRecognizeNextTime = new Button("pre submit secret answer", By.id("yes-recognize"), getWebdriver(),
-					getWebdriver());
+		logger.info("Answering secret question");
 
-			try {
-				String secretQuestion = fldSecretQuestion.getText();
-				if (secretQuestion == null) {  
-					webdriver.takeScreenshot();
-					throw new ConfigurationException("No secret question shown on the page");
-				}
+		fldSecretQuestion = new Field("secret question", By.cssSelector("label"), getWebdriver(), getWebdriver());
+		fldSecretAnswer = new Field("secret answer", By.id("tlpvt-challenge-answer"), getWebdriver(), getWebdriver());
+		btnSecretSubmit = new Button("submit secret answer", By.id("verify-cq-submit"), getWebdriver(), getWebdriver());
+		btnRecognizeNextTime = new Button("pre submit secret answer", By.id("yes-recognize"), getWebdriver(),
+				getWebdriver());
 
-				SecretQuestionEntity secretAnswer = account.getBank().getSecretQuestions().stream()
-						.filter(sq -> sq.getQuestion().equals(secretQuestion)).findFirst().orElse(null);
-				if (secretAnswer == null)
-					throw new ConfigurationException("Cannot find answer for question "+secretQuestion);
-				else
-					fldSecretAnswer.setText(secretAnswer.getAnswer());
+		String secretQuestion = fldSecretQuestion.getText();
+		if (secretQuestion == null)
+			throw new ConfigurationException("No secret question shown on the page", webdriver);
 
-				btnRecognizeNextTime.clickIfAvailable();
-				btnSecretSubmit.click();
-			} catch (PageElementNotFoundException e) {
-				webdriver.takeScreenshot();
-				throw new ConfigurationException(e.getLocalizedMessage());
-			}
+		SecretQuestionEntity secretAnswer = account.getBank().getSecretQuestions().stream()
+				.filter(sq -> sq.getQuestion().equals(secretQuestion)).findFirst().orElse(null);
+		if (secretAnswer == null)
+			throw new ConfigurationException("Cannot find answer for question " + secretQuestion);
+		else
+			fldSecretAnswer.setText(secretAnswer.getAnswer());
+
+		btnRecognizeNextTime.clickIfAvailable();
+		btnSecretSubmit.click();
+
+		logger.info("Secret answer submitted");
+
 	}
-	
+
 	private void navigateToMyPortfolioPage() throws PageElementNotFoundException {
 		if (!webdriver.getWebDriver().getTitle().contains("My Portfolio"))
 			gotoMyPortfolioPage();

@@ -125,7 +125,6 @@ public class AccountPageMyPortfolio extends AccountPage {
 			return totalRow.getAmount();
 		else {
 			logger.error("Unable to find total for {} by id '{}'", account.getName(), account.getMyPortfolioId());
-			webdriver.takeScreenshot();
 			return null;
 		}
 	}

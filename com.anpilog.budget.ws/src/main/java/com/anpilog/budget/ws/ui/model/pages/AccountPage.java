@@ -58,8 +58,6 @@ public abstract class AccountPage implements Page {
 		this.webdriver = new UberWebDriver();
 		java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(java.util.logging.Level.OFF);
 		java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.OFF);
-
-		//pageQuestions = new AccountPageSecretQuestions(accountDto, webDriver);
 		
 		refreshLocators();
 	}

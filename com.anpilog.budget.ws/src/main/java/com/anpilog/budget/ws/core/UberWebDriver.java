@@ -43,7 +43,7 @@ public class UberWebDriver implements SearchContext {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.wait = new WebDriverWait(this.webDriver, 30);
+		this.wait = new WebDriverWait(this.webDriver, 60);
 	}
 
 	public void get(String url) {

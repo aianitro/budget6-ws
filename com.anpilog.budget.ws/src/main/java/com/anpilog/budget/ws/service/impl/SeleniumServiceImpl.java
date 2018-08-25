@@ -128,7 +128,7 @@ public class SeleniumServiceImpl implements SeleniumService {
 					}
 
 					Double prevTotal = total.getPreviousAmount();
-					Double difference = amount - prevTotal;
+					Double difference = NumUtils.roundDouble(amount - prevTotal);
 					total.setAmount(amount);
 					total.setDifference(difference);
 					logger.info("{}, total: {}, difference: {}", accountDto.getName(), NumUtils.amountToString(amount), NumUtils.amountToString(difference));

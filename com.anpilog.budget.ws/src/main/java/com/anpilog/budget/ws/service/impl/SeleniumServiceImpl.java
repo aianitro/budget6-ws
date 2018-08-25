@@ -156,7 +156,7 @@ public class SeleniumServiceImpl implements SeleniumService {
 	}
 
 	public boolean isOnline() {
-		logger.info("Network check...");
+		logger.info("Network check");
 		WebDriver webDriver = new HtmlUnitDriver();
 
 		int attempts = 0;

@@ -85,16 +85,16 @@ public class AccountPageMyPortfolio extends AccountPage {
 
 		// table of totals might be already captured
 		if (totalsList == null) {
-			
-			logger.info("Capturing all totals on 'My Portfolio' page...");
+
+			logger.info("Capturing all totals on 'My Portfolio' page");
 
 			answerSecretQuestion();
-			
+
 			navigateToMyPortfolioPage();
-			
+
 			totalsList = new ArrayList<mpTotal>();
-			
-			try {				
+
+			try {
 				waitingTotalsTableToRefresh();
 
 				captureDebitAccounts();
@@ -167,10 +167,10 @@ public class AccountPageMyPortfolio extends AccountPage {
 		if (!webdriver.getWebDriver().getTitle().contains("My Portfolio"))
 			gotoMyPortfolioPage();
 	}
-	
+
 	private void waitingTotalsTableToRefresh() throws PageElementNotFoundException {
 		if (fldRefreshStatus.getText().startsWith("Refreshing")) {
-			logger.info("Waiting for refreshing accounts table...");
+			logger.info("Waiting for refreshing accounts table");
 			while (fldRefreshStatus.getText().startsWith("Refreshing")) {
 				SeleniumUtils.sleep(5000);
 				fldRefreshStatus.setWebElement(null);
@@ -184,25 +184,26 @@ public class AccountPageMyPortfolio extends AccountPage {
 			logger.info("All My Portfolio accounts are up to date");
 		}
 	}
-	
+
 	private void captureDebitAccounts() throws PageElementNotFoundException {
 
-		List<WebElement> debitAccounts = webdriver
-				.findElements(By.xpath("//div[@id='main-table']/div/table/tbody/tr"));
+		List<WebElement> debitAccounts = webdriver.findElements(By.xpath("//div[@id='main-table']/div/table/tbody/tr"));
 		if (debitAccounts == null)
 			throw new PageElementNotFoundException("Unable to find table with debit accounts", webdriver);
-		
+
 		for (WebElement row : debitAccounts) {
 			if (row.getText().contains("TOTAL:"))
 				break;
 
 			WebElement weId = webdriver.findElementInRow(row, By.xpath("./td/div/div/div[2]/span"));
-			if (weId == null) 
-				throw new PageElementNotFoundException("Unable to find 'my portfolio id' in a table with debit accounts", webdriver);
+			if (weId == null)
+				throw new PageElementNotFoundException(
+						"Unable to find 'my portfolio id' in a table with debit accounts", webdriver);
 
 			WebElement weAmount = webdriver.findElementInRow(row, By.xpath("./td[2]/span/span"));
 			if (weAmount == null)
-				throw new PageElementNotFoundException("Unable to find 'amount' in a table with debit accounts", webdriver);
+				throw new PageElementNotFoundException("Unable to find 'amount' in a table with debit accounts",
+						webdriver);
 
 			String totalLocator = SeleniumUtils.getLocatorForWebElement(row);
 
@@ -214,7 +215,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 	private void captureCreditAccounts() throws PageElementNotFoundException {
 		List<WebElement> creditAccounts = webdriver
 				.findElements(By.xpath("//div[@id='main-table']/div[2]/table/tbody/tr"));
-		if (creditAccounts == null) 
+		if (creditAccounts == null)
 			throw new PageElementNotFoundException("Unable to find table with credit accounts", webdriver);
 
 		for (WebElement row : creditAccounts) {
@@ -222,12 +223,14 @@ public class AccountPageMyPortfolio extends AccountPage {
 				break;
 
 			WebElement weId = webdriver.findElementInRow(row, By.xpath("./td/div/div/div[2]/span"));
-			if (weId == null) 
-				throw new PageElementNotFoundException("Unable to find 'my portfolio id' in a table with debit accounts", webdriver);			
+			if (weId == null)
+				throw new PageElementNotFoundException(
+						"Unable to find 'my portfolio id' in a table with debit accounts", webdriver);
 
 			WebElement weAmount = webdriver.findElementInRow(row, By.xpath("./td[2]/span/span"));
-			if (weAmount == null) 
-				throw new PageElementNotFoundException("Unable to find 'amount' in a table with debit accounts", webdriver);						
+			if (weAmount == null)
+				throw new PageElementNotFoundException("Unable to find 'amount' in a table with debit accounts",
+						webdriver);
 
 			String totalLocator = SeleniumUtils.getLocatorForWebElement(row);
 
@@ -355,13 +358,15 @@ public class AccountPageMyPortfolio extends AccountPage {
 	}
 
 	private void gotoMyPortfolioPage() throws PageElementNotFoundException {
-		
-		logger.info("Navigating to 'My Portfolio' page...");
-		
+
+		logger.info("Navigating to 'My Portfolio' page");
+
 		webdriver.switchTo().defaultContent();
 
-		new Button("tools and investing", By.name("onh_tools_and_investing"), getWebdriver(), getWebdriver()).clickAsAction();
-		new Button("my portfolio", By.name("onh_tools_and_investing_my_portfolio"), getWebdriver(), getWebdriver()).click();
+		new Button("tools and investing", By.name("onh_tools_and_investing"), getWebdriver(), getWebdriver())
+				.clickAsAction();
+		new Button("my portfolio", By.name("onh_tools_and_investing_my_portfolio"), getWebdriver(), getWebdriver())
+				.click();
 
 		webdriver.waitFrameToBeAvailableAndSwitchToIt("htmlhelp");
 

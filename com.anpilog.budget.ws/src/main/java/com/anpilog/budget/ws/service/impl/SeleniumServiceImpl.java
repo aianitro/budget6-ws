@@ -24,7 +24,6 @@ import com.anpilog.budget.ws.shared.dto.TransactionDTO;
 import com.anpilog.budget.ws.ui.model.pages.AccountPage;
 import com.anpilog.budget.ws.ui.model.pages.AccountPageMyPortfolio;
 import com.anpilog.budget.ws.utils.NumUtils;
-import com.anpilog.budget.ws.utils.SeleniumUtils;
 
 /**
  *
@@ -96,9 +95,7 @@ public class SeleniumServiceImpl implements SeleniumService {
 			for (TotalDTO total : totalsByBankEntry.getValue()) {
 
 				AccountDTO accountDto = total.getAccount();
-				Thread.currentThread()
-						.setName("Bank accounts (" + SeleniumUtils.getThreadNumber(Thread.currentThread().getName())
-								+ "): " + accountDto.getName());
+
 				int attempt = 0;
 				Double amount = null;
 				boolean isDownloaded = false;

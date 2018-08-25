@@ -166,10 +166,10 @@ public class UberWebDriver implements SearchContext {
 	
 	public void takeScreenshot() {
 		File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
-		File destFile = new File("./screenshots/error" + System.currentTimeMillis() + ".png");
+		File destFile = new File("/b6/screenshots/error" + System.currentTimeMillis() + ".png");
 		try {
 			FileUtils.copyFile(scrFile, destFile);
-			logger.info("Screenshot '" + destFile.getPath() + "' is saved");
+			logger.info("Screenshot '" + destFile.getAbsolutePath() + "' is saved");
 		} catch (IOException e) {
 			logger.error("Unable to save screenshot '" + destFile.getPath() + "'");
 		}

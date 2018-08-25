@@ -1,9 +1,11 @@
 package com.anpilog.budget.ws.core;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -162,10 +164,15 @@ public class UberWebDriver implements SearchContext {
 		((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);		
 	}
 	
-	
 	public void takeScreenshot() {
-		// TODO - to fix
-		 File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
-		 PicturesStorage.INSTANCE.addPicture("test123", scrFile);
+		File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
+		File destFile = new File("./screenshots/error" + System.currentTimeMillis() + ".png");
+		try {
+			FileUtils.copyFile(scrFile, destFile);
+			logger.info("Screenshot '" + destFile.getPath() + "' is saved");
+		} catch (IOException e) {
+			logger.error("Unable to save screenshot '" + destFile.getPath() + "'");
+		}
 	}
+
 }

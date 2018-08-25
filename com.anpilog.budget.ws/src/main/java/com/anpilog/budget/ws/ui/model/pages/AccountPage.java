@@ -27,7 +27,7 @@ public abstract class AccountPage implements Page {
 
 	protected AccountDTO account;
 
-	protected UberWebDriver webDriver;
+	protected UberWebDriver webdriver;
 	protected WebDriverWait wait;
 
 	// Login
@@ -55,7 +55,7 @@ public abstract class AccountPage implements Page {
 	public AccountPage(AccountDTO accountDto) {
 		this.account = accountDto;
 
-		this.webDriver = new UberWebDriver();
+		this.webdriver = new UberWebDriver();
 		java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(java.util.logging.Level.OFF);
 		java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.OFF);
 
@@ -97,7 +97,7 @@ public abstract class AccountPage implements Page {
 
 	@Override
 	public UberWebDriver getWebdriver() {
-		return webDriver;
+		return webdriver;
 	}
 
 	public abstract void quit();

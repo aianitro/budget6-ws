@@ -18,19 +18,15 @@ public class Label extends PageElement {
 			return null;
 		if (webElement == null)
 			webElement = searchContext.findElement(locator);
-		if (webElement == null){
-			webdriver.takeScreenshot();
-			throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ");
-		}
+		if (webElement == null)
+			throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ", webdriver);
 		
 		try {
 			return webElement.getText().trim();
 		} catch (StaleElementReferenceException ex) {
 			webElement = searchContext.findElement(locator);
-			if (webElement == null) {
-				webdriver.takeScreenshot();
-				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ");
-			}
+			if (webElement == null)
+				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ", webdriver);
 			return webElement.getText().trim();
 		}				
 	}

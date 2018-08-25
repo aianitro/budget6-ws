@@ -22,10 +22,8 @@ public class Switch extends PageElement {
 			return;
 		if (webElement == null)
 			webElement = searchContext.findElement(locator);
-		if (webElement == null){
-			webdriver.takeScreenshot();
-			throw new PageElementNotFoundException("Switch '" + name + "' (" + locator + ") not found ");
-		}
+		if (webElement == null)
+			throw new PageElementNotFoundException("Switch '" + name + "' (" + locator + ") not found ", webdriver);
 		
 		try {
 			if ("click".equals(action))
@@ -34,10 +32,8 @@ public class Switch extends PageElement {
 				new Select(webElement).selectByIndex(1);
 		} catch (WebDriverException ex) {
 			webElement = searchContext.findElement(locator);
-			if (webElement == null) {
-				webdriver.takeScreenshot();
-				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ");
-			}
+			if (webElement == null)
+				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ", webdriver);
 			
 			webdriver.scrollTo(locator);
 			if ("click".equals(action))

@@ -1,7 +1,6 @@
 package com.anpilog.budget.ws.ui.model.navigation;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;

@@ -6,7 +6,6 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.anpilog.budget.ws.exceptions.ConfigurationException;
 import com.anpilog.budget.ws.exceptions.PageElementNotFoundException;
@@ -46,7 +45,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 	}
 
 	public void gotoHomePage() {
-		webDriver.get(url);
+		webdriver.get(url);
 	}
 
 	public void refreshLocators() {
@@ -70,7 +69,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 	}
 
 	public DataRetrievalStatus login() {
-		if (SeleniumUtils.checkIfSiteDown(webDriver))
+		if (SeleniumUtils.checkIfSiteDown(webdriver))
 			return DataRetrievalStatus.SERVICE_UNAVAILABLE;
 		try {
 			fldUsername.setText(valUsername);
@@ -82,112 +81,32 @@ public class AccountPageMyPortfolio extends AccountPage {
 		}
 	}
 
-	public Double getTotal() throws ConfigurationException {
+	public Double getTotal() throws ConfigurationException, PageElementNotFoundException {
 
-		// first check if table of totals already captured
+		// table of totals might be already captured
 		if (totalsList == null) {
+			
 			logger.info("Capturing all totals on 'My Portfolio' page...");
 
-			// secret question
-			if (SeleniumUtils.isSecretQuestionShown(webDriver))
-				if (!answerSecretQuestion())
-					return null;
-
-			// navigate to MyPortfolio page if it's not there yet
-			if (!webDriver.getWebDriver().getTitle().contains("My Portfolio")) {
-				if (!gotoMyPortfolioPage()) {
-					logger.error("Cannot navigate to 'My Portfolio' page");
-					return null;
-				}
-			}
-
+			answerSecretQuestion();
+			
+			navigateToMyPortfolioPage();
+			
 			totalsList = new ArrayList<mpTotal>();
+			
+			try {				
+				waitingTotalsTableToRefresh();
 
-			try {
-				// Waiting for table to refresh
-				if (fldRefreshStatus.getText().startsWith("Refreshing")) {
-					logger.info("Waiting for refreshing accounts table...");
-					while (fldRefreshStatus.getText().startsWith("Refreshing")) {
-						SeleniumUtils.sleep(5000);
-						fldRefreshStatus.setWebElement(null);
-					}
+				captureDebitAccounts();
 
-					// Needs to come again on 'My Portfolio' page
-					// otherwise updated totals not reflected in table
-					webDriver.getWebDriver().navigate().back();
-					SeleniumUtils.sleep(3000);
-					if (!gotoMyPortfolioPage()) {
-						logger.error("Cannot navigate to 'My Portfolio' page");
-						return null;
-					}
-					logger.info("All My Portfolio accounts are up to date");
-				}
-
-				// debit accounts
-				List<WebElement> debitAccounts = webDriver
-						.findElements(By.xpath("//div[@id='main-table']/div/table/tbody/tr"));
-				if (debitAccounts == null) {
-					logger.error("Unable to find table with debit accounts");
-					webDriver.takeScreenshot();
-					return null;
-				}
-				for (WebElement row : debitAccounts) {
-					if (row.getText().contains("TOTAL:"))
-						break;
-
-					WebElement weId = webDriver.findElementInRow(row, By.xpath("./td/div/div/div[2]/span"));
-					if (weId == null) {
-						logger.error("Unable to find 'my portfolio id' in a table with debit accounts");
-						return null;
-					}
-
-					WebElement weAmount = webDriver.findElementInRow(row, By.xpath("./td[2]/span/span"));
-					if (weAmount == null) {
-						logger.error("Unable to find 'amount' in a table with debit accounts");
-						return null;
-					}
-
-					String totalLocator = SeleniumUtils.getLocatorForWebElement(row);
-
-					totalsList.add(new mpTotal(weId.getText(), totalLocator,
-							NumUtils.convertStringAmountToDouble(weAmount.getText())));
-				}
-
-				// credit accounts
-				List<WebElement> creditAccounts = webDriver
-						.findElements(By.xpath("//div[@id='main-table']/div[2]/table/tbody/tr"));
-				if (creditAccounts == null) {
-					logger.error("Unable to find table with credit accounts");
-					return null;
-				}
-				for (WebElement row : creditAccounts) {
-					if (row.getText().contains("TOTAL:"))
-						break;
-
-					WebElement weId = webDriver.findElementInRow(row, By.xpath("./td/div/div/div[2]/span"));
-					if (weId == null) {
-						logger.error("Unable to find 'my portfolio id' in a table with debit accounts");
-						return null;
-					}
-
-					WebElement weAmount = webDriver.findElementInRow(row, By.xpath("./td[2]/span/span"));
-					if (weAmount == null) {
-						logger.error("Unable to find 'amount' in a table with debit accounts");
-						return null;
-					}
-
-					String totalLocator = SeleniumUtils.getLocatorForWebElement(row);
-
-					totalsList.add(new mpTotal(weId.getText(), totalLocator,
-							-NumUtils.convertStringAmountToDouble(weAmount.getText())));
-				}
+				captureCreditAccounts();
 
 				logger.info("Accounts total (parsed on page):");
 				totalsList.stream().forEach(t -> logger.info(t.toString()));
 
 				// return to the main page (from where Transactions will be
 				// opened)
-				webDriver.getWebDriver().navigate().back();
+				webdriver.getWebDriver().navigate().back();
 
 			} catch (PageElementNotFoundException e) {
 				return null;
@@ -206,8 +125,114 @@ public class AccountPageMyPortfolio extends AccountPage {
 			return totalRow.getAmount();
 		else {
 			logger.error("Unable to find total for {} by id '{}'", account.getName(), account.getMyPortfolioId());
-			webDriver.takeScreenshot();
+			webdriver.takeScreenshot();
 			return null;
+		}
+	}
+
+	private void answerSecretQuestion() throws ConfigurationException {
+		if (SeleniumUtils.isSecretQuestionShown(webdriver))
+			
+			logger.info("Answering secret question...");
+
+			fldSecretQuestion = new Field("secret question", By.cssSelector("label"), getWebdriver(), getWebdriver());
+			fldSecretAnswer = new Field("secret answer", By.id("tlpvt-challenge-answer"), getWebdriver(), getWebdriver());
+			btnSecretSubmit = new Button("submit secret answer", By.id("verify-cq-submit"), getWebdriver(), getWebdriver());
+			btnRecognizeNextTime = new Button("pre submit secret answer", By.id("yes-recognize"), getWebdriver(),
+					getWebdriver());
+
+			try {
+				String secretQuestion = fldSecretQuestion.getText();
+				if (secretQuestion == null) {  
+					webdriver.takeScreenshot();
+					throw new ConfigurationException("No secret question shown on the page");
+				}
+
+				SecretQuestionEntity secretAnswer = account.getBank().getSecretQuestions().stream()
+						.filter(sq -> sq.getQuestion().equals(secretQuestion)).findFirst().orElse(null);
+				if (secretAnswer == null)
+					throw new ConfigurationException("Cannot find answer for question "+secretQuestion);
+				else
+					fldSecretAnswer.setText(secretAnswer.getAnswer());
+
+				btnRecognizeNextTime.clickIfAvailable();
+				btnSecretSubmit.click();
+			} catch (PageElementNotFoundException e) {
+				webdriver.takeScreenshot();
+				throw new ConfigurationException(e.getLocalizedMessage());
+			}
+	}
+	
+	private void navigateToMyPortfolioPage() throws PageElementNotFoundException {
+		if (!webdriver.getWebDriver().getTitle().contains("My Portfolio"))
+			gotoMyPortfolioPage();
+	}
+	
+	private void waitingTotalsTableToRefresh() throws PageElementNotFoundException {
+		if (fldRefreshStatus.getText().startsWith("Refreshing")) {
+			logger.info("Waiting for refreshing accounts table...");
+			while (fldRefreshStatus.getText().startsWith("Refreshing")) {
+				SeleniumUtils.sleep(5000);
+				fldRefreshStatus.setWebElement(null);
+			}
+
+			// Needs to come again on 'My Portfolio' page
+			// otherwise updated totals not reflected in table
+			webdriver.getWebDriver().navigate().back();
+			SeleniumUtils.sleep(3000);
+			gotoMyPortfolioPage();
+			logger.info("All My Portfolio accounts are up to date");
+		}
+	}
+	
+	private void captureDebitAccounts() throws PageElementNotFoundException {
+
+		List<WebElement> debitAccounts = webdriver
+				.findElements(By.xpath("//div[@id='main-table']/div/table/tbody/tr"));
+		if (debitAccounts == null)
+			throw new PageElementNotFoundException("Unable to find table with debit accounts", webdriver);
+		
+		for (WebElement row : debitAccounts) {
+			if (row.getText().contains("TOTAL:"))
+				break;
+
+			WebElement weId = webdriver.findElementInRow(row, By.xpath("./td/div/div/div[2]/span"));
+			if (weId == null) 
+				throw new PageElementNotFoundException("Unable to find 'my portfolio id' in a table with debit accounts", webdriver);
+
+			WebElement weAmount = webdriver.findElementInRow(row, By.xpath("./td[2]/span/span"));
+			if (weAmount == null)
+				throw new PageElementNotFoundException("Unable to find 'amount' in a table with debit accounts", webdriver);
+
+			String totalLocator = SeleniumUtils.getLocatorForWebElement(row);
+
+			totalsList.add(new mpTotal(weId.getText(), totalLocator,
+					NumUtils.convertStringAmountToDouble(weAmount.getText())));
+		}
+	}
+
+	private void captureCreditAccounts() throws PageElementNotFoundException {
+		List<WebElement> creditAccounts = webdriver
+				.findElements(By.xpath("//div[@id='main-table']/div[2]/table/tbody/tr"));
+		if (creditAccounts == null) 
+			throw new PageElementNotFoundException("Unable to find table with credit accounts", webdriver);
+
+		for (WebElement row : creditAccounts) {
+			if (row.getText().contains("TOTAL:"))
+				break;
+
+			WebElement weId = webdriver.findElementInRow(row, By.xpath("./td/div/div/div[2]/span"));
+			if (weId == null) 
+				throw new PageElementNotFoundException("Unable to find 'my portfolio id' in a table with debit accounts", webdriver);			
+
+			WebElement weAmount = webdriver.findElementInRow(row, By.xpath("./td[2]/span/span"));
+			if (weAmount == null) 
+				throw new PageElementNotFoundException("Unable to find 'amount' in a table with debit accounts", webdriver);						
+
+			String totalLocator = SeleniumUtils.getLocatorForWebElement(row);
+
+			totalsList.add(new mpTotal(weId.getText(), totalLocator,
+					-NumUtils.convertStringAmountToDouble(weAmount.getText())));
 		}
 	}
 
@@ -217,7 +242,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 		List<TransactionDTO> currentTransactions = new ArrayList<TransactionDTO>();
 		getWebdriver().getWebDriver().switchTo().defaultContent();
 
-		if (!webDriver.getWebDriver().getTitle().contains("Transaction")) {
+		if (!webdriver.getWebDriver().getTitle().contains("Transaction")) {
 			btnToolsAndTransactions.clickAsAction();
 			btnTransactions.click();
 		}
@@ -228,11 +253,10 @@ public class AccountPageMyPortfolio extends AccountPage {
 		} catch (Exception e) {
 		}
 
-		List<WebElement> accounts = webDriver.findElements(By.className(" groupItem"));
-		if (accounts == null) {
-			webDriver.takeScreenshot();
-			throw new PageElementNotFoundException("Unable to fetch list of accounts");
-		}
+		List<WebElement> accounts = webdriver.findElements(By.className(" groupItem"));
+		if (accounts == null)
+			throw new PageElementNotFoundException("Unable to fetch list of accounts", webdriver);
+
 		WebElement weAccount = accounts.stream()
 				.filter(a -> !a.getText().equals("") && a.getText().contains(account.getMyPortfolioId())).findFirst()
 				.orElse(null);
@@ -240,18 +264,17 @@ public class AccountPageMyPortfolio extends AccountPage {
 			logger.error("Unable to filter transactions by account '{}' withing following list:",
 					account.getMyPortfolioId());
 			accounts.stream().filter(a -> !a.getText().equals("")).forEach(a -> logger.error(a.getText()));
-			webDriver.takeScreenshot();
 			throw new PageElementNotFoundException(
-					"Unable to filter transactions by account '" + account.getMyPortfolioId() + "'");
+					"Unable to filter transactions by account '" + account.getMyPortfolioId() + "'", webdriver);
 		} else
-			webDriver.clickElementWithAction(weAccount);
+			webdriver.clickElementWithAction(weAccount);
 
 		// select period for 1 month
-		WebElement periodList = webDriver.findElement(By.id("dropdown_dateRangeId"));
+		WebElement periodList = webdriver.findElement(By.id("dropdown_dateRangeId"));
 		if (periodList != null) {
 			if (!periodList.getText().equals("1 month")) {
 				periodList.click();
-				WebElement periodItem = webDriver.findElement(By.id("custom_multi_select_2_dateRangeId"));
+				WebElement periodItem = webdriver.findElement(By.id("custom_multi_select_2_dateRangeId"));
 				if (periodItem != null)
 					periodItem.click();
 			}
@@ -260,7 +283,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 		Double difference = total.getDifference();
 
 		// CURRENT PERIOD TRANSACTIONS
-		List<WebElement> currentPeriodRows = webDriver.findElements(By.xpath("//table[@id='TxnTable']/tbody/tr"));
+		List<WebElement> currentPeriodRows = webdriver.findElements(By.xpath("//table[@id='TxnTable']/tbody/tr"));
 		if (currentPeriodRows == null)
 			logger.info("No rows found in the current period table");
 		else {
@@ -284,7 +307,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 					difference = NumUtils.roundDouble(difference - tr.getAmount());
 					logger.info("Amount: {}, diff: {}", tr.getAmount(), difference);
 					if (difference == 0.0) {
-						webDriver.getWebDriver().navigate().back();
+						webdriver.getWebDriver().navigate().back();
 						total.setTransactions(currentTransactions);
 						return;
 					}
@@ -302,7 +325,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 		// Wait for previous transactions table to be loaded
 		SeleniumUtils.sleep(5000);
 
-		previousPeriodRows = webDriver.findElements(By.xpath("//table[@id='TxnTable']/tbody/tr"));
+		previousPeriodRows = webdriver.findElements(By.xpath("//table[@id='TxnTable']/tbody/tr"));
 		logger.info("Rows in the previous period table: {}", previousPeriodRows.size());
 
 		for (WebElement row : previousPeriodRows) {
@@ -323,7 +346,7 @@ public class AccountPageMyPortfolio extends AccountPage {
 				difference = NumUtils.roundDouble(difference - tr.getAmount());
 				logger.info("Amount: {}, diff: {}", tr.getAmount(), difference);
 				if (difference == 0.0) {
-					webDriver.getWebDriver().navigate().back();
+					webdriver.getWebDriver().navigate().back();
 					total.setTransactions(currentTransactions);
 					return;
 				}
@@ -331,25 +354,17 @@ public class AccountPageMyPortfolio extends AccountPage {
 		}
 	}
 
-	private boolean gotoMyPortfolioPage() {
+	private void gotoMyPortfolioPage() throws PageElementNotFoundException {
+		
 		logger.info("Navigating to 'My Portfolio' page...");
-		webDriver.switchTo().defaultContent();
-		Actions action = new Actions(webDriver.getWebDriver());
+		
+		webdriver.switchTo().defaultContent();
 
-		WebElement we = webDriver.findElement(By.name("onh_tools_and_investing"));
-		if (we == null)
-			return false;
-		else
-			action.moveToElement(we).build().perform();
+		new Button("tools and investing", By.name("onh_tools_and_investing"), getWebdriver(), getWebdriver()).clickAsAction();
+		new Button("my portfolio", By.name("onh_tools_and_investing_my_portfolio"), getWebdriver(), getWebdriver()).click();
 
-		WebElement submit1 = webDriver.findElement(By.name("onh_tools_and_investing_my_portfolio"));
-		if (submit1 == null)
-			return false;
-		else
-			submit1.click();
-		webDriver.waitFrameToBeAvailableAndSwitchToIt("htmlhelp");
+		webdriver.waitFrameToBeAvailableAndSwitchToIt("htmlhelp");
 
-		return true;
 	}
 
 	class mpTotal {
@@ -381,38 +396,6 @@ public class AccountPageMyPortfolio extends AccountPage {
 		}
 	}
 
-	private boolean answerSecretQuestion() {
-
-		logger.info("Answering secret question...");
-
-		fldSecretQuestion = new Field("secret question", By.cssSelector("label"), getWebdriver(), getWebdriver());
-		fldSecretAnswer = new Field("secret answer", By.id("tlpvt-challenge-answer"), getWebdriver(), getWebdriver());
-		btnSecretSubmit = new Button("submit secret answer", By.id("verify-cq-submit"), getWebdriver(), getWebdriver());
-		btnRecognizeNextTime = new Button("pre submit secret answer", By.id("yes-recognize"), getWebdriver(),
-				getWebdriver());
-
-		try {
-			String secretQuestion = fldSecretQuestion.getText();
-			if (secretQuestion == null)
-				return true; // no secret question shown on the page
-
-			SecretQuestionEntity secretAnswer = account.getBank().getSecretQuestions().stream()
-					.filter(sq -> sq.getQuestion().equals(secretQuestion)).findFirst().orElse(null);
-			if (secretAnswer == null)
-				logger.error("Cannot find answer for question {}", secretQuestion);
-			else
-				fldSecretAnswer.setText(secretAnswer.getAnswer());
-
-			btnRecognizeNextTime.clickIfAvailable();
-			btnSecretSubmit.click();
-		} catch (PageElementNotFoundException e) {
-			logger.error(e.getLocalizedMessage());
-			return false;
-		}
-
-		return true;
-	}
-
 	public void quit() {
 		try {
 			btnLogout.click();
@@ -421,6 +404,6 @@ public class AccountPageMyPortfolio extends AccountPage {
 			logger.error("Bank page {} was not closed properly", account.getBank().getName());
 		}
 
-		webDriver.quit();
+		webdriver.quit();
 	}
 }

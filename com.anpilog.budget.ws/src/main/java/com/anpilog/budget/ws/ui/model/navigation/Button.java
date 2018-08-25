@@ -18,19 +18,15 @@ public class Button extends PageElement {
 	public void click() throws PageElementNotFoundException{
 		if (webElement == null)
 			webElement = searchContext.findElement(locator);
-		if (webElement == null){
-			webdriver.takeScreenshot();
-			throw new PageElementNotFoundException("Button '" + name + "' (" + locator + ") not found ");
-		}
+		if (webElement == null)			
+			throw new PageElementNotFoundException("Button '" + name + "' (" + locator + ") not found ", webdriver);
 		
 		try {
 			webElement.click();
 		} catch (WebDriverException ex) {
 			webElement = searchContext.findElement(locator);
-			if (webElement == null) {
-				webdriver.takeScreenshot();
-				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ");
-			}
+			if (webElement == null)
+				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ", webdriver);			
 			webdriver.scrollTo(locator);
 			webElement.click();
 		}		
@@ -39,20 +35,16 @@ public class Button extends PageElement {
 	public void clickAsAction() throws PageElementNotFoundException{
 		if (webElement == null)
 			webElement = searchContext.findElement(locator);
-		if (webElement == null){
-			webdriver.takeScreenshot();
-			throw new PageElementNotFoundException("Button '" + name + "' (" + locator + ") not found ");
-		}
+		if (webElement == null)
+			throw new PageElementNotFoundException("Button '" + name + "' (" + locator + ") not found ", webdriver);
 		
 		try {
 			Actions action = new Actions(webdriver.getWebDriver());
 			action.moveToElement(webElement).build().perform();
 		} catch (StaleElementReferenceException ex) {
 			webElement = searchContext.findElement(locator);
-			if (webElement == null) {
-				webdriver.takeScreenshot();
-				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ");
-			}
+			if (webElement == null)
+				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ", webdriver);
 			Actions action = new Actions(webdriver.getWebDriver());
 			action.moveToElement(webElement).build().perform();
 		}	
@@ -64,16 +56,14 @@ public class Button extends PageElement {
 		if (webElement == null)
 			webElement = searchContext.findElement(locator);
 		if (webElement == null)
-			throw new PageElementNotFoundException("Button '" + name + "' (" + locator + ") not found ");
+			throw new PageElementNotFoundException("Button '" + name + "' (" + locator + ") not found ", webdriver);
 		
 		try {
 			webElement.click();
 		} catch (StaleElementReferenceException ex) {
 			webElement = searchContext.findElement(locator);
-			if (webElement == null) {
-				webdriver.takeScreenshot();
-				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ");
-			}
+			if (webElement == null)
+				throw new PageElementNotFoundException("Field '" + name + "' (" + locator + ") not found ", webdriver);
 			webElement.click();
 		}		
 	}

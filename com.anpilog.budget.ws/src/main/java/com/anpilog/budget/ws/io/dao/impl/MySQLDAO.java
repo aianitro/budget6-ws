@@ -559,15 +559,26 @@ public class MySQLDAO implements DAO {
 			// Totals
 			if (balanceEntity.getTotals().size() > 0) {
 				List<TotalDTO> totalsDto = new ArrayList<TotalDTO>();
-				for (TotalEntity totalEntity : balanceEntity.getTotals()) {			
+				for (TotalEntity totalEntity : balanceEntity.getTotals()) {
 					TotalDTO totalDto = new TotalDTO();
 					BeanUtils.copyProperties(totalEntity, totalDto);
-					
+
 					// Account
 					AccountDTO accountDTO = new AccountDTO();
 					BeanUtils.copyProperties(totalEntity.getAccount(), accountDTO);
 					totalDto.setAccount(accountDTO);
-					
+
+					// Transactions
+					if (totalEntity.getTransactions().size() > 0) {
+						List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
+						for (TransactionEntity transactionEntity : totalEntity.getTransactions()) {
+							TransactionDTO transactionDto = new TransactionDTO();
+							BeanUtils.copyProperties(transactionEntity, transactionDto);
+							transactionsDto.add(transactionDto);
+						}
+						totalDto.setTransactions(transactionsDto);
+					}
+
 					totalsDto.add(totalDto);
 				}
 				balanceDto.setTotals(totalsDto);

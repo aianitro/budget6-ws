@@ -13,10 +13,15 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.anpilog.budget.ws.io.entity.ReferenceEntity;
+import com.anpilog.budget.ws.io.entity.TransactionEntity;
 import com.anpilog.budget.ws.service.BalancesService;
 import com.anpilog.budget.ws.shared.dto.BalanceDTO;
+import com.anpilog.budget.ws.shared.dto.TotalDTO;
+import com.anpilog.budget.ws.shared.dto.TransactionDTO;
 import com.anpilog.budget.ws.ui.model.request.CreateBalanceRequest;
 import com.anpilog.budget.ws.ui.model.response.BalanceResponse;
+import com.anpilog.budget.ws.ui.model.response.TotalResponse;
 
 @Path("/balances")
 public class BalancesEntryPoint {
@@ -35,6 +40,31 @@ public class BalancesEntryPoint {
 		for (BalanceDTO balanceDto : balances) {
 			BalanceResponse balanceResponse = new BalanceResponse();
 			BeanUtils.copyProperties(balanceDto, balanceResponse);
+			
+			List<TotalResponse> totals = new ArrayList<TotalResponse>();
+			for(TotalDTO totalDTO: balanceDto.getTotals()) {
+				TotalResponse total = new TotalResponse();
+				BeanUtils.copyProperties(totalDTO, total);
+
+				// Account
+				ReferenceEntity accountEntity = new ReferenceEntity();
+				BeanUtils.copyProperties(totalDTO.getAccount(), accountEntity);
+				total.setAccount(accountEntity);
+				
+				// Transactions
+				if (totalDTO.getTransactions().size() > 0) {
+					List<TransactionEntity> transactionEntities = new ArrayList<TransactionEntity>();
+					for (TransactionDTO transactionDto : totalDTO.getTransactions()) {
+						TransactionEntity transactionEntity = new TransactionEntity();
+						BeanUtils.copyProperties(transactionDto, transactionEntity);
+						transactionEntities.add(transactionEntity);
+					}
+					total.setTransactions(transactionEntities);
+				}
+
+				totals.add(total);
+			}
+			balanceResponse.setTotals(totals);
 			
 			returnValue.add(balanceResponse);
 		}

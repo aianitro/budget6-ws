@@ -16,7 +16,7 @@ public class BalanceResponse {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate date;
 	private DataRetrievalStatus status;
-	private List<TotalEntity> totals;
+	private List<TotalResponse> totals;
 	
 	public int getId() {
 		return id;
@@ -42,11 +42,11 @@ public class BalanceResponse {
 		this.status = status;
 	}
 
-	public List<TotalEntity> getTotals() {
+	public List<TotalResponse> getTotals() {
 		return totals;
 	}
 
-	public void setTotals(List<TotalEntity> totals) {
+	public void setTotals(List<TotalResponse> totals) {
 		this.totals = totals;
 	}
 	

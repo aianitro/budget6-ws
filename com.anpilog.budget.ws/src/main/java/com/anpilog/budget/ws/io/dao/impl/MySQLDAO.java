@@ -55,14 +55,14 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against a particular persistent class
-		CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
+		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
 
 		// Query roots always reference entities
-		Root<UserEntity> root = criteria.from(UserEntity.class);
-		criteria.select(root);
+		Root<UserEntity> root = cq.from(UserEntity.class);
+		cq.select(root);
 
 		// Fetch results from start to a number of "limit"
-		List<UserEntity> searchResults = session.createQuery(criteria).setFirstResult(start).setMaxResults(limit)
+		List<UserEntity> searchResults = session.createQuery(cq).setFirstResult(start).setMaxResults(limit)
 				.getResultList();
 
 		List<UserDTO> returnValue = new ArrayList<UserDTO>();
@@ -80,15 +80,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against a particular persistent class
-		CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
+		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
 
 		// Query roots always reference entitie
-		Root<UserEntity> root = criteria.from(UserEntity.class);
-		criteria.select(root);
-		criteria.where(cb.equal(root.get("userId"), id));
+		Root<UserEntity> root = cq.from(UserEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("userId"), id));
 
 		// Fetch single result
-		UserEntity userEntity = session.createQuery(criteria).getSingleResult();
+		UserEntity userEntity = session.createQuery(cq).getSingleResult();
 
 		UserDTO returnValue = new UserDTO();
 		BeanUtils.copyProperties(userEntity, returnValue);
@@ -104,15 +104,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against a particular persistent class
-		CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
+		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
 
 		// Query roots always reference entitie
-		Root<UserEntity> root = criteria.from(UserEntity.class);
-		criteria.select(root);
-		criteria.where(cb.equal(root.get("email"), userName));
+		Root<UserEntity> root = cq.from(UserEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("email"), userName));
 
 		// Fetch single result
-		Query<UserEntity> query = session.createQuery(criteria);
+		Query<UserEntity> query = session.createQuery(cq);
 		List<UserEntity> resultList = query.getResultList();
 		if (resultList != null && resultList.size() > 0) {
 			UserEntity userEntity = resultList.get(0);
@@ -167,15 +167,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against a particular persistent class
-		CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
+		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
 
 		// Query roots always reference entitie
-		Root<UserEntity> root = criteria.from(UserEntity.class);
-		criteria.select(root);
-		criteria.where(cb.equal(root.get("emailVerificationToken"), token));
+		Root<UserEntity> root = cq.from(UserEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("emailVerificationToken"), token));
 
 		// Fetch single result
-		Query<UserEntity> query = session.createQuery(criteria);
+		Query<UserEntity> query = session.createQuery(cq);
 		List<UserEntity> resultList = query.getResultList();
 		if (resultList != null && resultList.size() > 0) {
 			UserEntity userEntity = resultList.get(0);
@@ -193,14 +193,14 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<BankEntity> criteria = cb.createQuery(BankEntity.class);
+		CriteriaQuery<BankEntity> cq = cb.createQuery(BankEntity.class);
 
 		// Query
-		Root<BankEntity> root = criteria.from(BankEntity.class);
-		criteria.select(root);
+		Root<BankEntity> root = cq.from(BankEntity.class);
+		cq.select(root);
 
 		// Fetch single result
-		List<BankEntity> searchResults = session.createQuery(criteria).getResultList();
+		List<BankEntity> searchResults = session.createQuery(cq).getResultList();
 
 		List<BankDTO> returnValue = new ArrayList<BankDTO>();
 		for (BankEntity bankEntity : searchResults) {
@@ -229,15 +229,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<BankEntity> criteria = cb.createQuery(BankEntity.class);
+		CriteriaQuery<BankEntity> cq = cb.createQuery(BankEntity.class);
 
 		// Query
-		Root<BankEntity> root = criteria.from(BankEntity.class);
-		criteria.select(root);
-		criteria.where(cb.equal(root.get("id"), id));
+		Root<BankEntity> root = cq.from(BankEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("id"), id));
 
 		// Fetch single result
-		BankEntity bankEntity = session.createQuery(criteria).getSingleResult();
+		BankEntity bankEntity = session.createQuery(cq).getSingleResult();
 
 		BankDTO returnValue = new BankDTO();
 		BeanUtils.copyProperties(bankEntity, returnValue);
@@ -264,15 +264,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<BankEntity> criteria = cb.createQuery(BankEntity.class);
+		CriteriaQuery<BankEntity> cq = cb.createQuery(BankEntity.class);
 
 		// Query
-		Root<BankEntity> root = criteria.from(BankEntity.class);
-		criteria.select(root);
-		criteria.where(cb.equal(root.get("name"), name));
+		Root<BankEntity> root = cq.from(BankEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("name"), name));
 
 		// Fetch single result
-		Query<BankEntity> query = session.createQuery(criteria);
+		Query<BankEntity> query = session.createQuery(cq);
 		List<BankEntity> resultList = query.getResultList();
 		if (resultList != null && resultList.size() > 0) {
 			BankEntity bankEntity = resultList.get(0);
@@ -377,14 +377,14 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<AccountEntity> criteria = cb.createQuery(AccountEntity.class);
+		CriteriaQuery<AccountEntity> cq = cb.createQuery(AccountEntity.class);
 
 		// Query
-		Root<AccountEntity> root = criteria.from(AccountEntity.class);
-		criteria.select(root).orderBy(cb.asc(root.get("id")));
+		Root<AccountEntity> root = cq.from(AccountEntity.class);
+		cq.select(root).orderBy(cb.asc(root.get("id")));
 
 		// Fetch single result
-		List<AccountEntity> searchResults = session.createQuery(criteria).setFirstResult(start).setMaxResults(limit)
+		List<AccountEntity> searchResults = session.createQuery(cq).setFirstResult(start).setMaxResults(limit)
 				.getResultList();
 
 		List<AccountDTO> returnValue = new ArrayList<AccountDTO>();
@@ -402,15 +402,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<AccountEntity> criteria = cb.createQuery(AccountEntity.class);
+		CriteriaQuery<AccountEntity> cq = cb.createQuery(AccountEntity.class);
 
 		// Query
-		Root<AccountEntity> root = criteria.from(AccountEntity.class);
-		criteria.select(root);
-		criteria.where(cb.equal(root.get("isEnabled"), true));
+		Root<AccountEntity> root = cq.from(AccountEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("isEnabled"), true));
 
 		// Fetch single result
-		List<AccountEntity> searchResults = session.createQuery(criteria).setFirstResult(start).setMaxResults(limit)
+		List<AccountEntity> searchResults = session.createQuery(cq).setFirstResult(start).setMaxResults(limit)
 				.getResultList();
 
 		List<AccountDTO> returnValue = new ArrayList<AccountDTO>();
@@ -428,15 +428,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<AccountEntity> criteria = cb.createQuery(AccountEntity.class);
+		CriteriaQuery<AccountEntity> cq = cb.createQuery(AccountEntity.class);
 
 		// Query
-		Root<AccountEntity> root = criteria.from(AccountEntity.class);
-		criteria.select(root);
-		criteria.where(cb.equal(root.get("id"), id));
+		Root<AccountEntity> root = cq.from(AccountEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("id"), id));
 
 		// Fetch single result
-		AccountEntity accountEntity = session.createQuery(criteria).getSingleResult();
+		AccountEntity accountEntity = session.createQuery(cq).getSingleResult();
 
 		AccountDTO returnValue = new AccountDTO();
 		BeanUtils.copyProperties(accountEntity, returnValue);
@@ -452,15 +452,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<AccountEntity> criteria = cb.createQuery(AccountEntity.class);
+		CriteriaQuery<AccountEntity> cq = cb.createQuery(AccountEntity.class);
 
 		// Query
-		Root<AccountEntity> root = criteria.from(AccountEntity.class);
-		criteria.select(root);
-		criteria.where(cb.equal(root.get("name"), name));
+		Root<AccountEntity> root = cq.from(AccountEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("name"), name));
 
 		// Fetch single result
-		Query<AccountEntity> query = session.createQuery(criteria);
+		Query<AccountEntity> query = session.createQuery(cq);
 		List<AccountEntity> resultList = query.getResultList();
 		if (resultList != null && resultList.size() > 0) {
 			AccountEntity accountEntity = resultList.get(0);
@@ -515,14 +515,14 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<SecretQuestionEntity> criteria = cb.createQuery(SecretQuestionEntity.class);
+		CriteriaQuery<SecretQuestionEntity> cq = cb.createQuery(SecretQuestionEntity.class);
 
 		// Query
-		Root<SecretQuestionEntity> root = criteria.from(SecretQuestionEntity.class);
-		criteria.select(root);
+		Root<SecretQuestionEntity> root = cq.from(SecretQuestionEntity.class);
+		cq.select(root);
 
 		// Fetch single result
-		List<SecretQuestionEntity> searchResults = session.createQuery(criteria).getResultList();
+		List<SecretQuestionEntity> searchResults = session.createQuery(cq).getResultList();
 
 		List<SecretQuestionDTO> returnValue = new ArrayList<SecretQuestionDTO>();
 		for (SecretQuestionEntity secretQuestionEntity : searchResults) {
@@ -542,14 +542,14 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<BalanceEntity> criteria = cb.createQuery(BalanceEntity.class);
+		CriteriaQuery<BalanceEntity> cq = cb.createQuery(BalanceEntity.class);
 
 		// Query
-		Root<BalanceEntity> root = criteria.from(BalanceEntity.class);
-		criteria.select(root);
+		Root<BalanceEntity> root = cq.from(BalanceEntity.class);
+		cq.select(root);
 
 		// Fetch single result
-		List<BalanceEntity> searchResults = session.createQuery(criteria).getResultList();
+		List<BalanceEntity> searchResults = session.createQuery(cq).getResultList();
 
 		List<BalanceDTO> returnValue = new ArrayList<BalanceDTO>();
 		for (BalanceEntity balanceEntity : searchResults) {
@@ -674,15 +674,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<TotalEntity> criteria = cb.createQuery(TotalEntity.class);
+		CriteriaQuery<TotalEntity> cq = cb.createQuery(TotalEntity.class);
 
 		// Query
-		Root<TotalEntity> root = criteria.from(TotalEntity.class);
-		criteria.orderBy(cb.desc(root.get("date")), cb.desc(root.get("id")));
-		criteria.select(root);
+		Root<TotalEntity> root = cq.from(TotalEntity.class);
+		cq.orderBy(cb.desc(root.get("date")), cb.desc(root.get("id")));
+		cq.select(root);
 
 		// Fetch single result
-		List<TotalEntity> searchResults = session.createQuery(criteria).getResultList();
+		List<TotalEntity> searchResults = session.createQuery(cq).getResultList();
 
 		List<TotalDTO> returnValue = new ArrayList<TotalDTO>();
 		for (TotalEntity totalEntity : searchResults) {
@@ -772,15 +772,15 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<TotalEntity> criteria = cb.createQuery(TotalEntity.class);
+		CriteriaQuery<TotalEntity> cq = cb.createQuery(TotalEntity.class);
 
 		// Query
-		Root<TotalEntity> root = criteria.from(TotalEntity.class);
-		criteria.select(root);
-		criteria.where(cb.equal(root.get("id"), id));
+		Root<TotalEntity> root = cq.from(TotalEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("id"), id));
 
 		// Fetch single result
-		TotalEntity totalEntity = session.createQuery(criteria).getSingleResult();
+		TotalEntity totalEntity = session.createQuery(cq).getSingleResult();
 
 		TotalDTO returnValue = new TotalDTO();
 		BeanUtils.copyProperties(totalEntity, returnValue);
@@ -887,14 +887,14 @@ public class MySQLDAO implements DAO {
 		CriteriaBuilder cb = session.getCriteriaBuilder();
 
 		// Create Criteria against particular persistent class
-		CriteriaQuery<TransactionEntity> criteria = cb.createQuery(TransactionEntity.class);
+		CriteriaQuery<TransactionEntity> cq = cb.createQuery(TransactionEntity.class);
 
 		// Query
-		Root<TransactionEntity> root = criteria.from(TransactionEntity.class);
-		criteria.select(root);
+		Root<TransactionEntity> root = cq.from(TransactionEntity.class);
+		cq.select(root);
 
 		// Fetch single result
-		List<TransactionEntity> searchResults = session.createQuery(criteria).getResultList();
+		List<TransactionEntity> searchResults = session.createQuery(cq).getResultList();
 
 		List<TransactionDTO> returnValue = new ArrayList<TransactionDTO>();
 		for (TransactionEntity transactionEntity : searchResults) {

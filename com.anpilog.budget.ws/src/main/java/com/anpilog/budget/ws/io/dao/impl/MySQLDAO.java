@@ -694,7 +694,7 @@ public class MySQLDAO implements DAO {
 			BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
 			totalDto.setAccount(accountDto);
 
-			// Secret questions
+			// Transactions
 			if (totalEntity.getTransactions().size() > 0) {
 				List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
 				for (TransactionEntity transactionEntity : totalEntity.getTransactions()) {
@@ -789,6 +789,17 @@ public class MySQLDAO implements DAO {
 		AccountDTO accountDto = new AccountDTO();
 		BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
 		returnValue.setAccount(accountDto);
+		
+		// Transactions
+		if (totalEntity.getTransactions().size() > 0) {
+			List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
+			for (TransactionEntity transactionEntity : totalEntity.getTransactions()) {
+				TransactionDTO transactionDto = new TransactionDTO();
+				BeanUtils.copyProperties(transactionEntity, transactionDto);
+				transactionsDto.add(transactionDto);
+			}
+			returnValue.setTransactions(transactionsDto);
+		}
 
 		return returnValue;
 	}

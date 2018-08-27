@@ -678,6 +678,7 @@ public class MySQLDAO implements DAO {
 
 		// Query
 		Root<TotalEntity> root = criteria.from(TotalEntity.class);
+		criteria.orderBy(cb.desc(root.get("date")), cb.desc(root.get("id")));
 		criteria.select(root);
 
 		// Fetch single result

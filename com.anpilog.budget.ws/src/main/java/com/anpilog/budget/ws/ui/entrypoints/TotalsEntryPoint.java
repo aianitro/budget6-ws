@@ -114,22 +114,6 @@ public class TotalsEntryPoint {
 		BeanUtils.copyProperties(createdTotal.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
 
-		// Transactions
-		List<ReferenceEntity> transactionReferences = new ArrayList<ReferenceEntity>();
-		for (TransactionDTO transactionDto : createdTotal.getTransactions()) {
-			ReferenceEntity transactionReference = new ReferenceEntity();
-			transactionReference.setId(transactionDto.getId());
-			String transactionData = transactionDto.getDate() + "  " + transactionDto.getAmount();
-			if (transactionDto.getDescription() != null)
-				transactionData = transactionData + "  " + transactionDto.getDescription();
-			if (transactionDto.getCategoryStr() != null)
-				transactionData = transactionData + "  " + transactionDto.getCategoryStr();
-
-			transactionReference.setName(transactionData);
-			transactionReferences.add(transactionReference);
-		}
-		returnValue.setTransactions(transactionReferences);
-
 		return returnValue;
 	}
 

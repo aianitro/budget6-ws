@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.anpilog.budget.ws.io.entity.ReferenceEntity;
+import com.anpilog.budget.ws.io.entity.TransactionEntity;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -19,7 +20,7 @@ public class TotalResponse {
 	private ReferenceEntity account;
 	private Double amount;
 	private Double difference;
-	private List<ReferenceEntity> transactions;
+	private List<TransactionEntity> transactions;
 	
 	public int getId() {
 		return id;
@@ -69,11 +70,11 @@ public class TotalResponse {
 		this.difference = difference;
 	}
 	
-	public List<ReferenceEntity> getTransactions() {
+	public List<TransactionEntity> getTransactions() {
 		return transactions;
 	}
 	
-	public void setTransactions(List<ReferenceEntity> transactions) {
+	public void setTransactions(List<TransactionEntity> transactions) {
 		this.transactions = transactions;
 	}
 	

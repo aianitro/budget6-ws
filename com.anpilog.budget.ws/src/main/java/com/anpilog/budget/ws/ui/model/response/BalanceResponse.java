@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.anpilog.budget.ws.io.entity.TotalEntity;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 

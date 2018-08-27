@@ -591,6 +591,55 @@ public class MySQLDAO implements DAO {
 	}
 
 	@Override
+	public BalanceDTO getBalance(String id) {
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+
+		// Create Criteria against particular persistent class
+		CriteriaQuery<BalanceEntity> cq = cb.createQuery(BalanceEntity.class);
+
+		// Query
+		Root<BalanceEntity> root = cq.from(BalanceEntity.class);
+		cq.select(root);
+		cq.where(cb.equal(root.get("id"), id));
+
+		// Fetch single result
+		BalanceEntity balanceEntity = session.createQuery(cq).getSingleResult();
+
+		BalanceDTO returnValue = new BalanceDTO();
+		BeanUtils.copyProperties(balanceEntity, returnValue);
+
+		// Totals
+		if (balanceEntity.getTotals().size() > 0) {
+			List<TotalDTO> totalsDto = new ArrayList<TotalDTO>();
+			for (TotalEntity totalEntity : balanceEntity.getTotals()) {
+				TotalDTO totalDto = new TotalDTO();
+				BeanUtils.copyProperties(totalEntity, totalDto);
+
+				// Account
+				AccountDTO accountDTO = new AccountDTO();
+				BeanUtils.copyProperties(totalEntity.getAccount(), accountDTO);
+				totalDto.setAccount(accountDTO);
+
+				// Transactions
+				if (totalEntity.getTransactions().size() > 0) {
+					List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
+					for (TransactionEntity transactionEntity : totalEntity.getTransactions()) {
+						TransactionDTO transactionDto = new TransactionDTO();
+						BeanUtils.copyProperties(transactionEntity, transactionDto);
+						transactionsDto.add(transactionDto);
+					}
+					totalDto.setTransactions(transactionsDto);
+				}
+
+				totalsDto.add(totalDto);
+			}
+			returnValue.setTotals(totalsDto);
+		}
+
+		return returnValue;
+	}
+
+	@Override
 	public BalanceDTO saveBalance(BalanceDTO balanceDto) {
 
 		BalanceEntity balanceEntity = new BalanceEntity();
@@ -626,11 +675,11 @@ public class MySQLDAO implements DAO {
 			for (TotalEntity totalEntity : balanceEntity.getTotals()) {
 				TotalDTO totalDto = new TotalDTO();
 				BeanUtils.copyProperties(totalEntity, totalDto);
-				
+
 				AccountDTO accountDTO = new AccountDTO();
 				BeanUtils.copyProperties(totalEntity.getAccount(), accountDTO);
 				totalDto.setAccount(accountDTO);
-				
+
 				totalsDto.add(totalDto);
 			}
 			returnValue.setTotals(totalsDto);
@@ -638,7 +687,7 @@ public class MySQLDAO implements DAO {
 
 		return returnValue;
 	}
-	
+
 	@Override
 	public void updateBalance(BalanceDTO balanceDto) {
 
@@ -651,7 +700,7 @@ public class MySQLDAO implements DAO {
 
 			TotalEntity totalEntity = new TotalEntity();
 			BeanUtils.copyProperties(totalDto, totalEntity);
-			
+
 			if (totalDto.getTransactions() != null && totalDto.getTransactions().size() > 0) {
 				List<TransactionEntity> transactionsEntity = new ArrayList<TransactionEntity>();
 				for (TransactionDTO transactionDto : totalDto.getTransactions()) {
@@ -935,20 +984,20 @@ public class MySQLDAO implements DAO {
 		for (TransactionEntity transactionEntity : searchResults) {
 			if (!transactionEntity.getTotal().getAccount().getIsEnabled())
 				continue;
-			
+
 			TransactionDTO transactionDto = new TransactionDTO();
 			BeanUtils.copyProperties(transactionEntity, transactionDto);
-			
+
 			// Total
 			TotalDTO totalDto = new TotalDTO();
 			BeanUtils.copyProperties(transactionEntity.getTotal(), totalDto);
 			transactionDto.setTotal(totalDto);
-			
+
 			// Account
 			AccountDTO accountDto = new AccountDTO();
 			BeanUtils.copyProperties(transactionEntity.getTotal().getAccount(), accountDto);
 			totalDto.setAccount(accountDto);
-			
+
 			returnValue.add(transactionDto);
 		}
 

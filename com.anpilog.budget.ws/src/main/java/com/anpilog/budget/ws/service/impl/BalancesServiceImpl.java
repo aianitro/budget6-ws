@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.anpilog.budget.ws.exceptions.CouldNotUpdateRecordException;
+import com.anpilog.budget.ws.exceptions.NoRecordFoundException;
 import com.anpilog.budget.ws.io.dao.DAO;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.BalancesService;
 import com.anpilog.budget.ws.shared.dto.BalanceDTO;
+import com.anpilog.budget.ws.ui.model.response.ErrorMessages;
 
 public class BalancesServiceImpl implements BalancesService {
 
@@ -62,6 +64,23 @@ public class BalancesServiceImpl implements BalancesService {
 		}
 
 		return balance;
+	}
+	
+	@Override
+	public BalanceDTO getBalance(String id) {
+		BalanceDTO returnValue = null;
+
+		try {
+			this.database.openConnection();
+			returnValue = this.database.getBalance(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NoRecordFoundException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+		} finally {
+			this.database.closeConnection();
+		}
+
+		return returnValue;
 	}
 
 	@Override

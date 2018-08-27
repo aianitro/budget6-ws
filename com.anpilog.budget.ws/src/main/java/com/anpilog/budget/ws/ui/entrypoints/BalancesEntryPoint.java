@@ -7,6 +7,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -25,7 +26,7 @@ import com.anpilog.budget.ws.ui.model.response.TotalResponse;
 
 @Path("/balances")
 public class BalancesEntryPoint {
-	
+
 	@Autowired
 	BalancesService balancesService;
 
@@ -40,9 +41,9 @@ public class BalancesEntryPoint {
 		for (BalanceDTO balanceDto : balances) {
 			BalanceResponse balanceResponse = new BalanceResponse();
 			BeanUtils.copyProperties(balanceDto, balanceResponse);
-			
+
 			List<TotalResponse> totals = new ArrayList<TotalResponse>();
-			for(TotalDTO totalDTO: balanceDto.getTotals()) {
+			for (TotalDTO totalDTO : balanceDto.getTotals()) {
 				TotalResponse total = new TotalResponse();
 				BeanUtils.copyProperties(totalDTO, total);
 
@@ -50,7 +51,7 @@ public class BalancesEntryPoint {
 				ReferenceEntity accountEntity = new ReferenceEntity();
 				BeanUtils.copyProperties(totalDTO.getAccount(), accountEntity);
 				total.setAccount(accountEntity);
-				
+
 				// Transactions
 				if (totalDTO.getTransactions().size() > 0) {
 					List<TransactionEntity> transactionEntities = new ArrayList<TransactionEntity>();
@@ -65,9 +66,48 @@ public class BalancesEntryPoint {
 				totals.add(total);
 			}
 			balanceResponse.setTotals(totals);
-			
+
 			returnValue.add(balanceResponse);
 		}
+
+		return returnValue;
+	}
+
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public BalanceResponse getBalance(@PathParam("id") String id) {
+
+		BalanceDTO balanceDTO = balancesService.getBalance(id);
+
+		// Prepare return value
+		BalanceResponse returnValue = new BalanceResponse();
+		BeanUtils.copyProperties(balanceDTO, returnValue);
+
+		List<TotalResponse> totals = new ArrayList<TotalResponse>();
+		for (TotalDTO totalDTO : balanceDTO.getTotals()) {
+			TotalResponse total = new TotalResponse();
+			BeanUtils.copyProperties(totalDTO, total);
+
+			// Account
+			ReferenceEntity accountEntity = new ReferenceEntity();
+			BeanUtils.copyProperties(totalDTO.getAccount(), accountEntity);
+			total.setAccount(accountEntity);
+
+			// Transactions
+			if (totalDTO.getTransactions().size() > 0) {
+				List<TransactionEntity> transactionEntities = new ArrayList<TransactionEntity>();
+				for (TransactionDTO transactionDto : totalDTO.getTransactions()) {
+					TransactionEntity transactionEntity = new TransactionEntity();
+					BeanUtils.copyProperties(transactionDto, transactionEntity);
+					transactionEntities.add(transactionEntity);
+				}
+				total.setTransactions(transactionEntities);
+			}
+
+			totals.add(total);
+		}
+		returnValue.setTotals(totals);
 
 		return returnValue;
 	}
@@ -75,21 +115,21 @@ public class BalancesEntryPoint {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public BalanceResponse createBalance(CreateBalanceRequest requestObject) {		
-		
+	public BalanceResponse createBalance(CreateBalanceRequest requestObject) {
+
 		// Prepare DTO
 		BalanceDTO balanceDto = new BalanceDTO();
-		BeanUtils.copyProperties(requestObject, balanceDto);	
+		BeanUtils.copyProperties(requestObject, balanceDto);
 
 		// Create new balance
-		BalanceDTO createdBalance = balancesService.createBalance(balanceDto);		
+		BalanceDTO createdBalance = balancesService.createBalance(balanceDto);
 
 		// Prepare response
 		BalanceResponse returnValue = new BalanceResponse();
 		BeanUtils.copyProperties(createdBalance, returnValue);
-		
+
 		// To avoid StackOverflowException
-		//returnValue.getTotals().stream().forEach(t -> t.setBalance(null));
+		// returnValue.getTotals().stream().forEach(t -> t.setBalance(null));
 
 		return returnValue;
 	}

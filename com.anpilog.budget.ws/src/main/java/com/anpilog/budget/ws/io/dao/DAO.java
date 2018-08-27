@@ -45,6 +45,7 @@ public interface DAO {
     
 	// Balances
 	List<BalanceDTO> getBalances();
+	BalanceDTO getBalance(String id);
 	BalanceDTO saveBalance(BalanceDTO balanceDto);
 	void updateBalance(BalanceDTO balanceDto);
     

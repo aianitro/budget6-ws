@@ -26,6 +26,7 @@ import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.shared.dto.TransactionDTO;
 import com.anpilog.budget.ws.ui.model.request.RefreshRequest;
 import com.anpilog.budget.ws.ui.model.response.RefreshResponse;
+import com.anpilog.budget.ws.utils.BalanceUtil;
 import com.anpilog.budget.ws.utils.DateUtils;
 
 @Path("/refresh")
@@ -74,9 +75,7 @@ public class RefreshEntryPoint {
 
 			createdBalance = pendingBalance;
 
-		else {
-			// Handling previous old (not today's) totals (and balance) which are left in
-			// PENDING state
+		else { // Handling old (not today's) balance) which left in PENDING state
 
 			// 1. Setting old balance to COMPLETE status
 			pendingBalance.setStatus(DataRetrievalStatus.COMPLETED);
@@ -114,6 +113,8 @@ public class RefreshEntryPoint {
 			}
 		if (isRefreshSuccessful)
 			createdBalance.setStatus(DataRetrievalStatus.COMPLETED);
+		
+		createdBalance.setAmount(BalanceUtil.getBalanceAmount(createdBalance));
 
 		balancesService.updateBalance(createdBalance);
 
@@ -124,5 +125,7 @@ public class RefreshEntryPoint {
 
 		return refreshResponse;
 	}
+	
+	
 
 }

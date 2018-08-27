@@ -12,6 +12,7 @@ public class BalanceDTO implements Serializable{
 	
 	private int id;
 	private LocalDate date;
+	private Double amount;
 	private DataRetrievalStatus status;
 	private List<TotalDTO> totals;
 	
@@ -29,6 +30,14 @@ public class BalanceDTO implements Serializable{
 	
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+	
+	public Double getAmount() {
+		return amount;
+	}
+	
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 
 	public DataRetrievalStatus getStatus() {

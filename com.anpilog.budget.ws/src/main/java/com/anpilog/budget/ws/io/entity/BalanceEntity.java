@@ -30,6 +30,7 @@ public class BalanceEntity implements Serializable{
 	private int id;
 	@Convert(converter = LocalDatePersistenceConverter.class)
 	private LocalDate date;
+	private Double amount;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
 	private DataRetrievalStatus status;
@@ -51,6 +52,14 @@ public class BalanceEntity implements Serializable{
 	
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+		
+	public Double getAmount() {
+		return amount;
+	}
+	
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 	
 	public DataRetrievalStatus getStatus() {

@@ -48,9 +48,21 @@ public class TotalsEntryPoint {
 			TotalResponse totalResponse = new TotalResponse();
 			BeanUtils.copyProperties(totalDto, totalResponse);
 
+			// Account
 			ReferenceEntity accountReference = new ReferenceEntity();
 			BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 			totalResponse.setAccount(accountReference);
+			
+			// Transactions
+			if (totalDto.getTransactions().size() > 0) {
+				List<TransactionEntity> transactionEntities = new ArrayList<TransactionEntity>();
+				for (TransactionDTO transactionDto : totalDto.getTransactions()) {
+					TransactionEntity transactionEntity = new TransactionEntity();
+					BeanUtils.copyProperties(transactionDto, transactionEntity);
+					transactionEntities.add(transactionEntity);
+				}
+				totalResponse.setTransactions(transactionEntities);
+			}
 
 			returnValue.add(totalResponse);
 		}
@@ -62,18 +74,28 @@ public class TotalsEntryPoint {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public TotalResponse getTotal(@PathParam("id") String id) {
-		TotalResponse returnValue = null;
 
 		TotalDTO totalDto = totalsService.getTotal(id);
 
 		// Prepare response
-		returnValue = new TotalResponse();
+		TotalResponse returnValue = new TotalResponse();
 		BeanUtils.copyProperties(totalDto, returnValue);
 
 		// Account
 		ReferenceEntity accountReference = new ReferenceEntity();
 		BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
+
+		// Transactions
+		if (totalDto.getTransactions().size() > 0) {
+			List<TransactionEntity> transactionEntities = new ArrayList<TransactionEntity>();
+			for (TransactionDTO transactionDto : totalDto.getTransactions()) {
+				TransactionEntity transactionEntity = new TransactionEntity();
+				BeanUtils.copyProperties(transactionDto, transactionEntity);
+				transactionEntities.add(transactionEntity);
+			}
+			returnValue.setTransactions(transactionEntities);
+		}
 
 		return returnValue;
 	}

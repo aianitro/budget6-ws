@@ -789,13 +789,14 @@ public class MySQLDAO implements DAO {
 		AccountDTO accountDto = new AccountDTO();
 		BeanUtils.copyProperties(totalEntity.getAccount(), accountDto);
 		returnValue.setAccount(accountDto);
-		
+
 		// Transactions
 		if (totalEntity.getTransactions().size() > 0) {
 			List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
 			for (TransactionEntity transactionEntity : totalEntity.getTransactions()) {
 				TransactionDTO transactionDto = new TransactionDTO();
 				BeanUtils.copyProperties(transactionEntity, transactionDto);
+				transactionDto.setTotal(returnValue);
 				transactionsDto.add(transactionDto);
 			}
 			returnValue.setTransactions(transactionsDto);
@@ -819,7 +820,7 @@ public class MySQLDAO implements DAO {
 		List<TransactionEntity> transactionEntities = new ArrayList<TransactionEntity>();
 		if (totalEntity.getTransactions() != null)
 			for (TransactionDTO transactionDto : totalDto.getTransactions()) {
-				TransactionEntity transactionEntity =  new TransactionEntity();
+				TransactionEntity transactionEntity = new TransactionEntity();
 				BeanUtils.copyProperties(transactionDto, transactionEntity);
 				transactionEntity.setTotal(totalEntity);
 				transactionEntities.add(transactionEntity);
@@ -884,6 +885,18 @@ public class MySQLDAO implements DAO {
 	public void deleteTotal(TotalDTO totalDto) {
 		TotalEntity totalEntity = new TotalEntity();
 		BeanUtils.copyProperties(totalDto, totalEntity);
+
+		// Transactions
+		if (totalDto.getTransactions() != null && totalDto.getTransactions().size() > 0) {
+			List<TransactionEntity> transactionEntities = new ArrayList<TransactionEntity>();
+			for (TransactionDTO transactionDto : totalDto.getTransactions()) {
+				TransactionEntity transactionEntity = new TransactionEntity();
+				BeanUtils.copyProperties(transactionDto, transactionEntity);
+				transactionEntity.setTotal(totalEntity);
+				transactionEntities.add(transactionEntity);
+			}
+			totalEntity.setTransactions(transactionEntities);
+		}
 
 		session.beginTransaction();
 		session.delete(totalEntity);

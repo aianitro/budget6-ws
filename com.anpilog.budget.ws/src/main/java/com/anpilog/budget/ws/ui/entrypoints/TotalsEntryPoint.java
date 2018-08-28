@@ -52,7 +52,7 @@ public class TotalsEntryPoint {
 			ReferenceEntity accountReference = new ReferenceEntity();
 			BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 			totalResponse.setAccount(accountReference);
-			
+
 			// Transactions
 			if (totalDto.getTransactions().size() > 0) {
 				List<TransactionEntity> transactionEntities = new ArrayList<TransactionEntity>();
@@ -116,13 +116,15 @@ public class TotalsEntryPoint {
 		totalDto.setAccount(accountDto);
 
 		// Transactions
-		List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
-		for (TransactionEntity transactionEntity : requestObject.getTransactions()) {
-			TransactionDTO transactionDto = new TransactionDTO();
-			BeanUtils.copyProperties(transactionEntity, transactionDto);
-			transactionsDto.add(transactionDto);
+		if (requestObject.getTransactions() != null && requestObject.getTransactions().size() > 0) {
+			List<TransactionDTO> transactionsDto = new ArrayList<TransactionDTO>();
+			for (TransactionEntity transactionEntity : requestObject.getTransactions()) {
+				TransactionDTO transactionDto = new TransactionDTO();
+				BeanUtils.copyProperties(transactionEntity, transactionDto);
+				transactionsDto.add(transactionDto);
+			}
+			totalDto.setTransactions(transactionsDto);
 		}
-		totalDto.setTransactions(transactionsDto);
 
 		// Create new total
 		TotalDTO createdTotal = totalsService.createTotal(totalDto);

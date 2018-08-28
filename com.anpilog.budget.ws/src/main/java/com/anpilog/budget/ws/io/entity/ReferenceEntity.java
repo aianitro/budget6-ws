@@ -2,14 +2,14 @@ package com.anpilog.budget.ws.io.entity;
 
 public class ReferenceEntity{
 
-	private long id;
+	private Long id;
 	private String name;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 	
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	

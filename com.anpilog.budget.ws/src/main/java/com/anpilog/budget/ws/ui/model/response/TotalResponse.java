@@ -11,7 +11,7 @@ import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @XmlRootElement 
-public class TotalResponse {
+public class TotalResponse implements Comparable<Object>{
 	
 	private int id;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -76,6 +76,11 @@ public class TotalResponse {
 	
 	public void setTransactions(List<TransactionEntity> transactions) {
 		this.transactions = transactions;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		return account.getId().compareTo(((TotalResponse) o).getAccount().getId());
 	}
 	
 }

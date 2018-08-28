@@ -1,6 +1,7 @@
 package com.anpilog.budget.ws.ui.entrypoints;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -65,6 +66,7 @@ public class BalancesEntryPoint {
 
 				totals.add(total);
 			}
+			Collections.sort(totals);
 			balanceResponse.setTotals(totals);
 
 			returnValue.add(balanceResponse);
@@ -107,6 +109,7 @@ public class BalancesEntryPoint {
 
 			totals.add(total);
 		}
+		Collections.sort(totals);
 		returnValue.setTotals(totals);
 
 		return returnValue;

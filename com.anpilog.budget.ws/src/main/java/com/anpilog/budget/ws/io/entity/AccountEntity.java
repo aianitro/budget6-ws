@@ -18,7 +18,7 @@ public class AccountEntity implements Serializable{
 	private long id;
 	private String name;
 	@ManyToOne
-	@JoinColumn(name = "bank_id", nullable = false)	
+	@JoinColumn(name = "bank_id", nullable = true)	
 	private BankEntity bank;
 	private String myPortfolioId;
 	private Boolean isAutomated;

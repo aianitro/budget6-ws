@@ -546,6 +546,7 @@ public class MySQLDAO implements DAO {
 
 		// Query
 		Root<BalanceEntity> root = cq.from(BalanceEntity.class);
+		cq.orderBy(cb.desc(root.get("date")));
 		cq.select(root);
 
 		// Fetch single result

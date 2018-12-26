@@ -2,6 +2,7 @@ package com.anpilog.budget.ws.ui.entrypoints;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -102,7 +103,11 @@ public class RefreshEntryPoint {
 
 		// Start fetching new data with Selenium
 		SeleniumServiceImpl seleniumService = new SeleniumServiceImpl();
-		seleniumService.refreshTotals(createdBalance.getTotals(), allTransactions);
+		
+		// Refresh only not 'COMPLETED' totals
+		seleniumService.refreshTotals(createdBalance.getTotals().stream()
+				.filter(t -> !t.getStatus().equals(DataRetrievalStatus.COMPLETED)).collect(Collectors.toList()),
+				allTransactions);
 
 		// If all totals successfully refreshed changing status for Balance
 		boolean isRefreshSuccessful = true;
@@ -113,7 +118,7 @@ public class RefreshEntryPoint {
 			}
 		if (isRefreshSuccessful)
 			createdBalance.setStatus(DataRetrievalStatus.COMPLETED);
-		
+
 		createdBalance.setAmount(BalanceUtil.getBalanceAmount(createdBalance));
 
 		balancesService.updateBalance(createdBalance);
@@ -125,7 +130,5 @@ public class RefreshEntryPoint {
 
 		return refreshResponse;
 	}
-	
-	
 
 }

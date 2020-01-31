@@ -3,6 +3,7 @@ package com.anpilog.budget.ws.shared.dto;
 import java.io.Serializable;
 
 import com.anpilog.budget.ws.io.entity.BankEntity;
+import com.anpilog.budget.ws.io.entity.enums.BalanceType;
 
 public class AccountDTO implements Serializable{
 
@@ -14,6 +15,7 @@ public class AccountDTO implements Serializable{
 	private String myPortfolioId;
 	private Boolean isAutomated;
 	private Boolean isEnabled;
+	private BalanceType balanceType;
 	
 	public long getId() {
 		return id;
@@ -62,4 +64,12 @@ public class AccountDTO implements Serializable{
 	public void setIsEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
+	
+	public BalanceType getBalanceType() {
+		return balanceType;
+	}
+
+	public void setBalanceType(BalanceType balanceType) {
+		this.balanceType = balanceType;
+	}	
 }

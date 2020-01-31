@@ -3,6 +3,7 @@ package com.anpilog.budget.ws.ui.model.response;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.anpilog.budget.ws.io.entity.ReferenceEntity;
+import com.anpilog.budget.ws.io.entity.enums.BalanceType;
 
 @XmlRootElement 
 public class AccountResponse {
@@ -13,6 +14,7 @@ public class AccountResponse {
 	private String myPortfolioId;
 	private Boolean isAutomated;
 	private Boolean isEnabled;
+	private BalanceType balanceType;
 	
 	public long getId() {
 		return id;
@@ -60,5 +62,13 @@ public class AccountResponse {
 	
 	public void setIsEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
+	}
+	
+	public BalanceType getBalanceType() {
+		return balanceType;
+	}
+
+	public void setBalanceType(BalanceType balanceType) {
+		this.balanceType = balanceType;
 	}
 }

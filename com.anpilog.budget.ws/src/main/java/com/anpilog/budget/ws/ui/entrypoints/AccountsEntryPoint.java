@@ -136,6 +136,9 @@ public class AccountsEntryPoint {
 
 		if (accountDetails.getIsAutomated() != null)
 			storedAccount.setIsAutomated(accountDetails.getIsAutomated());
+		
+		if (accountDetails.getBalanceType() != null)
+			storedAccount.setBalanceType(accountDetails.getBalanceType());		
 
 		// Update account details
 		accountService.updateAccountDetails(storedAccount);

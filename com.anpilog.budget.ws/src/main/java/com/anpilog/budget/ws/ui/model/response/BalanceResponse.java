@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.anpilog.budget.ws.io.entity.enums.BalanceType;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
+import com.anpilog.budget.ws.ui.model.reference.TotalReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @XmlRootElement 
@@ -14,8 +16,10 @@ public class BalanceResponse {
 	private int id;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate date;
+	private Double amount;
 	private DataRetrievalStatus status;
-	private List<TotalResponse> totals;
+	private BalanceType balanceType;
+	private List<TotalReference> totals;
 	
 	public int getId() {
 		return id;
@@ -32,6 +36,14 @@ public class BalanceResponse {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
+	
+	public Double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
 
 	public DataRetrievalStatus getStatus() {
 		return status;
@@ -39,13 +51,21 @@ public class BalanceResponse {
 
 	public void setStatus(DataRetrievalStatus status) {
 		this.status = status;
+	}	
+
+	public BalanceType getBalanceType() {
+		return balanceType;
 	}
 
-	public List<TotalResponse> getTotals() {
+	public void setBalanceType(BalanceType balanceType) {
+		this.balanceType = balanceType;
+	}
+
+	public List<TotalReference> getTotals() {
 		return totals;
 	}
 
-	public void setTotals(List<TotalResponse> totals) {
+	public void setTotals(List<TotalReference> totals) {
 		this.totals = totals;
 	}
 	

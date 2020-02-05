@@ -2,15 +2,15 @@ package com.anpilog.budget.ws.ui.model.response;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.anpilog.budget.ws.io.entity.ReferenceEntity;
 import com.anpilog.budget.ws.io.entity.enums.BalanceType;
+import com.anpilog.budget.ws.ui.model.reference.EntityReference;
 
 @XmlRootElement 
 public class AccountResponse {
 	
 	private long id;
 	private String name;
-	private ReferenceEntity bank;
+	private EntityReference bank;
 	private String myPortfolioId;
 	private Boolean isAutomated;
 	private Boolean isEnabled;
@@ -32,11 +32,11 @@ public class AccountResponse {
 		this.name = name;
 	}
 	
-	public ReferenceEntity getBank() {
+	public EntityReference getBank() {
 		return bank;
 	}
 	
-	public void setBank(ReferenceEntity bank) {
+	public void setBank(EntityReference bank) {
 		this.bank = bank;
 	}
 	

@@ -1,6 +1,6 @@
-package com.anpilog.budget.ws.io.entity;
+package com.anpilog.budget.ws.ui.model.reference;
 
-public class ReferenceEntity{
+public class EntityReference{
 
 	private Long id;
 	private String name;

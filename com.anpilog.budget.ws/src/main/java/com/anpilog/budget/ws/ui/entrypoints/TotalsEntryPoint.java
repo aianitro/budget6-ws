@@ -16,13 +16,13 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.anpilog.budget.ws.io.entity.ReferenceEntity;
 import com.anpilog.budget.ws.io.entity.TransactionEntity;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.TotalsService;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
 import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.shared.dto.TransactionDTO;
+import com.anpilog.budget.ws.ui.model.reference.EntityReference;
 import com.anpilog.budget.ws.ui.model.request.CreateTotalRequest;
 import com.anpilog.budget.ws.ui.model.request.UpdateTotalRequest;
 import com.anpilog.budget.ws.ui.model.response.DeleteTotalResponse;
@@ -49,7 +49,7 @@ public class TotalsEntryPoint {
 			BeanUtils.copyProperties(totalDto, totalResponse);
 
 			// Account
-			ReferenceEntity accountReference = new ReferenceEntity();
+			EntityReference accountReference = new EntityReference();
 			BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 			totalResponse.setAccount(accountReference);
 
@@ -82,7 +82,7 @@ public class TotalsEntryPoint {
 		BeanUtils.copyProperties(totalDto, returnValue);
 
 		// Account
-		ReferenceEntity accountReference = new ReferenceEntity();
+		EntityReference accountReference = new EntityReference();
 		BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
 
@@ -134,7 +134,7 @@ public class TotalsEntryPoint {
 		BeanUtils.copyProperties(createdTotal, returnValue);
 
 		// Account
-		ReferenceEntity accountReference = new ReferenceEntity();
+		EntityReference accountReference = new EntityReference();
 		BeanUtils.copyProperties(createdTotal.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
 
@@ -178,7 +178,7 @@ public class TotalsEntryPoint {
 		BeanUtils.copyProperties(totalDto, returnValue);
 
 		// Account
-		ReferenceEntity accountReference = new ReferenceEntity();
+		EntityReference accountReference = new EntityReference();
 		BeanUtils.copyProperties(totalDto.getAccount(), accountReference);
 		returnValue.setAccount(accountReference);
 

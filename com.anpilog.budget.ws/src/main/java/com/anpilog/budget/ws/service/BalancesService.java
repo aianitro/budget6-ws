@@ -10,12 +10,9 @@ public interface BalancesService {
 	BalanceDTO getPendingBalance();
 	//List<BalanceDTO> getLastBalances();
 	BalanceDTO getLatestBalance();
-	BalanceDTO getBalance(String id);	
-	
-	BalanceDTO createBalance(BalanceDTO balanceDto);
-	
-	void updateBalance(BalanceDTO balanceDto);
-	
-	//void deleteBalance(BalanceDTO balanceDto);
+	BalanceDTO getBalance(String id);		
+	BalanceDTO createBalance(BalanceDTO balanceDto);	
+	void updateBalance(BalanceDTO balanceDto);	
+	void deleteBalance(BalanceDTO balanceDto);
 	
 }

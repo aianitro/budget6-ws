@@ -4,12 +4,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.anpilog.budget.ws.exceptions.CouldNotDeleteRecordException;
 import com.anpilog.budget.ws.exceptions.CouldNotUpdateRecordException;
 import com.anpilog.budget.ws.exceptions.NoRecordFoundException;
 import com.anpilog.budget.ws.io.dao.DAO;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.service.BalancesService;
 import com.anpilog.budget.ws.shared.dto.BalanceDTO;
+import com.anpilog.budget.ws.shared.dto.TotalDTO;
 import com.anpilog.budget.ws.ui.model.response.ErrorMessages;
 
 public class BalancesServiceImpl implements BalancesService {
@@ -85,11 +87,17 @@ public class BalancesServiceImpl implements BalancesService {
 
 	@Override
 	public BalanceDTO createBalance(BalanceDTO balanceDto) {
+		
+		// Calculate balance amaount
+		Double balanceAmount = 0.0;
+		for(TotalDTO totalDto: balanceDto.getTotals())
+			balanceAmount += totalDto.getAmount();
+		balanceDto.setAmount(balanceAmount);
 
 		// Record data into a database
 		BalanceDTO returnValue = this.saveBalance(balanceDto);
 
-		// Return back the bank
+		// Return saved balance
 		return returnValue;
 	}
 
@@ -117,6 +125,19 @@ public class BalancesServiceImpl implements BalancesService {
 		} finally {
 			this.database.closeConnection();
 		}
+	}
+
+	@Override
+	public void deleteBalance(BalanceDTO balanceDto) {
+		try {
+			this.database.openConnection();
+			this.database.deleteBalance(balanceDto);
+		} catch (Exception ex) {
+			throw new CouldNotDeleteRecordException(ex.getMessage());
+		} finally {
+			this.database.closeConnection();
+		}
+		
 	}
 
 }

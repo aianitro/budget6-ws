@@ -1,26 +1,18 @@
-package com.anpilog.budget.ws.ui.model.response;
+package com.anpilog.budget.ws.ui.model.reference;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.anpilog.budget.ws.io.entity.TransactionEntity;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
-import com.anpilog.budget.ws.ui.model.reference.EntityReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-@XmlRootElement 
-public class TotalResponse implements Comparable<Object>{
+public class TotalReference implements Comparable<Object>{
 	
 	private int id;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate date;
 	private DataRetrievalStatus status;	
 	private EntityReference account;
 	private Double amount;
 	private Double difference;
-	private List<TransactionEntity> transactions;
+	private Integer transactions;
 	
 	public int getId() {
 		return id;
@@ -41,7 +33,7 @@ public class TotalResponse implements Comparable<Object>{
 	public DataRetrievalStatus getStatus() {
 		return status;
 	}
-
+	
 	public void setStatus(DataRetrievalStatus status) {
 		this.status = status;
 	}
@@ -70,17 +62,17 @@ public class TotalResponse implements Comparable<Object>{
 		this.difference = difference;
 	}
 	
-	public List<TransactionEntity> getTransactions() {
+	public Integer getTransactions() {
 		return transactions;
 	}
 	
-	public void setTransactions(List<TransactionEntity> transactions) {
+	public void setTransactions(Integer transactions) {
 		this.transactions = transactions;
 	}
-
+	
 	@Override
 	public int compareTo(Object o) {
-		return account.getId().compareTo(((TotalResponse) o).getAccount().getId());
+		return account.getId().compareTo(((TotalReference) o).getAccount().getId());
 	}
-	
+
 }

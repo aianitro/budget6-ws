@@ -19,9 +19,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.anpilog.budget.ws.exceptions.CouldNotUpdateRecordException;
-import com.anpilog.budget.ws.io.entity.ReferenceEntity;
 import com.anpilog.budget.ws.service.AccountsService;
 import com.anpilog.budget.ws.shared.dto.AccountDTO;
+import com.anpilog.budget.ws.ui.model.reference.EntityReference;
 import com.anpilog.budget.ws.ui.model.request.CreateAccountRequest;
 import com.anpilog.budget.ws.ui.model.request.UpdateAccountRequest;
 import com.anpilog.budget.ws.ui.model.response.AccountResponse;
@@ -50,7 +50,7 @@ public class AccountsEntryPoint {
 
 			// Set bank reference in response
 			if (accountDTO.getBank() != null) {
-				ReferenceEntity bankReference = new ReferenceEntity();
+				EntityReference bankReference = new EntityReference();
 				BeanUtils.copyProperties(accountDTO.getBank(), bankReference);
 				accountResponse.setBank(bankReference);
 			}
@@ -74,7 +74,7 @@ public class AccountsEntryPoint {
 
 		// Set bank reference in response
 		if (accountDto.getBank() != null) {
-			ReferenceEntity bankReference = new ReferenceEntity();
+			EntityReference bankReference = new EntityReference();
 			BeanUtils.copyProperties(accountDto.getBank(), bankReference);
 			returnValue.setBank(bankReference);
 		}
@@ -101,7 +101,7 @@ public class AccountsEntryPoint {
 
 		// Set bank reference in response
 		if (createdAccount.getBank() != null) {
-			ReferenceEntity bankReference = new ReferenceEntity();
+			EntityReference bankReference = new EntityReference();
 			BeanUtils.copyProperties(createdAccount.getBank(), bankReference);
 			returnValue.setBank(bankReference);
 		}
@@ -149,7 +149,7 @@ public class AccountsEntryPoint {
 
 		// Set bank reference in response
 		if (storedAccount.getBank() != null) {
-			ReferenceEntity bankReference = new ReferenceEntity();
+			EntityReference bankReference = new EntityReference();
 			BeanUtils.copyProperties(storedAccount.getBank(), bankReference);
 			returnValue.setBank(bankReference);
 		}

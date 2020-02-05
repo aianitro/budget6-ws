@@ -11,10 +11,11 @@ import com.anpilog.budget.ws.ui.model.reference.EntityReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @XmlRootElement 
-public class CreateBalanceRequest {
+public class UpdateBalanceRequest {
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate date;
+	private long id;
 	private DataRetrievalStatus status;
 	private BalanceType balanceType;
 	private List<EntityReference> totals;
@@ -25,6 +26,14 @@ public class CreateBalanceRequest {
 	
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+	
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public DataRetrievalStatus getStatus() {

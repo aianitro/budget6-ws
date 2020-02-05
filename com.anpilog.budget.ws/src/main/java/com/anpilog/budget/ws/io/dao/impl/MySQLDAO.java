@@ -727,6 +727,31 @@ public class MySQLDAO implements DAO {
 		session.update(balanceEntity);
 		session.getTransaction().commit();
 	}
+	
+	@Override
+	public void deleteBalance(BalanceDTO balanceDto) {
+		BalanceEntity balanceEntity = new BalanceEntity();
+		BeanUtils.copyProperties(balanceDto, balanceEntity);
+
+		// Totals
+		/*
+		if (balanceDto.getTotals() != null && balanceDto.getTotals().size() > 0) {
+			List<TotalEntity> totalEntities = new ArrayList<TotalEntity>();
+			for (TotalDTO totalDto : balanceDto.getTotals()) {
+				TotalEntity totalEntity = new TotalEntity();
+				BeanUtils.copyProperties(totalDto, totalEntity);
+				totalEntity.setBalance(balanceEntity);
+				totalEntities.add(totalEntity);
+			}
+			balanceEntity.setTotals(totalEntities);
+		}
+		*/
+
+		session.beginTransaction();
+		session.delete(balanceEntity);
+		session.getTransaction().commit();
+
+	}
 
 	// TOTALS
 
@@ -965,7 +990,7 @@ public class MySQLDAO implements DAO {
 
 	}
 
-	// TOTALS
+	// TRANSACTIONS
 
 	@Override
 	public List<TransactionDTO> getTransactions() {

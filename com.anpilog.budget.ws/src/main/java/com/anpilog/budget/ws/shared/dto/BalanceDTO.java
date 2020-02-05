@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.anpilog.budget.ws.io.entity.enums.BalanceType;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 
 public class BalanceDTO implements Serializable{
@@ -14,6 +15,7 @@ public class BalanceDTO implements Serializable{
 	private LocalDate date;
 	private Double amount;
 	private DataRetrievalStatus status;
+	private BalanceType balanceType;
 	private List<TotalDTO> totals;
 	
 	public int getId() {
@@ -46,6 +48,14 @@ public class BalanceDTO implements Serializable{
 
 	public void setStatus(DataRetrievalStatus status) {
 		this.status = status;
+	}	
+
+	public BalanceType getBalanceType() {
+		return balanceType;
+	}
+
+	public void setBalanceType(BalanceType balanceType) {
+		this.balanceType = balanceType;
 	}
 
 	public List<TotalDTO> getTotals() {

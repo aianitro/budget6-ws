@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.anpilog.budget.ws.io.entity.enums.BalanceType;
 import com.anpilog.budget.ws.io.entity.enums.DataRetrievalStatus;
 import com.anpilog.budget.ws.utils.LocalDatePersistenceConverter;
 
@@ -35,6 +36,9 @@ public class BalanceEntity implements Serializable{
 	@Column(name = "status")
 	private DataRetrievalStatus status;
 	//private String errorMessage;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "balanceType")	
+	private BalanceType balanceType;
 	@OneToMany(mappedBy = "balance", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<TotalEntity> totals;
 	
@@ -69,6 +73,15 @@ public class BalanceEntity implements Serializable{
 	public void setStatus(DataRetrievalStatus status) {
 		this.status = status;
 	}
+	
+	public BalanceType getBalanceType() {
+		return balanceType;
+	}
+
+	public void setBalanceType(BalanceType balanceType) {
+		this.balanceType = balanceType;
+	}
+
 
 	public List<TotalEntity> getTotals() {
 		return totals;

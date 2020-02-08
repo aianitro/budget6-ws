@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.anpilog.budget.ws.io.entity.enums.BalanceType;
+import com.anpilog.budget.ws.io.entity.enums.AccountType;
 
 @Entity(name="accounts")
 public class AccountEntity implements Serializable{
@@ -29,8 +29,8 @@ public class AccountEntity implements Serializable{
 	private Boolean isAutomated;
 	private Boolean isEnabled;
 	@Enumerated(EnumType.STRING)
-	@Column(name = "balanceType")	
-	private BalanceType balanceType;
+	@Column(name = "accountType")	
+	private AccountType accountType;
 	
 	
 	public long getId() {
@@ -81,11 +81,11 @@ public class AccountEntity implements Serializable{
 		this.isEnabled = isEnabled;
 	}	
 	
-	public BalanceType getBalanceType() {
-		return balanceType;
+	public AccountType getAccountType() {
+		return accountType;
 	}
 
-	public void setBalanceType(BalanceType balanceType) {
-		this.balanceType = balanceType;
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
 	}
 }

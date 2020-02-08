@@ -2,7 +2,7 @@ package com.anpilog.budget.ws.ui.model.response;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.anpilog.budget.ws.io.entity.enums.BalanceType;
+import com.anpilog.budget.ws.io.entity.enums.AccountType;
 import com.anpilog.budget.ws.ui.model.reference.EntityReference;
 
 @XmlRootElement 
@@ -14,7 +14,7 @@ public class AccountResponse {
 	private String myPortfolioId;
 	private Boolean isAutomated;
 	private Boolean isEnabled;
-	private BalanceType balanceType;
+	private AccountType accountType;
 	
 	public long getId() {
 		return id;
@@ -64,11 +64,11 @@ public class AccountResponse {
 		this.isEnabled = isEnabled;
 	}
 	
-	public BalanceType getBalanceType() {
-		return balanceType;
+	public AccountType getAccountType() {
+		return accountType;
 	}
 
-	public void setBalanceType(BalanceType balanceType) {
-		this.balanceType = balanceType;
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
 	}
 }
